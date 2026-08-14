@@ -37,7 +37,7 @@ The accepted V5 checkpoint received a short frozen-backbone replay fine-tune on 
 ## Evaluation-only sets
 
 - [AI Detector Arena v0.1](https://huggingface.co/datasets/aidetectarena/ai-image-detector-benchmark): development OOD benchmark; never training or calibration.
-- The 70 user-provided Rule34/full/thumbnail/GIF/real-graphic/social cases in [`tests/field-regression.json`](tests/field-regression.json): frozen before model evaluation; never training, calibration, threshold, or checkpoint selection.
+- The 71 user-provided Rule34/full/thumbnail/GIF/real-graphic/social cases in [`tests/field-regression.json`](tests/field-regression.json): frozen before model evaluation; never training, calibration, threshold, or checkpoint selection.
 - Optional OpenFake/Synthbuster/RAISE checks remain non-commercial evaluation only and are not part of the released weights.
 
 The vNext release gate is a separate 50,000–100,000-image corpus covering photos, UI, screenshots, illustration, film frames, 3D/game renders, memes, logos/text, and old and new generators. [`docs/EVALUATION.md`](docs/EVALUATION.md) defines its source-disjointness, licensing, deduplication, and scenario quotas. The repository contains the builder and quota file, not the image corpus.

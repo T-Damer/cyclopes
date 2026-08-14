@@ -561,6 +561,13 @@
       "urls": [], "local_file": "social-real-photo-top-gear.png",
       "sha256": "f2d59ab8546ca1524e2738947c2d60a7346350785945e675bfcadca5d418942e",
       "current_scores": {"browser": 0.98}
+    },
+    {
+      "id": "social-ai-gpt-pixel-vhs-anime",
+      "expected_label": "ai", "label_basis": "user_generator_attestation", "content_kind": "pixel_vhs_anime",
+      "urls": [], "local_file": "social-ai-gpt-pixel-vhs-anime.jpg",
+      "sha256": "211d782335a283218ecc29c080cbdadc01cb2666bc1903198aba2ec9e7d3f56b",
+      "current_scores": {"browser": 0.32}
     }
   ]
 }

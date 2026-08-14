@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+[[ -f /venv/main/bin/activate ]] && source /venv/main/bin/activate
+
 : "${HF_READ_ONLY_TOKEN:?HF_READ_ONLY_TOKEN is required}"
 nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader
 

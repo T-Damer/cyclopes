@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+[[ -f /venv/main/bin/activate ]] && source /venv/main/bin/activate
+
 : "${HF_READ_ONLY_TOKEN:?HF_READ_ONLY_TOKEN is required}"
 : "${TRAIN_MANIFEST:?TRAIN_MANIFEST is required}"
 : "${INITIAL_CHECKPOINT:?INITIAL_CHECKPOINT is required}"
