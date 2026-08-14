@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="240" viewBox="0 0 920 240">
+  <rect width="920" height="240" rx="20" fill="#0b0b0d"/>
+  <g font-family="system-ui" fill="white">
+    <text x="40" y="42" font-size="22" font-weight="700">AI Detector Arena v0.1 · 2,031 unique images · threshold 65%</text>
+    <text x="40" y="92" font-size="18">Balanced accuracy</text><text x="860" y="92" text-anchor="end" font-size="18">75.49%</text>
+    <rect x="230" y="72" width="580" height="22" rx="11" fill="#292932"/><rect x="230" y="72" width="438" height="22" rx="11" fill="#f4f4f5"/>
+    <text x="40" y="142" font-size="18">AI precision</text><text x="860" y="142" text-anchor="end" font-size="18">78.02%</text>
+    <rect x="230" y="122" width="580" height="22" rx="11" fill="#292932"/><rect x="230" y="122" width="453" height="22" rx="11" fill="#d6d6db"/>
+    <text x="40" y="192" font-size="18">Real specificity</text><text x="860" y="192" text-anchor="end" font-size="18">79.86%</text>
+    <rect x="230" y="172" width="580" height="22" rx="11" fill="#292932"/><rect x="230" y="172" width="463" height="22" rx="11" fill="#b9b9c1"/>
+  </g>
+</svg>

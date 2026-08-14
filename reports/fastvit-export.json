@@ -1,0 +1,13 @@
+{
+  "calibration": {
+    "bias": 2.5434449024140973,
+    "temperature": 1.0
+  },
+  "calibration_sha256": "a5a9338b886bf2202111ba5dc8dd702aec0d02b094cd8d593e66171e6513de42",
+  "checkpoint": "/workspace/cyclopes/runs/met/cyclopes.pt",
+  "checkpoint_sha256": "324d99e2c3dce53e6702bc1a9c82cf4e14917b033fc2a45310b2b44ff0fc9362",
+  "command": "export",
+  "onnx": "/workspace/cyclopes/extension/models/cyclopes-fastvit.onnx",
+  "onnx_sha256": "d43894639518cbc7939bf97718488cc096f74e4a47d59310776a6bf0e6b00c8e",
+  "threshold": 0.65
+}

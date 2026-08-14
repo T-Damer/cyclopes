@@ -1,0 +1,11 @@
+{
+  "models": ["cyclopes-fastvit.onnx", "cyclopes-sentry.onnx"],
+  "status": "release",
+  "sha256": {
+    "cyclopes-fastvit.onnx": "d43894639518cbc7939bf97718488cc096f74e4a47d59310776a6bf0e6b00c8e",
+    "cyclopes-sentry.onnx": "26b677e63160ff790316f62cf487661cca11e3f6cdb6bc89620b5e4eedfd0f3d"
+  },
+  "input": "NCHW float32 RGB, 256x256, ImageNet-normalized",
+  "score": "calibrated 68% FastViT + 32% ConvNeXt AI probability blend",
+  "note": "The extension never downloads model weights."
+}
