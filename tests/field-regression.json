@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "captured_at": "2026-08-14",
+  "purpose": "browser_field_regression",
+  "training_allowed": false,
+  "decision_threshold": 0.65,
+  "notes": [
+    "Expected labels come from the Rule34 ai-generated tag or the user's real-image assessment; they are field evidence, not independently adjudicated scientific labels.",
+    "Do not use these cases for training, calibration, checkpoint selection, threshold selection, or augmentation tuning.",
+    "Google cached-image URLs may expire. Before the final frozen browser run, materialize evaluation-only copies under ignored data/ storage and record their SHA-256 values without committing the images."
+  ],
+  "cases": [
+    {
+      "id": "rule34-18447255",
+      "expected_label": "ai",
+      "label_basis": "site_ai_generated_tag",
+      "content_kind": "illustration",
+      "urls": ["https://rule34.xxx/index.php?page=post&s=view&id=18447255"],
+      "current_scores": {"thumbnail": 0.6443, "full": 0.3868}
+    },
+    {
+      "id": "rule34-18447258",
+      "expected_label": "ai",
+      "label_basis": "site_ai_generated_tag",
+      "content_kind": "illustration",
+      "urls": ["https://rule34.xxx/index.php?page=post&s=view&id=18447258"],
+      "current_scores": {"thumbnail": 0.1981, "full": 0.4237}
+    },
+    {
+      "id": "rule34-18447257",
+      "expected_label": "ai",
+      "label_basis": "site_ai_generated_tag",
+      "content_kind": "illustration",
+      "urls": ["https://rule34.xxx/index.php?page=post&s=view&id=18447257"],
+      "current_scores": {"thumbnail": 0.6161, "full": 0.307}
+    },
+    {
+      "id": "rule34-18447247",
+      "expected_label": "ai",
+      "label_basis": "site_ai_generated_tag",
+      "content_kind": "illustration",
+      "urls": ["https://rule34.xxx/index.php?page=post&s=view&id=18447247"],
+      "current_scores": {"thumbnail": 0.3231, "full": 0.298}
+    },
+    {
+      "id": "rule34-18447265",
+      "expected_label": "ai",
+      "label_basis": "site_ai_generated_tag",
+      "content_kind": "illustration",
+      "urls": ["https://rule34.xxx/index.php?page=post&s=view&id=18447265"],
+      "current_scores": {"thumbnail": 0.507, "full": 0.7576}
+    },
+    {
+      "id": "rule34-18447254",
+      "expected_label": "ai",
+      "label_basis": "site_ai_generated_tag_user_ambiguous",
+      "content_kind": "illustration",
+      "urls": ["https://rule34.xxx/index.php?page=post&s=view&id=18447254"],
+      "current_scores": {"thumbnail": 0.6488, "full": 0.4379}
+    },
+    {
+      "id": "rule34-18447260",
+      "expected_label": "ai",
+      "label_basis": "site_ai_generated_tag_user_ambiguous",
+      "content_kind": "illustration",
+      "urls": ["https://rule34.xxx/index.php?page=post&s=view&id=18447260"],
+      "current_scores": {"thumbnail": 0.6483, "full": 0.6487}
+    },
+    {
+      "id": "rule34-18447263",
+      "expected_label": "ai",
+      "label_basis": "site_ai_generated_tag_user_ambiguous",
+      "content_kind": "illustration",
+      "urls": ["https://rule34.xxx/index.php?page=post&s=view&id=18447263"],
+      "current_scores": {"thumbnail": 0.6467, "full": 0.485}
+    },
+    {
+      "id": "rule34-18447261",
+      "expected_label": "real",
+      "label_basis": "user_assessment",
+      "content_kind": "illustration",
+      "urls": ["https://rule34.xxx/index.php?page=post&s=view&id=18447261"],
+      "current_scores": {"thumbnail": 0.6477, "full": 0.6505}
+    },
+    {
+      "id": "rule34-18447267",
+      "expected_label": "ai",
+      "label_basis": "site_ai_generated_tag_user_obvious",
+      "content_kind": "illustration",
+      "urls": ["https://rule34.xxx/index.php?page=post&s=view&id=18447267"],
+      "current_scores": {"full": 0.0056}
+    },
+    {
+      "id": "rule34-18447269",
+      "expected_label": "ai",
+      "label_basis": "site_ai_generated_tag",
+      "content_kind": "animated_gif",
+      "urls": [
+        "https://rule34.xxx/index.php?page=post&s=view&id=18447269",
+        "https://wimg.rule34.xxx/thumbnails/703/thumbnail_58712c18ee0cae454e7dfbadad771ff5.jpg?18447269"
+      ],
+      "current_scores": {"thumbnail": 0.6498, "gif_still": 0.317}
+    },
+    {
+      "id": "yabloko-poster",
+      "expected_label": "real",
+      "label_basis": "user_assessment",
+      "content_kind": "flat_graphic_poster",
+      "urls": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSS2AcirVk3FIc6Hxw_JtAsDcwFuWMsJJxoaJlJrI-zg&s=10",
+        "https://www.yabloko.ru/files/styles/max_1300x1300/public/for-smi-gallery/2025-08/01.png?itok=EVHk0C7A"
+      ],
+      "current_scores": {"google_cached": 0.6504, "large_source": 0.6504}
+    },
+    {
+      "id": "yabloko-emblem",
+      "expected_label": "real",
+      "label_basis": "user_assessment",
+      "content_kind": "logo_vector_rendering",
+      "urls": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs1S8eMlC1QBIFh8QSVMQ5eUk5PsS9ZZ1FDIhuK17PCA&s",
+        "https://upload.wikimedia.org/wikipedia/ru/thumb/1/19/Yabloko_emblem.svg/250px-Yabloko_emblem.svg.png?utm_source=ru.wikipedia.org&utm_campaign=parser&utm_content=thumbnail"
+      ],
+      "current_scores": {"google_cached": 0.6503, "wikimedia_png": 0.6497}
+    },
+    {
+      "id": "yabloko-google-graphic-2",
+      "expected_label": "real",
+      "label_basis": "user_assessment",
+      "content_kind": "web_graphic",
+      "urls": ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS1azaop7DT5uG32yneNV7kYjuMwwxr_6cHmfuOQhwVw&s=10"],
+      "current_scores": {"google_cached": 0.6506}
+    },
+    {
+      "id": "yabloko-google-graphic-3",
+      "expected_label": "real",
+      "label_basis": "user_assessment",
+      "content_kind": "web_graphic",
+      "urls": ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcwj3FPZUVjv19cFfFTQr3gLyHLtz5R9MXAhNybCZmcw&s=10"],
+      "current_scores": {"google_cached": 0.6502}
+    },
+    {
+      "id": "rferl-graphic-fdabfb49",
+      "expected_label": "real",
+      "label_basis": "user_assessment",
+      "content_kind": "web_graphic",
+      "urls": ["https://gdb.rferl.org/fdabfb49-5181-4c57-46eb-08decacf94d0_w408_r1_s.png"],
+      "current_scores": {"source": 0.6505}
+    }
+  ]
+}

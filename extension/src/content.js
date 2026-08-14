@@ -1,7 +1,7 @@
 import { AI_THRESHOLD, isEligibleImage } from "./shared.js";
 
 let states = new WeakMap();
-let enabled = true;
+let enabled = false;
 const style = document.createElement("style");
 style.textContent = ".cyclopes-ai{filter:blur(20px)!important}";
 document.documentElement.append(style);
@@ -14,10 +14,15 @@ async function analyze(image) {
   states.set(image, source);
   try {
     const result = await chrome.runtime.sendMessage({ target: "background", type: "score", url: source });
-    if (states.get(image) === source && typeof result?.score === "number") {
-      image.classList.toggle("cyclopes-ai", result.score >= AI_THRESHOLD);
-    }
-  } catch {}
+    if (typeof result?.score !== "number") throw new Error(result?.error || "Inference returned no score.");
+    if (states.get(image) !== source) return;
+    image.dataset.cyclopesScore = result.score.toFixed(4);
+    image.classList.toggle("cyclopes-ai", result.score >= AI_THRESHOLD);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    image.dataset.cyclopesError = message;
+    console.warn(`Cyclopes: ${message}`);
+  }
 }
 
 function watch(image) {
@@ -32,6 +37,7 @@ function scan(root = document) {
 
 function setEnabled(value) {
   enabled = value;
+  document.documentElement.dataset.cyclopesEnabled = String(enabled);
   if (!enabled) {
     states = new WeakMap();
     document.querySelectorAll(".cyclopes-ai").forEach((image) => image.classList.remove("cyclopes-ai"));
@@ -39,7 +45,7 @@ function setEnabled(value) {
   if (enabled) scan();
 }
 
-chrome.storage.local.get({ enabled: true }).then(({ enabled: value }) => setEnabled(value));
+chrome.storage.local.get({ enabled: false }).then(({ enabled: value }) => setEnabled(value));
 chrome.storage.onChanged.addListener((changes) => {
   if (changes.enabled) setEnabled(changes.enabled.newValue);
 });

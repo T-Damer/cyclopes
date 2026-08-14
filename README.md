@@ -26,7 +26,7 @@ npm ci
 npm run build
 ```
 
-Open `chrome://extensions`, enable Developer mode, choose **Load unpacked**, and select `dist/`. Click the Cyclopes icon to toggle **Filter: ON/OFF**.
+Open `chrome://extensions`, enable Developer mode, choose **Load unpacked**, and select `dist/`. Reload already-open pages once, then click the Cyclopes icon to toggle **Filter: ON/OFF**.
 
 ## Approach
 

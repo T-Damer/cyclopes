@@ -8,6 +8,12 @@ const FASTVIT_WEIGHT = 0.68;
 const OPERATING_POINT = 0.6794350376527292;
 let sessionsPromise;
 
+async function createSessions() {
+  const fastvit = await createSession("cyclopes-fastvit.onnx");
+  const sentry = await createSession("cyclopes-sentry.onnx");
+  return [fastvit, sentry];
+}
+
 function sigmoid(value) {
   return 1 / (1 + Math.exp(-value));
 }
@@ -73,7 +79,10 @@ export async function inferBlob(blob) {
   const ort = runtime();
   const bitmap = await createImageBitmap(blob);
   try {
-    sessionsPromise ??= Promise.all([createSession("cyclopes-fastvit.onnx"), createSession("cyclopes-sentry.onnx")]);
+    sessionsPromise ??= createSessions().catch((error) => {
+      sessionsPromise = undefined;
+      throw error;
+    });
     const [fastvit, sentry] = await sessionsPromise;
     const fastvitInput = new ort.Tensor("float32", pixels(bitmap, SIZE, MEAN, STD), [1, 3, SIZE, SIZE]);
     const sentryInput = new ort.Tensor("float32", pixels(bitmap, SENTRY_SIZE, SENTRY_MEAN, SENTRY_STD, true), [1, 3, SENTRY_SIZE, SENTRY_SIZE]);
