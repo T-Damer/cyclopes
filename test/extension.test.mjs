@@ -76,6 +76,7 @@ test("the built MV3 package is local and has its inference document", () => {
   assert.match(content, /\\u\{1307A\}/);
   assert.match(content, /150/);
   assert.match(content, /white-space:nowrap/);
+  assert.match(content, /border-radius:10px/);
   assert.match(content, /anchor-name/);
   assert.match(content, /AI.*%/);
   assert.doesNotMatch(content, /blur\(/);

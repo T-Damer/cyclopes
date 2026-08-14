@@ -17,7 +17,7 @@ const loadingFrames = ["𓁺", "𓁻", "𓁿", "𓂀"];
 
 const style = document.createElement("style");
 style.textContent = `
-  .cyclopes-badge{position:absolute;white-space:nowrap;padding:3px 6px;border-radius:5px;color:#fff;background:#475569;font:600 11px/1.2 system-ui,sans-serif;pointer-events:none;box-shadow:0 1px 4px #0008}
+  .cyclopes-badge{position:absolute;white-space:nowrap;padding:3px 6px;border-radius:10px;color:#fff;background:#475569;font:600 11px/1.2 system-ui,sans-serif;pointer-events:none;box-shadow:0 1px 4px #0008}
   .cyclopes-badge[data-verdict="ai"]{background:#dc2626}
   .cyclopes-badge[data-verdict="real"]{background:#2563eb}
 `;

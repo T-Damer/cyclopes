@@ -442,6 +442,13 @@
       "urls": [], "local_file": "social-real-digital-art-dialogue.png",
       "sha256": "1a18acfb6ac5d86c6b664697bf629005a7c154b17d7052aea50bf8f2fab4e47f",
       "current_scores": {"browser": 0.65}
+    },
+    {
+      "id": "social-real-street-photo-meme",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "photo_meme",
+      "urls": [], "local_file": "social-real-street-photo-meme.png",
+      "sha256": "25bfca05acd56b8cb48401ff53f0437a4aa3e8645a87ba5cab288d89e1521dcc",
+      "current_scores": {"browser": 0.92}
     }
   ]
 }
