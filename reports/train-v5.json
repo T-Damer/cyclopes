@@ -1,0 +1,39 @@
+{
+  "best_selection_score": 0.9043699405401533,
+  "checkpoint": "/Users/d/Projects/Personal/cyclopes/data/artifacts/cyclopes-v5.pt",
+  "checkpoint_sha256": "9f7dec4fd6175d73534370a36ea65d5e59ff51d75db7978280fddcf63c03956d",
+  "command": "train",
+  "epoch_metrics": [
+    {
+      "ema": {
+        "clean_balanced_accuracy": 0.8917687513432194,
+        "clean_threshold": 0.9865893648955548,
+        "selection_score": 0.8844974568378823,
+        "web_balanced_accuracy": 0.8844974568378823,
+        "web_threshold": 0.9867939602650903
+      },
+      "epoch": 1,
+      "loss": 0.9280366522073745,
+      "raw": {
+        "clean_balanced_accuracy": 0.9081811017981231,
+        "clean_threshold": 0.979114667656286,
+        "selection_score": 0.9043699405401533,
+        "web_balanced_accuracy": 0.9043699405401533,
+        "web_threshold": 0.9802062897214279
+      },
+      "selected": "raw",
+      "step": 100
+    }
+  ],
+  "initial_checkpoint_sha256": "cc3fb15ef5d0c2ce83eadfda6838bb632264c63efcc9352e269e2cb3c97bfeb3",
+  "manifest": "/Users/d/Projects/Personal/cyclopes/data/replay/clean.csv",
+  "manifest_sha256": "9e554b2d99159c7fd9d3e237d1486c1b3818892548f1bed7054d23e17e8899fa",
+  "runtime": {
+    "cuda": null,
+    "device": "mps",
+    "torch": "2.7.1"
+  },
+  "samples": 7429,
+  "steps": 100,
+  "threshold": 0.65
+}

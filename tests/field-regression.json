@@ -146,6 +146,244 @@
       "content_kind": "web_graphic",
       "urls": ["https://gdb.rferl.org/fdabfb49-5181-4c57-46eb-08decacf94d0_w408_r1_s.png"],
       "current_scores": {"source": 0.6505}
+    },
+    {
+      "id": "twitter-real-graffiti",
+      "expected_label": "real",
+      "label_basis": "user_assessment",
+      "content_kind": "photo_of_street_art",
+      "urls": [],
+      "local_file": "twitter-real-graffiti.png",
+      "sha256": "f5d5396960f7a6117185ae45578b3578ae251bf9c31ef051c20cec18724ed5a4",
+      "current_scores": {}
+    },
+    {
+      "id": "twitter-real-undertale",
+      "expected_label": "real",
+      "label_basis": "user_assessment",
+      "content_kind": "line_art",
+      "urls": [],
+      "local_file": "twitter-real-undertale.png",
+      "sha256": "e4edbc56d4a8504a235b4ec5a403557be4a7e4b7ea41ac8e4cf13491d955f89a",
+      "current_scores": {}
+    },
+    {
+      "id": "twitter-real-meme",
+      "expected_label": "real",
+      "label_basis": "user_assessment",
+      "content_kind": "photo_meme",
+      "urls": [],
+      "local_file": "twitter-real-meme.png",
+      "sha256": "a4eb49f7ce6a22e40e5c3ab6a297713f51ba7baa010674b02cf398fc51ed4a83",
+      "current_scores": {}
+    },
+    {
+      "id": "twitter-real-gif-frame",
+      "expected_label": "real",
+      "label_basis": "user_assessment",
+      "content_kind": "gif_frame",
+      "urls": [],
+      "local_file": "twitter-real-gif-frame.png",
+      "sha256": "1309b6d270df4890f022db00d626f0005bc189f54b072d8b1081cc16a7313392",
+      "current_scores": {}
+    },
+    {
+      "id": "twitter-real-digital-art",
+      "expected_label": "real",
+      "label_basis": "user_assessment",
+      "content_kind": "digital_art",
+      "urls": [],
+      "local_file": "twitter-real-digital-art.png",
+      "sha256": "16db567afa4626cfd8aff62ec52e85654ba90132930418e9b61e8af6be5e95d7",
+      "current_scores": {}
+    },
+    {
+      "id": "twitter-real-game-render",
+      "expected_label": "real",
+      "label_basis": "user_assessment",
+      "content_kind": "game_render",
+      "urls": [],
+      "local_file": "twitter-real-game-render.png",
+      "sha256": "c76c3a381eaaeed0161903b61762e41c2926f56d45f6f85d79953140faed950e",
+      "current_scores": {}
+    },
+    {
+      "id": "twitter-real-comic",
+      "expected_label": "real",
+      "label_basis": "user_assessment",
+      "content_kind": "comic",
+      "urls": [],
+      "local_file": "twitter-real-comic.png",
+      "sha256": "e1f5dabbb05da29a54a8b60440e4c3b396e446255dab159e25b206b5f532a026",
+      "current_scores": {}
+    },
+    {
+      "id": "twitter-real-simpsons-meme",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "meme",
+      "urls": [], "local_file": "twitter-real-simpsons-meme.png",
+      "sha256": "7a4291df70d47fa0a1a23bf0ff68ccc7f21359df91ccd2b9ce4dc379f96e7914",
+      "current_scores": {"browser": 0.80}
+    },
+    {
+      "id": "twitter-real-bat-sketch",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "digital_art",
+      "urls": [], "local_file": "twitter-real-bat-sketch.png",
+      "sha256": "f6f4d42367f9e7ecdcf875c6109bd6f7e0f82d2508daa36f9acadf5a84763283",
+      "current_scores": {"browser": 0.87}
+    },
+    {
+      "id": "twitter-real-comic-surgery",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "comic_meme",
+      "urls": [], "local_file": "twitter-real-comic-surgery.png",
+      "sha256": "ee87b2b80f4a7b4c580471c810f99c92dde8b7424b5766e55963bc349d90db7f",
+      "current_scores": {"browser": 0.82}
+    },
+    {
+      "id": "twitter-real-ui-chat",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "ui_screenshot",
+      "urls": [], "local_file": "twitter-real-ui-chat.png",
+      "sha256": "926b98547d229bf103852040911c43de042d8dd4a2fcb8473a26d43b26db4009",
+      "current_scores": {"browser": 0.37}
+    },
+    {
+      "id": "twitter-real-game-ui",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "game_ui_screenshot",
+      "urls": [], "local_file": "twitter-real-game-ui.png",
+      "sha256": "08f8b0e675beb950952cb524a96754f06d8129111a8d8ced1a57f571088df509",
+      "current_scores": {"browser": 0.65}
+    },
+    {
+      "id": "twitter-real-usage-dashboard",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "ui_screenshot",
+      "urls": [], "local_file": "twitter-real-usage-dashboard.png",
+      "sha256": "784245fb66d1c439e4b3ac5adaf4713ccd4eff6fcbac60beb946c6730461cb3d",
+      "current_scores": {"browser": 0.80}
+    },
+    {
+      "id": "twitter-real-mandalorian-meme",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "comic_meme",
+      "urls": [], "local_file": "twitter-real-mandalorian-meme.png",
+      "sha256": "a9ba1d15aee897b0a240c90147fcc39813d4f936007bba89733505dc637a94a9",
+      "current_scores": {"browser": 0.79}
+    },
+    {
+      "id": "twitter-real-anime-frame",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "anime_frame",
+      "urls": [], "local_file": "twitter-real-anime-frame.png",
+      "sha256": "82587dd57fe606fb1903bbf8a13f0418ff93e8a37ff2cf45a1aace8c247e8c67",
+      "current_scores": {"browser": 0.84}
+    },
+    {
+      "id": "twitter-real-steam-page",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "web_screenshot",
+      "urls": [], "local_file": "twitter-real-steam-page.png",
+      "sha256": "1e1ef90950f4c40cdfa6ecab61cba91e8975440066e4d4b4b7633672019a208f",
+      "current_scores": {"browser": 0.88}
+    },
+    {
+      "id": "twitter-real-avatar-logo",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "avatar_logo",
+      "urls": [], "local_file": "twitter-real-avatar-logo.png",
+      "sha256": "8da9a8ebb81aef22b6eb6a0297b7fb2707a944089930b0a8abc003a48ed207af",
+      "current_scores": {"browser": 0.87}
+    },
+    {
+      "id": "twitter-real-photo-water",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "closeup_photo",
+      "urls": [], "local_file": "twitter-real-photo-water.png",
+      "sha256": "42a6705839df41934935bfcb1b4b375eb8efcdd987bf091617c03795a8d5e5f7",
+      "current_scores": {"browser": 0.81}
+    },
+    {
+      "id": "twitter-real-photo-3d-print",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "object_photo",
+      "urls": [], "local_file": "twitter-real-photo-3d-print.png",
+      "sha256": "120fe042c1bc2ee344bfbb5c745601b3bdb89f6212bd9ad52f5e221f049177ac",
+      "current_scores": {"browser": 0.85}
+    },
+    {
+      "id": "twitter-real-big-rigs",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "game_screenshot_meme",
+      "urls": [], "local_file": "twitter-real-big-rigs.png",
+      "sha256": "a1d90c44465a8ef6456934efbed35cd7866b6d4dc54427f958926cb688154dac",
+      "current_scores": {"browser": 0.82}
+    },
+    {
+      "id": "twitter-real-facebook-meme",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "photo_meme",
+      "urls": [], "local_file": "twitter-real-facebook-meme.png",
+      "sha256": "ef5f166f054a0bc7065b0cfe4d60b9b01fd70b06e40a1181d0e309e3e2baee0d",
+      "current_scores": {"browser": 0.87}
+    },
+    {
+      "id": "twitter-real-stretched-text-meme",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "stretched_text_meme",
+      "urls": [], "local_file": "twitter-real-stretched-text-meme.png",
+      "sha256": "2ac8f053f298652b5766000043e58c3cbc3a2b4dc5625a0deb28ee6fed36a5a2",
+      "current_scores": {"browser": 0.82}
+    },
+    {
+      "id": "twitter-real-sun-oil-art",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "digital_art",
+      "urls": [], "local_file": "twitter-real-sun-oil-art.png",
+      "sha256": "9ce9444f1dc9f8fa0c1aeddb422949405afafbd505f0df5a86d215f8253df18b",
+      "current_scores": {"browser": 0.79}
+    },
+    {
+      "id": "twitter-real-dog-art",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "digital_art",
+      "urls": [], "local_file": "twitter-real-dog-art.png",
+      "sha256": "f7708bad31a75fde7be7185d9220c8b47baa1c6fc0a4535973a47553a13dd50f",
+      "current_scores": {"browser": 0.82}
+    },
+    {
+      "id": "twitter-real-rei-art",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "digital_art",
+      "urls": [], "local_file": "twitter-real-rei-art.png",
+      "sha256": "ce1d9a3bf32c2aa610b81bcd85fb74a66c7c1cab26e1959b0d55c7d9dfe81bde",
+      "current_scores": {"browser": 0.90}
+    },
+    {
+      "id": "twitter-real-two-photos",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "photo_collage",
+      "urls": [], "local_file": "twitter-real-two-photos.png",
+      "sha256": "dc8293446f66d2247a94976b2d73a53cee208938663f08cd2021dfd83d7d4e85",
+      "current_scores": {"browser": 0.77}
+    },
+    {
+      "id": "twitter-real-statement-text",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "text_graphic",
+      "urls": [], "local_file": "twitter-real-statement-text.png",
+      "sha256": "c8752fbdca1ae90717372d5d52a82cab64d88f85598543d5c984c163389b863c",
+      "current_scores": {"browser": 0.70}
+    },
+    {
+      "id": "twitter-real-discord-logo",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "logo",
+      "urls": [], "local_file": "twitter-real-discord-logo.png",
+      "sha256": "f0d1636e2719f16760b416a1129fa1d4aeec1d1eac70ebbb68312f5bb6fd4340",
+      "current_scores": {"browser": 0.70}
+    },
+    {
+      "id": "twitter-real-cassandra-comic",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "comic",
+      "urls": [], "local_file": "twitter-real-cassandra-comic.png",
+      "sha256": "5a09f8264bba5a7983c6d5dac3cd89d9efb8e93fa263db522df229cfb2923406",
+      "current_scores": {"browser": 0.71}
+    },
+    {
+      "id": "twitter-real-coronal-ui",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "ui_graphic",
+      "urls": [], "local_file": "twitter-real-coronal-ui.png",
+      "sha256": "3847e235a055ef23238f9eaee5ad202bba6161a4c6a805750b53045f96b03b6b",
+      "current_scores": {"browser": 0.67}
+    },
+    {
+      "id": "twitter-real-orange-juice-meme",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "photo_meme",
+      "urls": [], "local_file": "twitter-real-orange-juice-meme.png",
+      "sha256": "305559c846e64f0ab0a3ae56b3e4d0fbf86a7b5995b4b5f2719c245bf1bb6aae",
+      "current_scores": {"browser": 0.82}
     }
   ]
 }

@@ -1,0 +1,183 @@
+{
+  "class_counts": {
+    "0": 3707,
+    "1": 5499
+  },
+  "domain_counts": {
+    "cgi": 1170,
+    "digital-art": 2537,
+    "mixed": 5499
+  },
+  "dropped_low_information": 24,
+  "dropped_near_duplicates": 8,
+  "examples_dropped": [
+    {
+      "dhash_distance": 3,
+      "duplicate_of": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/50fb1a96246f6edfd933.jpg",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/40ad20873995eae3a80d.jpg",
+      "phash_distance": 0
+    },
+    {
+      "dhash_distance": 1,
+      "duplicate_of": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/9c7839198d362658f823.jpg",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/e6032f802f75a304d8a9.jpg",
+      "phash_distance": 0
+    },
+    {
+      "dhash_distance": 1,
+      "duplicate_of": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/c6333f5c6dab43972f46.jpg",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/6cc076e49106fbbd7f7d.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 2,
+      "duplicate_of": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/d91fa5b5a93e553b9a4e.jpg",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/8882bb208715047a34ab.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 2,
+      "duplicate_of": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/dbfcbb22b381478d102e.jpg",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/bfcc59f6b04a0adcaf26.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 3,
+      "duplicate_of": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/a8e740be10ae4a0fda18.jpg",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/90c1205014bacc80fbc3.jpg",
+      "phash_distance": 0
+    },
+    {
+      "dhash_distance": 1,
+      "duplicate_of": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/0436a000671abb55ccbd.jpg",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/60d38bd7be64dcdf8f6c.jpg",
+      "phash_distance": 0
+    },
+    {
+      "dhash_distance": 3,
+      "duplicate_of": "/Users/d/Projects/Personal/cyclopes/data/ai-replay/images/pamela/a3bde6142741df51949f.jpg",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/ai-replay/images/pamela/6d55b2a448d29f3a8c10.jpg",
+      "phash_distance": 2
+    }
+  ],
+  "examples_low_information": [
+    {
+      "contrast": 0.0,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/eb2e11d41eb552c22146.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/fbe2c48a5654bc9a3174.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/d830bd275dce2d280789.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/8b75ee8b0679d7ef22c3.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/a3a67a143ab207aae1d5.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/75e3dd285d80227bc92f.jpg"
+    },
+    {
+      "contrast": 1.0338183412021904,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/23e3d33c22b78bb8f8d1.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/ef764c6c1fcae9ed3448.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/5220301ea5b45e090b99.jpg"
+    },
+    {
+      "contrast": 0.015623092534937653,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/f320e55d5ea9ec81f1a6.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/81d552bf41f0cb68cd20.jpg"
+    },
+    {
+      "contrast": 2.0970087748677457,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/0aa873eead131d249c37.jpg"
+    },
+    {
+      "contrast": 2.872382977053093,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/840ee1b36685922d6776.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/200016ef913bb82fb061.jpg"
+    },
+    {
+      "contrast": 0.2859577776279874,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/f2ca5ca340bf5fc60e3a.jpg"
+    },
+    {
+      "contrast": 2.2449532124520775,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/e2c9537c2f76deec4340.jpg"
+    },
+    {
+      "contrast": 2.58674430408513,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/6893e7c52c1e0c68d664.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/7e5873215eb41c90246c.jpg"
+    },
+    {
+      "contrast": 1.8272165083064131,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/984d838781fb395f7f2a.jpg"
+    },
+    {
+      "contrast": 1.8201330366610202,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/d237ca83e7004720f043.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/aef352a07f4aa0c39ac3.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/f89115b5c3ff70de6ec1.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/5d31b164ad97360d9ed6.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/hard-negatives/images/opengameart/27d68a11ca93383f4e21.jpg"
+    }
+  ],
+  "family_counts": {
+    "modern": 5499,
+    "real": 3707
+  },
+  "input_rows": 9238,
+  "kept_rows": 9206,
+  "license_counts": {
+    "CC-BY-4.0": 5499,
+    "CC0-1.0": 3707
+  },
+  "manifest_sha256": "9e554b2d99159c7fd9d3e237d1486c1b3818892548f1bed7054d23e17e8899fa",
+  "source_counts": {
+    "heikeadel/cocoxgen": 2750,
+    "opengameart": 3707,
+    "pamela-dataset/pamela": 2749
+  },
+  "split_counts": {
+    "calibration": 735,
+    "test": 510,
+    "train": 7429,
+    "validation": 532
+  }
+}

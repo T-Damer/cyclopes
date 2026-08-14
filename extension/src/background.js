@@ -1,6 +1,4 @@
 const MAX_INFERENCE_CONCURRENCY = 1;
-const MAX_CACHE_ENTRIES = 256;
-const cachedScores = new Map();
 const inFlight = new Map();
 const queue = [];
 let active = 0;
@@ -67,20 +65,12 @@ function drain() {
 }
 
 function scoreImage(url) {
-  if (cachedScores.has(url)) {
-    const score = cachedScores.get(url);
-    cachedScores.delete(url);
-    cachedScores.set(url, score);
-    return Promise.resolve(score);
-  }
   if (inFlight.has(url)) return inFlight.get(url);
   const task = schedule(url)
     .then((result) => {
       if (typeof result?.score !== "number") throw new Error(result?.error || "Inference returned no score.");
       ready = true;
       showState(filterEnabled);
-      cachedScores.set(url, result.score);
-      while (cachedScores.size > MAX_CACHE_ENTRIES) cachedScores.delete(cachedScores.keys().next().value);
       return result.score;
     })
     .catch((error) => {

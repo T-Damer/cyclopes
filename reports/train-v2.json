@@ -1,0 +1,139 @@
+{
+  "best_selection_score": 0.9933152069881794,
+  "checkpoint": "/root/cyclopes/artifacts/cyclopes-v2.pt",
+  "checkpoint_sha256": "cc3fb15ef5d0c2ce83eadfda6838bb632264c63efcc9352e269e2cb3c97bfeb3",
+  "command": "train",
+  "epoch_metrics": [
+    {
+      "ema": {
+        "clean_balanced_accuracy": 0.9875815325337707,
+        "clean_threshold": 0.39412515563518663,
+        "selection_score": 0.9836179553729656,
+        "web_balanced_accuracy": 0.9836179553729656,
+        "web_threshold": 0.382402675751063
+      },
+      "epoch": 1,
+      "loss": 0.21771452903852495,
+      "raw": {
+        "clean_balanced_accuracy": 0.9902556143987123,
+        "clean_threshold": 0.2040540179302453,
+        "selection_score": 0.9855951128848676,
+        "web_balanced_accuracy": 0.9855951128848676,
+        "web_threshold": 0.37397048482979334
+      },
+      "selected": "raw",
+      "step": 568
+    },
+    {
+      "ema": {
+        "clean_balanced_accuracy": 0.9888432414186301,
+        "clean_threshold": 0.5331660728818125,
+        "selection_score": 0.9853409186804953,
+        "web_balanced_accuracy": 0.9853409186804953,
+        "web_threshold": 0.45670270324252565
+      },
+      "epoch": 2,
+      "loss": 0.07734303372505476,
+      "raw": {
+        "clean_balanced_accuracy": 0.9937015410137717,
+        "clean_threshold": 0.4660315265146345,
+        "selection_score": 0.9914323174484253,
+        "web_balanced_accuracy": 0.9914323174484253,
+        "web_threshold": 0.8132411403205838
+      },
+      "selected": "raw",
+      "step": 1136
+    },
+    {
+      "ema": {
+        "clean_balanced_accuracy": 0.9904626746170107,
+        "clean_threshold": 0.26774299756524766,
+        "selection_score": 0.9873273383293986,
+        "web_balanced_accuracy": 0.9873273383293986,
+        "web_threshold": 0.5205736681629913
+      },
+      "epoch": 3,
+      "loss": 0.06607859943088301,
+      "raw": {
+        "clean_balanced_accuracy": 0.9955844305535259,
+        "clean_threshold": 0.7643348252871369,
+        "selection_score": 0.9924398321289125,
+        "web_balanced_accuracy": 0.9924398321289125,
+        "web_threshold": 0.7834285064282135
+      },
+      "selected": "raw",
+      "step": 1704
+    },
+    {
+      "ema": {
+        "clean_balanced_accuracy": 0.9924398321289125,
+        "clean_threshold": 0.1896036505781211,
+        "selection_score": 0.9896529580178204,
+        "web_balanced_accuracy": 0.9896529580178204,
+        "web_threshold": 0.2935607870367532
+      },
+      "epoch": 4,
+      "loss": 0.05928369153054877,
+      "raw": {
+        "clean_balanced_accuracy": 0.9957914907718242,
+        "clean_threshold": 0.8855579194374815,
+        "selection_score": 0.9933152069881794,
+        "web_balanced_accuracy": 0.9933152069881794,
+        "web_threshold": 0.9570274498366407
+      },
+      "selected": "raw",
+      "step": 2272
+    },
+    {
+      "ema": {
+        "clean_balanced_accuracy": 0.9936544070276978,
+        "clean_threshold": 0.3023606804762983,
+        "selection_score": 0.991225257230127,
+        "web_balanced_accuracy": 0.991225257230127,
+        "web_threshold": 0.4757126102381756
+      },
+      "epoch": 5,
+      "loss": 0.05694179617288247,
+      "raw": {
+        "clean_balanced_accuracy": 0.9963470131666423,
+        "clean_threshold": 0.7260885870296299,
+        "selection_score": 0.9932116768790302,
+        "web_balanced_accuracy": 0.9932116768790302,
+        "web_threshold": 0.9269210334892269
+      },
+      "selected": "raw",
+      "step": 2840
+    },
+    {
+      "ema": {
+        "clean_balanced_accuracy": 0.9943227216686665,
+        "clean_threshold": 0.6756684605418194,
+        "selection_score": 0.9915829815436483,
+        "web_balanced_accuracy": 0.9915829815436483,
+        "web_threshold": 0.6636732311093806
+      },
+      "epoch": 6,
+      "loss": 0.05634913475475681,
+      "raw": {
+        "clean_balanced_accuracy": 0.9961963490714193,
+        "clean_threshold": 0.8619810938773353,
+        "selection_score": 0.9932116768790302,
+        "web_balanced_accuracy": 0.9932116768790302,
+        "web_threshold": 0.9516977301197416
+      },
+      "selected": "raw",
+      "step": 3408
+    }
+  ],
+  "initial_checkpoint_sha256": null,
+  "manifest": "/root/cyclopes/data/final/clean.csv",
+  "manifest_sha256": "87e0da6bce5fa635883094a567599a2bc19429decced8fc7a57fbb27955f5a4e",
+  "runtime": {
+    "cuda": "12.8",
+    "device": "NVIDIA H200 NVL",
+    "torch": "2.11.0+cu128"
+  },
+  "samples": 36326,
+  "steps": 3408,
+  "threshold": 0.65
+}

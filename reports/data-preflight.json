@@ -1,0 +1,307 @@
+{
+  "class_counts": {
+    "0": 25116,
+    "1": 21301
+  },
+  "domain_counts": {
+    "cgi": 4068,
+    "logo-poster-vector": 1868,
+    "mixed": 17057,
+    "photo": 19088,
+    "traditional-art": 4336
+  },
+  "dropped_low_information": 52,
+  "dropped_near_duplicates": 747,
+  "examples_dropped": [
+    {
+      "dhash_distance": 5,
+      "duplicate_of": "/root/cyclopes/data/core/images/real/train_04740.jpg",
+      "path": "/root/cyclopes/data/core/images/real/train_05360.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 5,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/346.jpg",
+      "path": "/root/cyclopes/data/met/images/met/348.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 8,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/401.jpg",
+      "path": "/root/cyclopes/data/met/images/met/405.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 3,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/419.jpg",
+      "path": "/root/cyclopes/data/met/images/met/420.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 7,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/423.jpg",
+      "path": "/root/cyclopes/data/met/images/met/424.jpg",
+      "phash_distance": 0
+    },
+    {
+      "dhash_distance": 6,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/1195.jpg",
+      "path": "/root/cyclopes/data/met/images/met/1197.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 1,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/1854.jpg",
+      "path": "/root/cyclopes/data/met/images/met/1855.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 1,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/1856.jpg",
+      "path": "/root/cyclopes/data/met/images/met/1857.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 4,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/1854.jpg",
+      "path": "/root/cyclopes/data/met/images/met/1858.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 7,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/2658.jpg",
+      "path": "/root/cyclopes/data/met/images/met/2671.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 8,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/3513.jpg",
+      "path": "/root/cyclopes/data/met/images/met/3514.jpg",
+      "phash_distance": 0
+    },
+    {
+      "dhash_distance": 1,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/3517.jpg",
+      "path": "/root/cyclopes/data/met/images/met/3519.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 2,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/3555.jpg",
+      "path": "/root/cyclopes/data/met/images/met/3557.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 7,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/3621.jpg",
+      "path": "/root/cyclopes/data/met/images/met/3622.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 7,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/4095.jpg",
+      "path": "/root/cyclopes/data/met/images/met/4096.jpg",
+      "phash_distance": 0
+    },
+    {
+      "dhash_distance": 6,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/5015.jpg",
+      "path": "/root/cyclopes/data/met/images/met/5052.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 2,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/5055.jpg",
+      "path": "/root/cyclopes/data/met/images/met/5060.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 6,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/5025.jpg",
+      "path": "/root/cyclopes/data/met/images/met/5063.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 8,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/5025.jpg",
+      "path": "/root/cyclopes/data/met/images/met/5065.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 5,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/5017.jpg",
+      "path": "/root/cyclopes/data/met/images/met/5068.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 4,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/5070.jpg",
+      "path": "/root/cyclopes/data/met/images/met/5073.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 5,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/5047.jpg",
+      "path": "/root/cyclopes/data/met/images/met/5074.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 6,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/5049.jpg",
+      "path": "/root/cyclopes/data/met/images/met/5075.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 5,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/5047.jpg",
+      "path": "/root/cyclopes/data/met/images/met/5076.jpg",
+      "phash_distance": 2
+    },
+    {
+      "dhash_distance": 5,
+      "duplicate_of": "/root/cyclopes/data/met/images/met/5070.jpg",
+      "path": "/root/cyclopes/data/met/images/met/5079.jpg",
+      "phash_distance": 2
+    }
+  ],
+  "examples_low_information": [
+    {
+      "contrast": 2.6850587864336686,
+      "path": "/root/cyclopes/data/core/images/real/train_03358.jpg"
+    },
+    {
+      "contrast": 2.092520678339792,
+      "path": "/root/cyclopes/data/core/images/real/train_03902.jpg"
+    },
+    {
+      "contrast": 0.2175412158719063,
+      "path": "/root/cyclopes/data/blender/images/spring/000012.jpg"
+    },
+    {
+      "contrast": 2.260850483636728,
+      "path": "/root/cyclopes/data/blender/images/spring/000013.jpg"
+    },
+    {
+      "contrast": 0.1383827311243621,
+      "path": "/root/cyclopes/data/blender/images/spring/000019.jpg"
+    },
+    {
+      "contrast": 2.111209502538482,
+      "path": "/root/cyclopes/data/blender/images/spring/000092.jpg"
+    },
+    {
+      "contrast": 1.169838646544952,
+      "path": "/root/cyclopes/data/blender/images/spring/000093.jpg"
+    },
+    {
+      "contrast": 0.3716538482180837,
+      "path": "/root/cyclopes/data/blender/images/spring/000094.jpg"
+    },
+    {
+      "contrast": 1.9805056403625916,
+      "path": "/root/cyclopes/data/blender/images/spring/000522.jpg"
+    },
+    {
+      "contrast": 0.2877850810504742,
+      "path": "/root/cyclopes/data/blender/images/spring/000523.jpg"
+    },
+    {
+      "contrast": 0.11646398480894309,
+      "path": "/root/cyclopes/data/blender/images/spring/000524.jpg"
+    },
+    {
+      "contrast": 0.10980901437523934,
+      "path": "/root/cyclopes/data/blender/images/spring/000525.jpg"
+    },
+    {
+      "contrast": 0.06237781024480981,
+      "path": "/root/cyclopes/data/blender/images/charge/000226.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/root/cyclopes/data/blender/images/charge/000232.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/root/cyclopes/data/blender/images/sintel/000118.jpg"
+    },
+    {
+      "contrast": 2.1579047499119812,
+      "path": "/root/cyclopes/data/blender/images/sintel/000120.jpg"
+    },
+    {
+      "contrast": 1.1142672006043381,
+      "path": "/root/cyclopes/data/blender/images/sintel/000175.jpg"
+    },
+    {
+      "contrast": 0.4233755514915751,
+      "path": "/root/cyclopes/data/blender/images/sintel/000176.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/root/cyclopes/data/blender/images/sintel/000177.jpg"
+    },
+    {
+      "contrast": 0.7639056793735642,
+      "path": "/root/cyclopes/data/blender/images/sintel/000517.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/root/cyclopes/data/blender/images/sintel/000837.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/root/cyclopes/data/blender/images/sintel/000839.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/root/cyclopes/data/blender/images/sintel/000840.jpg"
+    },
+    {
+      "contrast": 0.0,
+      "path": "/root/cyclopes/data/blender/images/sintel/000921.jpg"
+    },
+    {
+      "contrast": 0.4469942174782153,
+      "path": "/root/cyclopes/data/blender/images/sintel/000929.jpg"
+    }
+  ],
+  "family_counts": {
+    "diffusion": 4244,
+    "legacy-diffusion": 5981,
+    "legacy-gan": 5000,
+    "modern": 6076,
+    "real": 25116
+  },
+  "input_rows": 47216,
+  "kept_rows": 46417,
+  "license_counts": {
+    "CC-BY": 2675,
+    "CC-BY-3.0": 921,
+    "CC-BY-4.0": 24164,
+    "CC-BY-SA": 472,
+    "CC0-1.0": 6204,
+    "CreativeML-OpenRAIL-M": 2000,
+    "MIT": 9981
+  },
+  "manifest_sha256": "87e0da6bce5fa635883094a567599a2bc19429decced8fc7a57fbb27955f5a4e",
+  "source_counts": {
+    "bitmind/nano-banana": 1000,
+    "blender-open-movies": 4068,
+    "cyclopes-procedural-graphics": 1868,
+    "google/docci": 14844,
+    "heikeadel/cocoxgen": 4244,
+    "metmuseum/openaccess": 4336,
+    "pamela-dataset/pamela": 5076,
+    "self-generated/adm": 2000,
+    "self-generated/biggan": 5000,
+    "self-generated/glide": 1981,
+    "self-generated/ldm": 2000
+  },
+  "split_counts": {
+    "calibration": 4091,
+    "test": 2798,
+    "train": 36326,
+    "validation": 3202
+  }
+}

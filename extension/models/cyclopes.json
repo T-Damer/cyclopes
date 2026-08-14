@@ -1,11 +1,11 @@
 {
-  "models": ["cyclopes-fastvit.onnx", "cyclopes-sentry.onnx"],
-  "status": "release",
-  "sha256": {
-    "cyclopes-fastvit.onnx": "d43894639518cbc7939bf97718488cc096f74e4a47d59310776a6bf0e6b00c8e",
-    "cyclopes-sentry.onnx": "26b677e63160ff790316f62cf487661cca11e3f6cdb6bc89620b5e4eedfd0f3d"
-  },
-  "input": "NCHW float32 RGB, 256x256, ImageNet-normalized",
-  "score": "calibrated 68% FastViT + 32% ConvNeXt AI probability blend",
-  "note": "The extension never downloads model weights."
+  "name": "Cyclopes ScalePair MobileNetV3-Large",
+  "version": 3,
+  "file": "cyclopes.onnx",
+  "size_bytes": 14974340,
+  "sha256": "4936a9ef0988efe9717da24c45da61a213ed09eb39437f1ea7ee0474471fc359",
+  "input": "NCHW float32 RGB, 224x224, ImageNet-normalized",
+  "output": "one calibrated logit; sigmoid(logit) is p_ai",
+  "threshold": 0.65,
+  "offline": true
 }

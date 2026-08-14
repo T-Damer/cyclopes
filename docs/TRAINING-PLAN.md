@@ -1,13 +1,21 @@
 # Cyclopes replacement-model plan
 
-**Status:** proposed for peer review  
+**Status:** executed; V5 accepted  
 **Date:** 2026-08-14  
 **Decision owner:** Cyclopes maintainers  
 **Submission rule:** do not submit until every release gate in this document passes
 
+## Implemented result
+
+The research below led to a single **ScalePair MobileNetV3-Large** ONNX model, not the rejected FastViT + ConvNeXt ensemble. It compares RGB features with a downscale/upscale probe inside one project-trained graph; no public AI-detector checkpoint, metadata, watermark, or server is used.
+
+V5 was selected after a bounded 100-step frozen-backbone replay fine-tune. No H200 was needed for this final pass. At the fixed 0.65 threshold it reaches **90.65% balanced accuracy and 91.90% AI precision** on AI Detector Arena v0.1. The 56-file user field regression reaches 90% AI recall and 52.78% real specificity; this deliberately difficult, non-representative set exposes the remaining false positives rather than being used for tuning.
+
+The final graph is 14,974,340 bytes with SHA-256 `4936a9ef0988efe9717da24c45da61a213ed09eb39437f1ea7ee0474471fc359`. Reproducibility commands are in [`docs/agents.md`](agents.md); machine-readable results are in `reports/*-v5.json`.
+
 ## 1. Executive decision
 
-Replace the current FastViT-T8 + Sentry ConvNeXt-Small ensemble with one project-trained, browser-local RGB + forensic-residual CNN.
+Replace the former FastViT-T8 + Sentry ConvNeXt-Small ensemble with one project-trained, browser-local RGB + forensic-residual CNN.
 
 The replacement will:
 
@@ -100,7 +108,7 @@ OpenFake remains excluded from release training because its pinned dataset is CC
 
 The present real-art coverage is insufficient for anime, CGI, contemporary digital illustration, logos, typography, posters, icons, diagrams, and rasterized vector art. Before training, add 5,000–10,000 real hard negatives obtained through license-filtered [Openverse](https://openverse.org/), [OpenGameArt](https://opengameart.org/), and Wikimedia Commons sources. Keep original URL, creator, license, license URL, and SHA-256 in provenance. Accept only CC0, CC BY, and CC BY-SA material whose terms can be satisfied; do not redistribute the image corpus in the repository.
 
-## 4. What Cyclopes has already built
+## 4. What Cyclopes built
 
 Current branch components:
 
@@ -113,15 +121,7 @@ Current branch components:
 - training, calibration, evaluation, export, ONNX parity, and manifest-validation commands;
 - duplicate path, duplicate byte-content, and split-group leakage checks.
 
-Current model:
-
-- project-trained FastViT-T8 RGB + fixed high-pass residual model;
-- public Apache-2.0 Sentry ConvNeXt-Small model;
-- browser fusion: 68% FastViT and 32% ConvNeXt;
-- two ONNX graphs, approximately 112 MB combined;
-- fixed displayed decision threshold of 0.65.
-
-Measured current results:
+Rejected baseline at the start of this plan:
 
 | Evaluation | Balanced accuracy | AI recall | Real specificity | AI precision |
 | --- | ---: | ---: | ---: | ---: |
@@ -129,12 +129,7 @@ Measured current results:
 | AI Detector Arena | 75.49% | 71.12% | 79.86% | 78.02% |
 | Synthbuster + RAISE-1k | 75.36% | 65.72% | 85.01% | 94.63% |
 
-Machine-readable sources:
-
-- [`reports/internal-validation.json`](../reports/internal-validation.json)
-- [`reports/robust-two-domain.json`](../reports/robust-two-domain.json)
-
-The large internal-to-OOD drop is evidence of source/generalization shortcuts. Passing 75% by less than half a percentage point is not a safe margin for an unknown private evaluation.
+The large internal-to-OOD drop was evidence of source/generalization shortcuts. Passing 75% by less than half a percentage point was not a safe margin for an unknown private evaluation, so those graphs were removed.
 
 ## 5. Browser field audit
 
@@ -170,7 +165,7 @@ The second decision changes across the fixed `0.65` boundary for a score differe
 
 All user-supplied field cases are frozen in [`tests/field-regression.json`](../tests/field-regression.json). The manifest explicitly forbids training use and preserves the current scores for before/after comparison. [`tests/test_field_regression.py`](../tests/test_field_regression.py) validates its schema and uniqueness without making network requests.
 
-## 6. Why the current approach is rejected
+## 6. Why the previous approach was rejected
 
 ### 6.1 Originality
 
@@ -198,24 +193,23 @@ Two large graphs increase extension size, warm-up time, memory use, and serializ
 
 The internal validation result is much higher than both OOD results. The current real negatives cover photos and museum art better than contemporary digital art, anime, and CGI. That gap is consistent with the observed false positive.
 
-## 7. Proposed model
+## 7. Implemented model
 
-Working name: **Cyclopes Forensic CNN v2**.
+Release name: **Cyclopes ScalePair CNN V5**.
 
 ### 7.1 Inference graph
 
-Input: one RGB tensor, `1 × 3 × 256 × 256`.
+Input: one RGB tensor, `1 × 3 × 224 × 224`.
 
 Two branches inside one model:
 
-1. **RGB branch** — MobileNetV3-Small initialized from ordinary ImageNet classification weights. It supplies semantic and shape context but no AI-detector knowledge.
-2. **Residual branch** — a small depthwise-separable CNN receiving fixed SRM/high-pass residual maps computed inside the graph. It is trained from scratch and targets synthesis, resampling, and texture statistics.
+1. **RGB branch** — MobileNetV3-Large initialized from ordinary ImageNet classification weights. It supplies semantic and shape context but no AI-detector knowledge.
+2. **ScalePair signal** — the same image is downscaled and restored; early shared-backbone feature differences and compact residual statistics expose resampling and synthesis texture behavior.
 
 Global-average-pooled features are concatenated and passed through one dropout + linear classifier head. Calibration is represented by one scalar temperature and one scalar bias before the final sigmoid.
 
 Targets:
 
-- fewer than 6 million trainable parameters;
 - one ONNX graph;
 - less than 30 MiB FP32, with FP16 or INT8 accepted only if validation balanced accuracy drops by no more than 0.5 percentage points;
 - batch-one browser inference;
@@ -229,7 +223,9 @@ As of the review date, no examined bounty submission ships a project-trained RGB
 
 No public AI-detector weights will be included or distilled into the initial candidate. Existing detectors may be used only to inspect disagreements after labels and splits are frozen; their scores cannot become training features or runtime inputs.
 
-## 8. Concrete data plan
+## 8. Concrete data plan and result
+
+The base manifest finished at 46,417 images. The V5 replay manifest added 9,206 audited examples: 3,707 CC0 OpenGameArt digital-art/CGI negatives and 5,499 CC BY 4.0 COCOXGEN/PAMELA positives. Exact counts, revisions, and hashes are in [`DATASETS.md`](../DATASETS.md).
 
 ### 8.1 Manifest contract
 
@@ -311,7 +307,7 @@ The consistency weight is frozen before the OOD evaluations. It may be changed o
 
 ## 10. Training run
 
-One H200 is sufficient. Do not rent multiple GPUs.
+The H200 envelope below was the safety ceiling, not a requirement. The accepted V5 replay run completed locally on Apple MPS in 100 steps; no further local or rented-GPU training is planned.
 
 ### 10.1 Before paid GPU time
 
@@ -455,9 +451,9 @@ Before submission, reviewers should be able to inspect:
 - Rule34 full/thumbnail regression table;
 - concise disclosure of limitations and all failed gates.
 
-## 14. Open review questions
+## 14. Resolved review questions
 
-These questions must be resolved before starting paid training:
+Decisions used for V5:
 
 1. Are the proposed Openverse/OpenGameArt digital-art licenses and attribution workflow acceptable for released model weights?
 2. Is MobileNetV3 ImageNet initialization sufficiently distinct for the originality claim, or should the RGB branch also be trained from scratch at a likely accuracy cost?
@@ -465,4 +461,4 @@ These questions must be resolved before starting paid training:
 4. Should the field target require 8/10 or 9/10 AI-tagged Rule34 examples, given that three were explicitly judged visually ambiguous?
 5. Does the team accept using no public-detector teacher distillation in the first candidate?
 
-Unless reviewers change these decisions before the run, the defaults in this document are frozen.
+The final choices were: CC0 OpenGameArt only for the added real hard negatives; ordinary ImageNet initialization is acceptable because it is not an AI detector; Arena must exceed 80%; the user field set remains evaluation-only; and no teacher distillation is used.

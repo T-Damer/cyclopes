@@ -1,0 +1,189 @@
+{
+  "browser_view": true,
+  "calibration_sha256": "dc5791995da59f41c65e4f0180699fa9e887b018d15f7ca398188d2529dddf76",
+  "checkpoint_sha256": "cc3fb15ef5d0c2ce83eadfda6838bb632264c63efcc9352e269e2cb3c97bfeb3",
+  "command": "onnx-parity",
+  "count": 29,
+  "manifest_sha256": "735d0b536e6a9cbf7f0d923284c57019ffb6bbe3e43e575952b348f9c939e7db",
+  "max_abs_diff": 5.354281889496937e-06,
+  "mean_abs_diff": 7.719987497619975e-07,
+  "onnx_sha256": "f9e3f40a1337bd51b91744bcb5f85d57c2f5f41e945da77518d25f3a0c220ef5",
+  "per_image": [
+    {
+      "abs_diff": 2.3116116532051478e-07,
+      "onnx": 0.8743141653293267,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447255-0.jpg",
+      "python": 0.8743139341681614
+    },
+    {
+      "abs_diff": 5.630818192825515e-07,
+      "onnx": 0.8233759749999092,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447255-1.jpg",
+      "python": 0.8233765380817285
+    },
+    {
+      "abs_diff": 2.2781073871769308e-07,
+      "onnx": 0.6564883896872099,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447258-0.png",
+      "python": 0.6564886174979486
+    },
+    {
+      "abs_diff": 1.3475203686219572e-07,
+      "onnx": 0.8419633791147549,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447258-1.jpg",
+      "python": 0.8419635138667918
+    },
+    {
+      "abs_diff": 5.210334019789542e-08,
+      "onnx": 0.8697917160356441,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447257-0.jpg",
+      "python": 0.8697917681389843
+    },
+    {
+      "abs_diff": 4.546006793226809e-09,
+      "onnx": 0.8490135235251688,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447257-1.jpg",
+      "python": 0.8490135280711756
+    },
+    {
+      "abs_diff": 1.958809330293576e-07,
+      "onnx": 0.8603466915783415,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447247-0.jpg",
+      "python": 0.8603468874592746
+    },
+    {
+      "abs_diff": 9.490354280217161e-08,
+      "onnx": 0.8613157649176738,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447247-1.jpg",
+      "python": 0.8613158598212166
+    },
+    {
+      "abs_diff": 3.1627881025286797e-07,
+      "onnx": 0.8000028997636449,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447265-0.png",
+      "python": 0.8000032160424552
+    },
+    {
+      "abs_diff": 3.809857913594783e-07,
+      "onnx": 0.8638668263391089,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447265-1.jpg",
+      "python": 0.8638672073249003
+    },
+    {
+      "abs_diff": 5.460934883183555e-07,
+      "onnx": 0.8894516013214003,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447254-0.jpg",
+      "python": 0.889451055227912
+    },
+    {
+      "abs_diff": 3.3240858154925945e-07,
+      "onnx": 0.8253624763450831,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447254-1.jpg",
+      "python": 0.8253621439365015
+    },
+    {
+      "abs_diff": 7.779623978354522e-08,
+      "onnx": 0.7493350321870426,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447260-0.png",
+      "python": 0.7493349543908028
+    },
+    {
+      "abs_diff": 1.3868494774804674e-07,
+      "onnx": 0.8501350358555881,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447260-1.jpg",
+      "python": 0.8501351745405359
+    },
+    {
+      "abs_diff": 5.108497221684161e-06,
+      "onnx": 0.7864375630395546,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447263-0.png",
+      "python": 0.7864426715367763
+    },
+    {
+      "abs_diff": 6.237487029103761e-07,
+      "onnx": 0.8731340346388465,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447263-1.jpg",
+      "python": 0.8731346583875494
+    },
+    {
+      "abs_diff": 5.5592804804049933e-08,
+      "onnx": 0.8498388129687244,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447261-0.jpg",
+      "python": 0.8498388685615292
+    },
+    {
+      "abs_diff": 3.3472981797455503e-07,
+      "onnx": 0.8541912718660374,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447261-1.jpg",
+      "python": 0.8541909371362194
+    },
+    {
+      "abs_diff": 5.857523468488779e-07,
+      "onnx": 0.5820208484738398,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447267-0.png",
+      "python": 0.5820214342261867
+    },
+    {
+      "abs_diff": 3.449218514139929e-07,
+      "onnx": 0.7786396140131568,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447267-1.jpg",
+      "python": 0.7786392690913054
+    },
+    {
+      "abs_diff": 1.1411904166092057e-07,
+      "onnx": 0.8442379001178484,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447269-0.gif",
+      "python": 0.8442377859988067
+    },
+    {
+      "abs_diff": 5.540595474640142e-07,
+      "onnx": 0.7986227127050382,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447269-1.jpg",
+      "python": 0.7986232667645856
+    },
+    {
+      "abs_diff": 1.2126676016688265e-06,
+      "onnx": 0.5179013951926565,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/yabloko-poster-0.jpg",
+      "python": 0.5179026078602582
+    },
+    {
+      "abs_diff": 5.354281889496937e-06,
+      "onnx": 0.20396893736216445,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/yabloko-poster-1.png",
+      "python": 0.20397429164405395
+    },
+    {
+      "abs_diff": 2.8519730730092174e-06,
+      "onnx": 0.18171130242251948,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/yabloko-emblem-0.png",
+      "python": 0.1817141543955925
+    },
+    {
+      "abs_diff": 1.2260780899997492e-06,
+      "onnx": 0.30534675919650195,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/yabloko-emblem-1.png",
+      "python": 0.30534553311841195
+    },
+    {
+      "abs_diff": 4.789350172007545e-08,
+      "onnx": 0.8685638558231267,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/yabloko-google-graphic-2-0.jpg",
+      "python": 0.868563807929625
+    },
+    {
+      "abs_diff": 1.9548947993719423e-07,
+      "onnx": 0.8486112443987951,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/yabloko-google-graphic-3-0.jpg",
+      "python": 0.848611439888275
+    },
+    {
+      "abs_diff": 4.816713304878206e-07,
+      "onnx": 0.8695085829972935,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rferl-graphic-fdabfb49-0.png",
+      "python": 0.869509064668624
+    }
+  ],
+  "threshold": 0.65,
+  "within_tolerance": true
+}

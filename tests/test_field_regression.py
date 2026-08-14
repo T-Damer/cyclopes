@@ -9,7 +9,7 @@ def test_field_regression_manifest_is_evaluation_only() -> None:
 
     assert manifest["training_allowed"] is False
     assert manifest["decision_threshold"] == 0.65
-    assert len(manifest["cases"]) == 16
+    assert len(manifest["cases"]) == 47
 
     case_ids = [case["id"] for case in manifest["cases"]]
     urls = [url for case in manifest["cases"] for url in case["urls"]]
@@ -20,5 +20,7 @@ def test_field_regression_manifest_is_evaluation_only() -> None:
         assert case["expected_label"] in {"ai", "real"}
         assert case["label_basis"]
         assert case["content_kind"]
-        assert case["urls"]
+        assert case["urls"] or case.get("local_file")
+        if case.get("local_file"):
+            assert len(case["sha256"]) == 64
         assert all(0.0 <= score <= 1.0 for score in case["current_scores"].values())

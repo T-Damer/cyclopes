@@ -23,6 +23,7 @@ def write(path: Path, rows: list[dict[str, object]]) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("root", type=Path)
+    parser.add_argument("--skip-stress", action="store_true")
     args = parser.parse_args()
     root = args.root.resolve()
     rows: list[dict[str, object]] = []
@@ -44,6 +45,8 @@ def main() -> None:
             generator = item["generator"] or "camera"
             base = {"label": label, "source": "ai-detector-arena-v0.1", "generator": generator, "group": item["id"], "split": "test"}
             rows.append({"path": source.relative_to(root), **base})
+            if args.skip_stress:
+                continue
             with Image.open(source) as opened:
                 image = opened.convert("RGB")
                 width, height = image.size

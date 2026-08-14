@@ -8,7 +8,7 @@
 
 Browser-local AI image filtering. One button, no uploads: images scoring at least **65% AI** are blurred.
 
-**78.02% AI precision · 75.49% balanced accuracy** on AI Detector Arena v0.1.
+**91.90% AI precision · 90.65% balanced accuracy** on AI Detector Arena v0.1.
 
 ![Cyclopes benchmark metrics](docs/metrics.svg)
 
@@ -30,16 +30,16 @@ Open `chrome://extensions`, enable Developer mode, choose **Load unpacked**, and
 
 ## Approach
 
-Two complementary local CNNs: our FastViT-T8 learns RGB and high-pass forensic residuals; an Apache-2.0 ConvNeXt adds a conservative real-image signal. Both ONNX models run through WebGPU with a WASM fallback. No metadata or runtime model download is used.
+One project-trained ScalePair CNN compares each displayed image with its own downscale/upscale probe, using a shared MobileNetV3 backbone and early-feature residual statistics. Strong portrait/landscape ratios use one centered square view, not a crop ensemble. The packaged ONNX runs through WebGPU with a WASM fallback; pixels never leave the browser.
 
 ## Metrics
 
 | External set | Images | Balanced accuracy | AI precision | AI recall | Real specificity |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| AI Detector Arena v0.1 | 2,031 | **75.49%** | **78.02%** | 71.12% | 79.86% |
-| Synthbuster + RAISE-1k | 4,990 | **75.19%** | 94.52% | 65.67% | 84.71% |
+| AI Detector Arena v0.1 | 2,031 | **90.65%** | **91.90%** | 89.19% | 92.10% |
+| Held-out replay test | 510 | **82.36%** | 81.74% | 97.72% | 67.00% |
 
-The operating point is fixed at 65%. Detection remains probabilistic and generator-dependent.
+The operating point is fixed at 65%. On 56 frozen user-supplied browser regression files, Cyclopes detects 18/20 AI images and correctly rejects 19/36 real images. This small adversarial set is reported for transparency, not as a representative benchmark.
 
 ## Development
 

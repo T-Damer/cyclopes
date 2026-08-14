@@ -1,0 +1,425 @@
+{
+  "items": [
+    {
+      "expected": 1,
+      "group": "field:rule34-18447255",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447255-0.jpg",
+      "predicted": 1,
+      "score": 0.8461661484397471
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447255",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447255-1.jpg",
+      "predicted": 1,
+      "score": 0.8334206115465418
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447258",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447258-0.png",
+      "predicted": 1,
+      "score": 0.6780337183320169
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447258",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447258-1.jpg",
+      "predicted": 1,
+      "score": 0.800966347587306
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447257",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447257-0.jpg",
+      "predicted": 1,
+      "score": 0.7573248199732806
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447257",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447257-1.jpg",
+      "predicted": 1,
+      "score": 0.7620415265683573
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447247",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447247-0.jpg",
+      "predicted": 1,
+      "score": 0.817356323173881
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447247",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447247-1.jpg",
+      "predicted": 1,
+      "score": 0.821758000473212
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447265",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447265-0.png",
+      "predicted": 1,
+      "score": 0.7416075689330955
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447265",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447265-1.jpg",
+      "predicted": 1,
+      "score": 0.8172786424546549
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447254",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447254-0.jpg",
+      "predicted": 1,
+      "score": 0.821227002490449
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447254",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447254-1.jpg",
+      "predicted": 1,
+      "score": 0.8038963647019646
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447260",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447260-0.png",
+      "predicted": 1,
+      "score": 0.7386006716807014
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447260",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447260-1.jpg",
+      "predicted": 1,
+      "score": 0.8004579320294297
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447263",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447263-0.png",
+      "predicted": 0,
+      "score": 0.4796613153446594
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447263",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447263-1.jpg",
+      "predicted": 1,
+      "score": 0.7168156086286175
+    },
+    {
+      "expected": 0,
+      "group": "field:rule34-18447261",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447261-0.jpg",
+      "predicted": 1,
+      "score": 0.7793944370569112
+    },
+    {
+      "expected": 0,
+      "group": "field:rule34-18447261",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447261-1.jpg",
+      "predicted": 1,
+      "score": 0.8130404974616593
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447267",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447267-0.png",
+      "predicted": 0,
+      "score": 0.6396281625128358
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447267",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447267-1.jpg",
+      "predicted": 1,
+      "score": 0.7788894071034197
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447269",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447269-0.gif",
+      "predicted": 1,
+      "score": 0.8347574116498261
+    },
+    {
+      "expected": 1,
+      "group": "field:rule34-18447269",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447269-1.jpg",
+      "predicted": 1,
+      "score": 0.8091976572815329
+    },
+    {
+      "expected": 0,
+      "group": "field:yabloko-poster",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/yabloko-poster-0.jpg",
+      "predicted": 0,
+      "score": 0.26851898011050035
+    },
+    {
+      "expected": 0,
+      "group": "field:yabloko-poster",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/yabloko-poster-1.png",
+      "predicted": 0,
+      "score": 0.130886608162047
+    },
+    {
+      "expected": 0,
+      "group": "field:yabloko-emblem",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/yabloko-emblem-0.png",
+      "predicted": 0,
+      "score": 0.07546261625947712
+    },
+    {
+      "expected": 0,
+      "group": "field:yabloko-emblem",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/yabloko-emblem-1.png",
+      "predicted": 0,
+      "score": 0.1292371664118583
+    },
+    {
+      "expected": 0,
+      "group": "field:yabloko-google-graphic-2",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/yabloko-google-graphic-2-0.jpg",
+      "predicted": 1,
+      "score": 0.8423715899708784
+    },
+    {
+      "expected": 0,
+      "group": "field:yabloko-google-graphic-3",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/yabloko-google-graphic-3-0.jpg",
+      "predicted": 1,
+      "score": 0.851149511413128
+    },
+    {
+      "expected": 0,
+      "group": "field:rferl-graphic-fdabfb49",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rferl-graphic-fdabfb49-0.png",
+      "predicted": 1,
+      "score": 0.8424023207792576
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-graffiti",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-graffiti-0.png",
+      "predicted": 1,
+      "score": 0.7946286951514775
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-undertale",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-undertale-0.png",
+      "predicted": 0,
+      "score": 0.1347407315630395
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-meme",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-meme-0.png",
+      "predicted": 0,
+      "score": 0.6139058801165691
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-gif-frame",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-gif-frame-0.png",
+      "predicted": 1,
+      "score": 0.8095941299301062
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-digital-art",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-digital-art-0.png",
+      "predicted": 1,
+      "score": 0.7444097862176282
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-game-render",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-game-render-0.png",
+      "predicted": 0,
+      "score": 0.15985807678188474
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-comic",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-comic-0.png",
+      "predicted": 0,
+      "score": 0.4340110162105802
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-simpsons-meme",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-simpsons-meme-0.png",
+      "predicted": 0,
+      "score": 0.5759223284862731
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-bat-sketch",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-bat-sketch-0.png",
+      "predicted": 1,
+      "score": 0.7525021936268349
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-comic-surgery",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-comic-surgery-0.png",
+      "predicted": 0,
+      "score": 0.6410106825506532
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-ui-chat",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-ui-chat-0.png",
+      "predicted": 0,
+      "score": 0.047483305934173374
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-game-ui",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-game-ui-0.png",
+      "predicted": 0,
+      "score": 0.4976251418630457
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-usage-dashboard",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-usage-dashboard-0.png",
+      "predicted": 0,
+      "score": 0.2834971841514257
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-mandalorian-meme",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-mandalorian-meme-0.png",
+      "predicted": 0,
+      "score": 0.623044285709747
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-anime-frame",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-anime-frame-0.png",
+      "predicted": 0,
+      "score": 0.5798333169003981
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-steam-page",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-steam-page-0.png",
+      "predicted": 1,
+      "score": 0.757979480548589
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-avatar-logo",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-avatar-logo-0.png",
+      "predicted": 1,
+      "score": 0.6515577378289611
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-photo-water",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-photo-water-0.png",
+      "predicted": 1,
+      "score": 0.7460638127331919
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-photo-3d-print",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-photo-3d-print-0.png",
+      "predicted": 1,
+      "score": 0.7010072911934088
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-big-rigs",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-big-rigs-0.png",
+      "predicted": 0,
+      "score": 0.6397518144048435
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-facebook-meme",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-facebook-meme-0.png",
+      "predicted": 1,
+      "score": 0.7273510660236521
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-stretched-text-meme",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-stretched-text-meme-0.png",
+      "predicted": 1,
+      "score": 0.6508031669937258
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-sun-oil-art",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-sun-oil-art-0.png",
+      "predicted": 1,
+      "score": 0.6837478568815594
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-dog-art",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-dog-art-0.png",
+      "predicted": 0,
+      "score": 0.6431119233418054
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-rei-art",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-rei-art-0.png",
+      "predicted": 1,
+      "score": 0.8189543154614822
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-two-photos",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-two-photos-0.png",
+      "predicted": 0,
+      "score": 0.5510167022306846
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-statement-text",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-statement-text-0.png",
+      "predicted": 0,
+      "score": 0.4338998645414963
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-discord-logo",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-discord-logo-0.png",
+      "predicted": 1,
+      "score": 0.7065089603277366
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-cassandra-comic",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-cassandra-comic-0.png",
+      "predicted": 1,
+      "score": 0.6799174467832845
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-coronal-ui",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-coronal-ui-0.png",
+      "predicted": 1,
+      "score": 0.6531642921823625
+    },
+    {
+      "expected": 0,
+      "group": "field:twitter-real-orange-juice-meme",
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-orange-juice-meme-0.png",
+      "predicted": 1,
+      "score": 0.8187063670978226
+    }
+  ],
+  "threshold": 0.65
+}

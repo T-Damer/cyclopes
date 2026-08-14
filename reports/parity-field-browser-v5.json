@@ -1,0 +1,375 @@
+{
+  "browser_view": true,
+  "calibration_sha256": "0eccadf9cd34f5af9acbe8f4f07154c42b359b802bd3684e76b6b17392d0d10c",
+  "checkpoint_sha256": "9f7dec4fd6175d73534370a36ea65d5e59ff51d75db7978280fddcf63c03956d",
+  "command": "onnx-parity",
+  "count": 60,
+  "manifest_sha256": "3dd6fe54ab598a5acca9bb7f67d33a333680e91841e1f7d17d173a003bf982e6",
+  "max_abs_diff": 3.704843589191764e-06,
+  "mean_abs_diff": 4.240701718280967e-07,
+  "onnx_sha256": "4936a9ef0988efe9717da24c45da61a213ed09eb39437f1ea7ee0474471fc359",
+  "per_image": [
+    {
+      "abs_diff": 4.1406444939440235e-09,
+      "onnx": 0.8461661442991026,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447255-0.jpg",
+      "python": 0.8461661484397471
+    },
+    {
+      "abs_diff": 2.8467278756494352e-08,
+      "onnx": 0.8334206400138205,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447255-1.jpg",
+      "python": 0.8334206115465418
+    },
+    {
+      "abs_diff": 3.735709386276653e-08,
+      "onnx": 0.678033680974923,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447258-0.png",
+      "python": 0.6780337183320169
+    },
+    {
+      "abs_diff": 2.5593193719863905e-07,
+      "onnx": 0.8009666035192432,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447258-1.jpg",
+      "python": 0.800966347587306
+    },
+    {
+      "abs_diff": 3.8462062090793836e-08,
+      "onnx": 0.7573247815112185,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447257-0.jpg",
+      "python": 0.7573248199732806
+    },
+    {
+      "abs_diff": 4.8923130990807806e-08,
+      "onnx": 0.7620415754914883,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447257-1.jpg",
+      "python": 0.7620415265683573
+    },
+    {
+      "abs_diff": 2.8697531073706983e-07,
+      "onnx": 0.8173566101491917,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447247-0.jpg",
+      "python": 0.817356323173881
+    },
+    {
+      "abs_diff": 4.782154006122141e-08,
+      "onnx": 0.8217580482947521,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447247-1.jpg",
+      "python": 0.821758000473212
+    },
+    {
+      "abs_diff": 7.242085187098013e-08,
+      "onnx": 0.7416074965122437,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447265-0.png",
+      "python": 0.7416075689330955
+    },
+    {
+      "abs_diff": 4.3320449227834956e-08,
+      "onnx": 0.8172786857751041,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447265-1.jpg",
+      "python": 0.8172786424546549
+    },
+    {
+      "abs_diff": 6.639700678157112e-08,
+      "onnx": 0.8212269360934422,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447254-0.jpg",
+      "python": 0.821227002490449
+    },
+    {
+      "abs_diff": 2.364953107791834e-07,
+      "onnx": 0.8038966011972754,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447254-1.jpg",
+      "python": 0.8038963647019646
+    },
+    {
+      "abs_diff": 1.8988135430664244e-07,
+      "onnx": 0.7386008615620557,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447260-0.png",
+      "python": 0.7386006716807014
+    },
+    {
+      "abs_diff": 4.86776298158631e-08,
+      "onnx": 0.8004579807070595,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447260-1.jpg",
+      "python": 0.8004579320294297
+    },
+    {
+      "abs_diff": 3.210933053332532e-07,
+      "onnx": 0.4796616364379647,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447263-0.png",
+      "python": 0.4796613153446594
+    },
+    {
+      "abs_diff": 8.005185148096672e-08,
+      "onnx": 0.716815528576766,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447263-1.jpg",
+      "python": 0.7168156086286175
+    },
+    {
+      "abs_diff": 3.590155753796509e-07,
+      "onnx": 0.7793940780413359,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447261-0.jpg",
+      "python": 0.7793944370569112
+    },
+    {
+      "abs_diff": 7.769637866417156e-08,
+      "onnx": 0.813040575158038,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447261-1.jpg",
+      "python": 0.8130404974616593
+    },
+    {
+      "abs_diff": 1.0679586390782703e-06,
+      "onnx": 0.6396292304714749,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447267-0.png",
+      "python": 0.6396281625128358
+    },
+    {
+      "abs_diff": 2.536284293697122e-09,
+      "onnx": 0.7788894045671354,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447267-1.jpg",
+      "python": 0.7788894071034197
+    },
+    {
+      "abs_diff": 1.5397798036609345e-08,
+      "onnx": 0.834757396252028,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447269-0.gif",
+      "python": 0.8347574116498261
+    },
+    {
+      "abs_diff": 1.8831427017751423e-07,
+      "onnx": 0.8091974689672627,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rule34-18447269-1.jpg",
+      "python": 0.8091976572815329
+    },
+    {
+      "abs_diff": 1.1885118033627684e-06,
+      "onnx": 0.2685201686223037,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/yabloko-poster-0.jpg",
+      "python": 0.26851898011050035
+    },
+    {
+      "abs_diff": 4.862492408164165e-07,
+      "onnx": 0.13088612191280619,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/yabloko-poster-1.png",
+      "python": 0.130886608162047
+    },
+    {
+      "abs_diff": 6.751519565501019e-07,
+      "onnx": 0.07546194110752057,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/yabloko-emblem-0.png",
+      "python": 0.07546261625947712
+    },
+    {
+      "abs_diff": 8.199697348054702e-07,
+      "onnx": 0.1292363464421235,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/yabloko-emblem-1.png",
+      "python": 0.1292371664118583
+    },
+    {
+      "abs_diff": 6.343935687880276e-08,
+      "onnx": 0.8423715265315215,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/yabloko-google-graphic-2-0.jpg",
+      "python": 0.8423715899708784
+    },
+    {
+      "abs_diff": 6.006394848157015e-08,
+      "onnx": 0.8511495714770765,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/yabloko-google-graphic-3-0.jpg",
+      "python": 0.851149511413128
+    },
+    {
+      "abs_diff": 1.2042745745066696e-07,
+      "onnx": 0.8424022003518001,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/rferl-graphic-fdabfb49-0.png",
+      "python": 0.8424023207792576
+    },
+    {
+      "abs_diff": 9.506534037750924e-08,
+      "onnx": 0.7946287902168179,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-graffiti-0.png",
+      "python": 0.7946286951514775
+    },
+    {
+      "abs_diff": 3.704843589191764e-06,
+      "onnx": 0.13473702671945031,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-undertale-0.png",
+      "python": 0.1347407315630395
+    },
+    {
+      "abs_diff": 1.3129034048819932e-07,
+      "onnx": 0.6139057488262286,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-meme-0.png",
+      "python": 0.6139058801165691
+    },
+    {
+      "abs_diff": 1.1591783499742547e-07,
+      "onnx": 0.8095940140122712,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-gif-frame-0.png",
+      "python": 0.8095941299301062
+    },
+    {
+      "abs_diff": 4.0475848150922644e-07,
+      "onnx": 0.7444101909761097,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-digital-art-0.png",
+      "python": 0.7444097862176282
+    },
+    {
+      "abs_diff": 1.163354212102563e-06,
+      "onnx": 0.15985924013609684,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-game-render-0.png",
+      "python": 0.15985807678188474
+    },
+    {
+      "abs_diff": 9.614742312868962e-07,
+      "onnx": 0.4340119776848115,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-comic-0.png",
+      "python": 0.4340110162105802
+    },
+    {
+      "abs_diff": 8.352092780716802e-07,
+      "onnx": 0.5759231636955512,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-simpsons-meme-0.png",
+      "python": 0.5759223284862731
+    },
+    {
+      "abs_diff": 9.971819747711663e-08,
+      "onnx": 0.7525020939086374,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-bat-sketch-0.png",
+      "python": 0.7525021936268349
+    },
+    {
+      "abs_diff": 7.891958720973591e-07,
+      "onnx": 0.6410098933547811,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-comic-surgery-0.png",
+      "python": 0.6410106825506532
+    },
+    {
+      "abs_diff": 4.4079786898354456e-07,
+      "onnx": 0.04748374673204236,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-ui-chat-0.png",
+      "python": 0.047483305934173374
+    },
+    {
+      "abs_diff": 1.1470197347485112e-08,
+      "onnx": 0.49762513039284834,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-game-ui-0.png",
+      "python": 0.4976251418630457
+    },
+    {
+      "abs_diff": 6.186097301075222e-07,
+      "onnx": 0.2834965655416956,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-usage-dashboard-0.png",
+      "python": 0.2834971841514257
+    },
+    {
+      "abs_diff": 3.556570388196789e-07,
+      "onnx": 0.6230439300527082,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-mandalorian-meme-0.png",
+      "python": 0.623044285709747
+    },
+    {
+      "abs_diff": 5.772605341514137e-07,
+      "onnx": 0.5798327396398639,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-anime-frame-0.png",
+      "python": 0.5798333169003981
+    },
+    {
+      "abs_diff": 1.4076290344444686e-07,
+      "onnx": 0.7579793397856855,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-steam-page-0.png",
+      "python": 0.757979480548589
+    },
+    {
+      "abs_diff": 6.223120121440218e-07,
+      "onnx": 0.6515583601409732,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-avatar-logo-0.png",
+      "python": 0.6515577378289611
+    },
+    {
+      "abs_diff": 4.329123932667045e-07,
+      "onnx": 0.7460642456455852,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-photo-water-0.png",
+      "python": 0.7460638127331919
+    },
+    {
+      "abs_diff": 6.672677765884316e-08,
+      "onnx": 0.7010073579201864,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-photo-3d-print-0.png",
+      "python": 0.7010072911934088
+    },
+    {
+      "abs_diff": 4.035211109698622e-08,
+      "onnx": 0.6397517740527324,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-big-rigs-0.png",
+      "python": 0.6397518144048435
+    },
+    {
+      "abs_diff": 3.694213279725744e-08,
+      "onnx": 0.7273510290815193,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-facebook-meme-0.png",
+      "python": 0.7273510660236521
+    },
+    {
+      "abs_diff": 9.795257004396873e-07,
+      "onnx": 0.6508021874680253,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-stretched-text-meme-0.png",
+      "python": 0.6508031669937258
+    },
+    {
+      "abs_diff": 4.333742702478105e-07,
+      "onnx": 0.6837482902558296,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-sun-oil-art-0.png",
+      "python": 0.6837478568815594
+    },
+    {
+      "abs_diff": 5.013393429287305e-07,
+      "onnx": 0.6431114220024625,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-dog-art-0.png",
+      "python": 0.6431119233418054
+    },
+    {
+      "abs_diff": 1.225731312004541e-07,
+      "onnx": 0.8189544380346134,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-rei-art-0.png",
+      "python": 0.8189543154614822
+    },
+    {
+      "abs_diff": 1.5894772276148217e-07,
+      "onnx": 0.5510165432829618,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-two-photos-0.png",
+      "python": 0.5510167022306846
+    },
+    {
+      "abs_diff": 2.5271897735601456e-06,
+      "onnx": 0.43389733735172276,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-statement-text-0.png",
+      "python": 0.4338998645414963
+    },
+    {
+      "abs_diff": 9.806544054580257e-08,
+      "onnx": 0.706508862262296,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-discord-logo-0.png",
+      "python": 0.7065089603277366
+    },
+    {
+      "abs_diff": 7.760686011604179e-07,
+      "onnx": 0.6799166707146833,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-cassandra-comic-0.png",
+      "python": 0.6799174467832845
+    },
+    {
+      "abs_diff": 1.2412122546434645e-06,
+      "onnx": 0.6531655333946171,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-coronal-ui-0.png",
+      "python": 0.6531642921823625
+    },
+    {
+      "abs_diff": 3.0133793016418053e-08,
+      "onnx": 0.8187063972316156,
+      "path": "/Users/d/Projects/Personal/cyclopes/data/field-regression/twitter-real-orange-juice-meme-0.png",
+      "python": 0.8187063670978226
+    }
+  ],
+  "threshold": 0.65,
+  "within_tolerance": true
+}

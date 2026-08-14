@@ -9,7 +9,9 @@ import hashlib
 import json
 from pathlib import Path
 
-FIELDS = ("path", "label", "source", "generator", "group", "split")
+from PIL import Image
+
+FIELDS = ("path", "label", "source_dataset", "generator_model", "content_group", "split", "family", "domain", "license", "sha256")
 
 
 def split_for(group: str) -> str:
@@ -34,17 +36,28 @@ def main() -> None:
         for item in json.loads(annotation.read_text()):
             unique[item["image_path"]] = item
     for relative, item in sorted(unique.items()):
-        path = (args.root / relative.removeprefix("./")).resolve()
-        if not path.is_file() or path.stat().st_size < 10_000:
+        source = (args.root / relative.removeprefix("./")).resolve()
+        if not source.is_file() or source.stat().st_size < 10_000:
+            continue
+        path = args.output.parent / "images" / "pamela" / f'{item["image_id"]}.jpg'
+        path.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            with Image.open(source) as image:
+                image.convert("RGB").save(path, "JPEG", quality=92, subsampling=0)
+        except OSError:
             continue
         group = f'pamela:{item["image_id"]}'
         rows.append({
             "path": path,
             "label": 1,
-            "source": "pamela-dataset/pamela",
-            "generator": "nano-banana-pro" if "NanoBananaPro" in path.name else "flux-2",
-            "group": group,
+            "source_dataset": "pamela-dataset/pamela",
+            "generator_model": "pamela-modern",
+            "content_group": group,
             "split": split_for(group),
+            "family": "modern",
+            "domain": "mixed",
+            "license": "CC-BY-4.0",
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         })
 
     args.output.parent.mkdir(parents=True, exist_ok=True)

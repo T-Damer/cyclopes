@@ -12,9 +12,13 @@ def test_parser_exposes_all_pipeline_commands() -> None:
     assert train.command == "train"
     assert train.initial_checkpoint == "old"
     assert parser.parse_args(["calibrate", "--manifest", "m", "--checkpoint", "c", "--output", "j"]).command == "calibrate"
-    assert parser.parse_args(["evaluate", "--manifest", "m", "--checkpoint", "c"]).command == "evaluate"
+    evaluate = parser.parse_args(["evaluate", "--manifest", "m", "--checkpoint", "c", "--browser-view"])
+    assert evaluate.command == "evaluate"
+    assert evaluate.browser_view is True
     assert parser.parse_args(["export", "--checkpoint", "c", "--output", "o"]).command == "export"
-    assert parser.parse_args(["onnx-parity", "--manifest", "m", "--checkpoint", "c", "--onnx", "o"]).command == "onnx-parity"
+    parity = parser.parse_args(["onnx-parity", "--manifest", "m", "--checkpoint", "c", "--onnx", "o", "--browser-view"])
+    assert parity.command == "onnx-parity"
+    assert parity.browser_view is True
 
 
 def test_metrics_report_is_frozen_at_point_65() -> None:

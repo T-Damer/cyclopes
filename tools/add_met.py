@@ -12,7 +12,7 @@ from pathlib import Path
 import pyarrow.parquet as pq
 from PIL import Image
 
-FIELDS = ("path", "label", "source", "generator", "group", "split")
+FIELDS = ("path", "label", "source_dataset", "generator_model", "content_group", "split", "family", "domain", "license", "sha256")
 
 
 def split_for(group: str) -> str:
@@ -34,18 +34,19 @@ def main() -> None:
     for row in rows:
         row["path"] = str((args.base_manifest.parent / row["path"]).resolve())
 
-    table = pq.read_table(args.parquet, columns=["Is Public Domain", "Object ID", "jpg"])
+    table = pq.read_table(args.parquet, columns=["isPublicDomain", "objectID", "image"])
     added = 0
     seen: set[str] = set()
     columns = table.to_pydict()
     for public_domain, object_id, encoded in zip(
-        columns["Is Public Domain"], columns["Object ID"], columns["jpg"], strict=True
+        columns["isPublicDomain"], columns["objectID"], columns["image"], strict=True
     ):
         if not public_domain or not encoded or added >= args.limit:
             continue
         target = image_root / f"{object_id}.jpg"
         try:
-            with Image.open(io.BytesIO(encoded)) as image:
+            payload = encoded["bytes"] if isinstance(encoded, dict) else encoded
+            with Image.open(io.BytesIO(payload)) as image:
                 target.parent.mkdir(parents=True, exist_ok=True)
                 image.convert("RGB").save(target, "JPEG", quality=92, subsampling=0)
         except Exception as error:
@@ -60,10 +61,14 @@ def main() -> None:
         rows.append({
             "path": target,
             "label": 0,
-            "source": "metmuseum/openaccess",
-            "generator": "human-art",
-            "group": group,
+            "source_dataset": "metmuseum/openaccess",
+            "generator_model": "human-art",
+            "content_group": group,
             "split": split_for(group),
+            "family": "real",
+            "domain": "traditional-art",
+            "license": "CC0-1.0",
+            "sha256": digest,
         })
         added += 1
 

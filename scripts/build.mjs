@@ -23,7 +23,10 @@ for (const name of ["background", "content", "offscreen"]) {
 
 await cp(join(extension, "manifest.json"), join(dist, "manifest.json"));
 await cp(join(extension, "offscreen.html"), join(dist, "offscreen.html"));
-await cp(join(extension, "models"), join(dist, "models"), { recursive: true });
+await mkdir(join(dist, "models"), { recursive: true });
+for (const name of ["cyclopes.onnx", "cyclopes.json"]) {
+  await cp(join(extension, "models", name), join(dist, "models", name));
+}
 await cp(join(extension, "icons"), join(dist, "icons"), { recursive: true });
 
 const ortSource = join(root, "node_modules", "onnxruntime-web", "dist");

@@ -1,0 +1,13 @@
+{
+  "calibration": {
+    "bias": -8.40814958767039,
+    "blend_weight": 1.0,
+    "temperature": 0.4653864496184509
+  },
+  "calibration_sha256": "dc5791995da59f41c65e4f0180699fa9e887b018d15f7ca398188d2529dddf76",
+  "checkpoint_sha256": "cc3fb15ef5d0c2ce83eadfda6838bb632264c63efcc9352e269e2cb3c97bfeb3",
+  "command": "export",
+  "onnx": "/root/cyclopes/extension/models/cyclopes.onnx",
+  "onnx_sha256": "f9e3f40a1337bd51b91744bcb5f85d57c2f5f41e945da77518d25f3a0c220ef5",
+  "threshold": 0.65
+}
