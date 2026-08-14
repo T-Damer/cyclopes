@@ -74,4 +74,4 @@ The bootstrap requires an H200-class CUDA device, at least 40 GB free disk, and 
 npm test
 ```
 
-Load `dist/` at `chrome://extensions` → Developer mode → Load unpacked. Reload a local fixture page once, click the Cyclopes icon, and verify loading badges, confidence badges, no content blur, 32×32 icons are ignored, dynamic images, scrolling, thumbnails, full images, and the GIF first frame. Field cases are frozen evaluation-only data and must never influence training, calibration, threshold, or checkpoint selection. No live Rule34 check is part of the vNext training gate.
+Load `dist/` at `chrome://extensions` → Developer mode → Load unpacked. Reload a local fixture page once, click the Cyclopes icon, and verify loading badges, confidence badges, no content blur, 32×32 icons and video posters are ignored, dynamic images, scrolling, thumbnails, full images, and the GIF first frame. Field cases are frozen evaluation-only data and must never influence training, calibration, threshold, or checkpoint selection. No live Rule34 check is part of the vNext training gate.

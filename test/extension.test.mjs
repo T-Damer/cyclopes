@@ -17,6 +17,20 @@ test("tiny rendered images are ignored even when their source is large", () => {
   assert.equal(shared.isEligibleImage({ ...image, width: 64, height: 64 }), true);
 });
 
+test("video poster images are ignored", () => {
+  const image = {
+    currentSrc: "https://example.test/poster.jpg",
+    naturalWidth: 512,
+    naturalHeight: 512,
+    width: 512,
+    height: 512,
+    closest: () => null,
+    ownerDocument: { querySelectorAll: () => [{ poster: "https://example.test/poster.jpg" }] },
+  };
+  assert.equal(shared.isEligibleImage(image), false);
+  assert.equal(shared.isEligibleImage({ ...image, currentSrc: "https://example.test/photo.jpg" }), true);
+});
+
 test("preprocessing preserves the complete displayed image", () => {
   assert.deepEqual(inference.sourceRegion(200, 400), { x: 0, y: 0, width: 200, height: 400 });
   assert.deepEqual(inference.sourceRegion(400, 200), { x: 0, y: 0, width: 400, height: 200 });

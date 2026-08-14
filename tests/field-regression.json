@@ -9,6 +9,22 @@
     "Do not use these cases for training, calibration, checkpoint selection, threshold selection, or augmentation tuning.",
     "Google cached-image URLs may expire. Before the final frozen browser run, materialize evaluation-only copies under ignored data/ storage and record their SHA-256 values without committing the images."
   ],
+  "ai_positive_profile_candidates": {
+    "use": "evaluation-only pending per-post provenance and label review; not licensed for training",
+    "urls": [
+      "https://www.instagram.com/millasofiafin",
+      "https://www.instagram.com/naina_avtr",
+      "https://www.instagram.com/fit_aitana",
+      "https://www.instagram.com/kyraonig",
+      "https://www.instagram.com/lilmiquela",
+      "https://www.instagram.com/magazineluiza",
+      "https://www.instagram.com/shudu.gram",
+      "https://www.instagram.com/imma.gram",
+      "https://www.instagram.com/guggimon",
+      "https://www.instagram.com/music._.w",
+      "https://www.instagram.com/grannyspills"
+    ]
+  },
   "cases": [
     {
       "id": "rule34-18447255",
@@ -384,6 +400,48 @@
       "urls": [], "local_file": "twitter-real-orange-juice-meme.png",
       "sha256": "305559c846e64f0ab0a3ae56b3e4d0fbf86a7b5995b4b5f2719c245bf1bb6aae",
       "current_scores": {"browser": 0.82}
+    },
+    {
+      "id": "social-real-star-wars-meme",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "film_frame_meme",
+      "urls": [], "local_file": "social-real-star-wars-meme.png",
+      "sha256": "2db33b3691a44293076ca0b4278e8e6f6b3667e9cfbf3c947de7a1317f41e262",
+      "current_scores": {"browser": 0.95}
+    },
+    {
+      "id": "social-real-imax-news-collage",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "news_photo_collage",
+      "urls": [], "local_file": "social-real-imax-news-collage.png",
+      "sha256": "09859cb9a3560c47e2a3eaa3a3fd6019a12db9674846ea41d654b3916931a57a",
+      "current_scores": {"browser": 1.0}
+    },
+    {
+      "id": "social-real-game-chat",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "game_ui_screenshot",
+      "urls": [], "local_file": "social-real-game-chat.png",
+      "sha256": "376cf6f55446159f2ee6a7d5cdcd11933784e2af1f006ce04e578bc0f4261260",
+      "current_scores": {"browser": 0.72}
+    },
+    {
+      "id": "social-real-tech-meme",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "photo_meme_collage",
+      "urls": [], "local_file": "social-real-tech-meme.png",
+      "sha256": "90dfdc1401477990528fec02717715460a11d9f7d2233ce5c11c140b59eed410",
+      "current_scores": {"browser": 0.88}
+    },
+    {
+      "id": "social-real-coffee-collage",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "photo_graphic_collage",
+      "urls": [], "local_file": "social-real-coffee-collage.png",
+      "sha256": "d9de26cb250a357ce7b85047291ab4dde10faa0d364c5643b564d5bbf6231bcd",
+      "current_scores": {"browser": 0.95}
+    },
+    {
+      "id": "social-real-digital-art-dialogue",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "digital_art",
+      "urls": [], "local_file": "social-real-digital-art-dialogue.png",
+      "sha256": "1a18acfb6ac5d86c6b664697bf629005a7c154b17d7052aea50bf8f2fab4e47f",
+      "current_scores": {"browser": 0.65}
     }
   ]
 }
