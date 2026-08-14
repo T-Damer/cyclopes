@@ -6,7 +6,7 @@
 
 ![Cyclopes labels images classified as AI-generated](docs/demo.svg)
 
-Browser-local AI image detection. One button, no uploads: eligible images receive an AI confidence badge; tiny icons, emoji, and video posters are ignored.
+Browser-local AI image detection. One button, no uploads: eligible, substantially visible images receive an anchored AI confidence badge; tiny icons, emoji, video posters, and images over 85% occluded are ignored.
 
 **93.68% AI precision · 94.83% balanced accuracy** on AI Detector Arena v0.1.
 

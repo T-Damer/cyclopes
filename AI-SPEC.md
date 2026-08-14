@@ -68,7 +68,7 @@ Required pre-submission gates:
 - An offscreen extension document fetches displayed image bytes, decodes pixels, runs inference, and returns only the score to the content script.
 - Static and dynamically inserted webpage images of at least 64 by 64 pixels are analyzed when they enter a 200px viewport margin.
 - The extension icon is the only control: click toggles Filter ON/OFF and exposes warming/error state.
-- Every visible image at least 64×64 CSS pixels receives a loading badge and then an AI confidence badge; video posters are ignored and content is never blurred.
+- Every visible image at least 64×64 CSS pixels receives an anchored loading badge and then an AI confidence badge; video posters and images over 85% occluded are ignored, and content is never blurred.
 - Results are cached by image-byte SHA-256 with a 256-entry LRU; inference concurrency is one to keep page interaction responsive.
 
 ## Reproducibility evidence

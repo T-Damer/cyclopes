@@ -31,6 +31,19 @@ test("video poster images are ignored", () => {
   assert.equal(shared.isEligibleImage({ ...image, currentSrc: "https://example.test/photo.jpg" }), true);
 });
 
+test("images with more than 85 percent sampled occlusion are ignored", () => {
+  const image = {
+    getBoundingClientRect: () => ({ left: 0, top: 0, width: 100, height: 100 }),
+    ownerDocument: {},
+  };
+  let samples = 0;
+  image.ownerDocument.elementFromPoint = () => samples++ < 3 ? image : {};
+  assert.equal(shared.isMostlyOccluded(image, 100, 100), true);
+  samples = 0;
+  image.ownerDocument.elementFromPoint = () => samples++ < 4 ? image : {};
+  assert.equal(shared.isMostlyOccluded(image, 100, 100), false);
+});
+
 test("preprocessing preserves the complete displayed image", () => {
   assert.deepEqual(inference.sourceRegion(200, 400), { x: 0, y: 0, width: 200, height: 400 });
   assert.deepEqual(inference.sourceRegion(400, 200), { x: 0, y: 0, width: 400, height: 200 });
@@ -51,9 +64,11 @@ test("the built MV3 package is local and has its inference document", () => {
   const content = readFileSync("dist/content.js", "utf8");
   assert.match(content, /cyclopesScore/);
   assert.match(content, /IntersectionObserver/);
-  assert.match(content, /Cyclopes \\u2026/);
+  assert.match(content, /loadingFrames/);
+  assert.match(content, /anchor-name/);
   assert.match(content, /AI.*%/);
   assert.doesNotMatch(content, /blur\(/);
+  assert.doesNotMatch(content, /2147483647/);
   assert.equal(existsSync("dist/popup.html"), false);
   assert.ok(existsSync("dist/offscreen.html"));
   assert.ok(existsSync("dist/offscreen.js"));
