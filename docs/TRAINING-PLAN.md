@@ -1,6 +1,6 @@
 # Cyclopes replacement-model plan
 
-**Status:** executed; V5 accepted  
+**Status:** v0.1 executed; bounded vNext adaptation prepared
 **Date:** 2026-08-14  
 **Decision owner:** Cyclopes maintainers  
 **Submission rule:** do not submit until every release gate in this document passes
@@ -12,6 +12,8 @@ The research below led to a single **ScalePair MobileNetV3-Large** ONNX model, n
 V5 was selected after a bounded 100-step frozen-backbone replay fine-tune. No H200 was needed for this final pass. At the fixed 0.65 threshold it reaches **90.65% balanced accuracy and 91.90% AI precision** on AI Detector Arena v0.1. The 56-file user field regression reaches 90% AI recall and 52.78% real specificity; this deliberately difficult, non-representative set exposes the remaining false positives rather than being used for tuning.
 
 The final graph is 14,974,340 bytes with SHA-256 `4936a9ef0988efe9717da24c45da61a213ed09eb39437f1ea7ee0474471fc359`. Reproducibility commands are in [`docs/agents.md`](agents.md); machine-readable results are in `reports/*-v5.json`.
+
+V0.1 remains the rollback baseline. The vNext experiment starts from the MIT-licensed Community Forensics ViT-S checkpoint at pinned revision `ac6ee457bea904a373065754107451793b56db00`, freezes its original detector, and learns only Cyclopes multi-layer and scale-consistency residual heads. This is a direct upstream dependency, not code or data taken from another bounty submission; its required attribution remains in `THIRD_PARTY_NOTICES.md`.
 
 ## 1. Executive decision
 
@@ -307,7 +309,7 @@ The consistency weight is frozen before the OOD evaluations. It may be changed o
 
 ## 10. Training run
 
-The H200 envelope below was the safety ceiling, not a requirement. The accepted V5 replay run completed locally on Apple MPS in 100 steps; no further local or rented-GPU training is planned.
+The H200 envelope below was the safety ceiling for v0.1, whose accepted V5 replay run completed locally on Apple MPS in 100 steps. VNext uses a separate 90-minute wall-clock limit and is not started until its training manifest and 50,000–100,000-image independent evaluation corpus pass the frozen audits.
 
 ### 10.1 Before paid GPU time
 

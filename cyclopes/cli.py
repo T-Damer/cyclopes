@@ -63,10 +63,24 @@ def _torch():
     return torch
 
 
-def _build_model(*, pretrained: bool = False):
-    from .modeling import ScalePairMobileNet
+def _build_model(
+    *,
+    architecture: str = "mobilenet_v3_large_scalepair",
+    pretrained: bool = False,
+    model_repo: str | None = None,
+    model_revision: str | None = None,
+    layers: tuple[int, ...] = (4, 8, 12),
+):
+    if architecture == "mobilenet_v3_large_scalepair":
+        from .modeling import ScalePairMobileNet
 
-    return ScalePairMobileNet(pretrained=pretrained)
+        return ScalePairMobileNet(pretrained=pretrained)
+    if architecture == "vit_multilayer_scalepair":
+        from .vit_modeling import MODEL_REPO, MODEL_REVISION, MultiLayerScalePairViT
+
+        loader = MultiLayerScalePairViT.from_pretrained if pretrained else MultiLayerScalePairViT.from_config
+        return loader(model_repo or MODEL_REPO, model_revision or MODEL_REVISION, layers=layers)
+    raise ValueError(f"unknown architecture: {architecture}")
 
 
 def _data_helpers():
@@ -79,7 +93,14 @@ def _load_checkpoint(path: str | Path, *, device: str = "cpu"):
     torch = _torch()
     checkpoint = torch.load(path, map_location=device, weights_only=False)
     state = checkpoint.get("model_state", checkpoint.get("state_dict", checkpoint))
-    model = _build_model(pretrained=False)
+    config = checkpoint.get("config", {})
+    model = _build_model(
+        architecture=config.get("architecture", "mobilenet_v3_large_scalepair"),
+        pretrained=False,
+        model_repo=config.get("model_repo"),
+        model_revision=config.get("model_revision"),
+        layers=tuple(config.get("layers", (4, 8, 12))),
+    )
     model.load_state_dict(state)
     model.to(device).eval()
     return model, checkpoint
@@ -92,10 +113,31 @@ def _dataset(
     training: bool = False,
     seed: int = 323,
     browser_view: bool = False,
+    model=None,
 ):
     ManifestDataset, load_manifest = _data_helpers()
     samples = load_manifest(manifest)
-    return samples, ManifestDataset(samples, split, training=training, seed=seed, browser_view=browser_view)
+    return samples, ManifestDataset(
+        samples,
+        split,
+        training=training,
+        seed=seed,
+        browser_view=browser_view,
+        image_size=getattr(model, "image_size", 224),
+        mean=getattr(model, "mean", (0.485, 0.456, 0.406)),
+        std=getattr(model, "std", (0.229, 0.224, 0.225)),
+    )
+
+
+def _checkpoint_config(args: argparse.Namespace, model) -> dict[str, Any]:
+    config: dict[str, Any] = {"architecture": args.architecture, "seed": args.seed}
+    if args.architecture == "vit_multilayer_scalepair":
+        config.update(
+            model_repo=args.model_repo,
+            model_revision=args.model_revision,
+            layers=list(model.layers),
+        )
+    return config
 
 
 def _labels(dataset) -> np.ndarray:
@@ -119,6 +161,7 @@ def _raw_outputs(model, dataset, *, batch_size: int, device: str, workers: int =
 
 def _paired_raw_outputs(model, dataset, *, batch_size: int, device: str, workers: int = 0) -> dict[str, np.ndarray]:
     torch = _torch()
+    random.seed(dataset.seed)
     loader = torch.utils.data.DataLoader(
         dataset,
         batch_size=batch_size,
@@ -245,12 +288,23 @@ def train(args: argparse.Namespace) -> int:
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(args.seed)
 
-    _samples, dataset = _dataset(args.manifest, args.split, training=True, seed=args.seed)
-    _validation_samples, validation = _dataset(args.manifest, args.validation_split, training=True, seed=args.seed + 1)
     if args.initial_checkpoint:
-        model, _ = _load_checkpoint(args.initial_checkpoint, device=args.device)
+        model, initial = _load_checkpoint(args.initial_checkpoint, device=args.device)
+        initial_config = initial.get("config", {})
+        args.architecture = initial_config.get("architecture", args.architecture)
+        args.model_repo = initial_config.get("model_repo", args.model_repo)
+        args.model_revision = initial_config.get("model_revision", args.model_revision)
     else:
-        model = _build_model(pretrained=args.pretrained).to(args.device)
+        model = _build_model(
+            architecture=args.architecture,
+            pretrained=args.pretrained,
+            model_repo=args.model_repo,
+            model_revision=args.model_revision,
+        ).to(args.device)
+    _samples, dataset = _dataset(args.manifest, args.split, training=True, seed=args.seed, model=model)
+    _validation_samples, validation = _dataset(
+        args.manifest, args.validation_split, training=True, seed=args.seed + 1, model=model
+    )
     ema = copy.deepcopy(model).eval()
 
     loader = torch.utils.data.DataLoader(
@@ -261,7 +315,10 @@ def train(args: argparse.Namespace) -> int:
         pin_memory=args.device.startswith("cuda"),
         persistent_workers=args.workers > 0,
     )
-    backbone = list(model.features.parameters())
+    backbone_module = getattr(model, "backbone", getattr(model, "features", None))
+    if backbone_module is None:
+        raise TypeError("model must expose backbone or features")
+    backbone = list(backbone_module.parameters())
     backbone_ids = {id(parameter) for parameter in backbone}
     head = [parameter for parameter in model.parameters() if id(parameter) not in backbone_ids]
     optimizer = torch.optim.AdamW(
@@ -278,8 +335,11 @@ def train(args: argparse.Namespace) -> int:
         return 0.5 * (1 + math.cos(math.pi * min(1.0, progress)))
 
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_multiplier)
-    for parameter in model.features.parameters():
-        parameter.requires_grad_(False)
+    if hasattr(model, "freeze_backbone"):
+        model.freeze_backbone()
+    else:
+        for parameter in backbone_module.parameters():
+            parameter.requires_grad_(False)
 
     bce = torch.nn.BCEWithLogitsLoss(reduction="none")
     global_step = 0
@@ -296,8 +356,11 @@ def train(args: argparse.Namespace) -> int:
         consistency_weight = 0.0 if epoch == 0 else 0.02 if epoch == 1 else args.consistency_weight
         for clean, web, labels, families, moderate, _indices in loader:
             if global_step == args.freeze_steps:
-                for parameter in model.features.parameters():
-                    parameter.requires_grad_(True)
+                if hasattr(model, "unfreeze_last_blocks"):
+                    model.unfreeze_last_blocks(args.unfreeze_last_blocks)
+                else:
+                    for parameter in backbone_module.parameters():
+                        parameter.requires_grad_(True)
             clean = clean.to(args.device, non_blocking=True)
             web = web.to(args.device, non_blocking=True)
             loss_device = "cpu" if args.device == "mps" else args.device
@@ -351,7 +414,13 @@ def train(args: argparse.Namespace) -> int:
                 _ema_update(ema, model, args.ema_decay)
             if global_step % args.checkpoint_every == 0:
                 torch.save(
-                    {"model_state": model.state_dict(), "ema_state": ema.state_dict(), "step": global_step, "epoch": epoch + 1},
+                    {
+                        "model_state": model.state_dict(),
+                        "ema_state": ema.state_dict(),
+                        "config": _checkpoint_config(args, model),
+                        "step": global_step,
+                        "epoch": epoch + 1,
+                    },
                     checkpoint_dir / f"step-{global_step:05d}.pt",
                 )
             if global_step >= total_steps:
@@ -382,7 +451,7 @@ def train(args: argparse.Namespace) -> int:
                     "model_state": selected.state_dict(),
                     "raw_state": model.state_dict(),
                     "ema_state": ema.state_dict(),
-                    "config": {"architecture": "mobilenet_v3_large_scalepair", "seed": args.seed},
+                    "config": _checkpoint_config(args, model),
                     "epoch": epoch + 1,
                     "step": global_step,
                     "selection_metrics": selected_metrics,
@@ -417,7 +486,7 @@ def train(args: argparse.Namespace) -> int:
 def calibrate(args: argparse.Namespace) -> int:
     _torch().manual_seed(args.seed)
     model, _checkpoint = _load_checkpoint(args.checkpoint, device=args.device)
-    _samples, dataset = _dataset(args.manifest, args.split, training=True, seed=args.seed)
+    _samples, dataset = _dataset(args.manifest, args.split, training=True, seed=args.seed, model=model)
     random.seed(args.seed)
     raw = _paired_raw_outputs(model, dataset, batch_size=args.batch_size, device=args.device, workers=args.workers)
     labels = _labels(dataset)
@@ -461,9 +530,43 @@ def calibrate(args: argparse.Namespace) -> int:
 
 def evaluate(args: argparse.Namespace) -> int:
     model, _checkpoint = _load_checkpoint(args.checkpoint, device=args.device)
-    _samples, dataset = _dataset(args.manifest, args.split, browser_view=args.browser_view)
-    raw = _raw_outputs(model, dataset, batch_size=args.batch_size, device=args.device, workers=args.workers)
     temperature, bias, weight = _load_calibration(args.calibration)
+    if args.paired_views:
+        random.seed(args.seed)
+        _samples, dataset = _dataset(
+            args.manifest, args.split, training=True, seed=args.seed, model=model
+        )
+        paired = _paired_raw_outputs(model, dataset, batch_size=args.batch_size, device=args.device, workers=args.workers)
+        view_scores = {
+            view: _probabilities(
+                weight * paired[f"{view}_fused"] + (1 - weight) * paired[f"{view}_current"],
+                temperature,
+                bias,
+            )
+            for view in ("clean", "web")
+        }
+        view_reports = {view: _metrics_report(dataset.samples, scores) for view, scores in view_scores.items()}
+        _emit(
+            {
+                "command": "evaluate",
+                "manifest_sha256": _sha256(args.manifest),
+                "checkpoint_sha256": _sha256(args.checkpoint),
+                "calibration_sha256": _sha256_optional(args.calibration),
+                "split": args.split,
+                "paired_views": True,
+                "seed": args.seed,
+                "calibration": {"temperature": temperature, "bias": bias, "blend_weight": weight},
+                "selection_score": min(
+                    view_reports["clean"]["balanced_accuracy"], view_reports["web"]["balanced_accuracy"]
+                ),
+                "views": view_reports,
+            },
+            args.report,
+        )
+        return 0
+
+    _samples, dataset = _dataset(args.manifest, args.split, browser_view=args.browser_view, model=model)
+    raw = _raw_outputs(model, dataset, batch_size=args.batch_size, device=args.device, workers=args.workers)
     scores = _probabilities(_blend(raw, weight), temperature, bias)
     predictions_sha256 = None
     if args.predictions:
@@ -510,7 +613,8 @@ def export_model(args: argparse.Namespace) -> int:
     wrapper = ExportedScalePair(model, weight, temperature, bias).to(args.device).eval()
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
-    dummy = torch.zeros((1, 3, 224, 224), dtype=torch.float32, device=args.device)
+    image_size = getattr(model, "image_size", 224)
+    dummy = torch.zeros((1, 3, image_size, image_size), dtype=torch.float32, device=args.device)
     torch.onnx.export(
         wrapper,
         dummy,
@@ -527,6 +631,7 @@ def export_model(args: argparse.Namespace) -> int:
             "calibration_sha256": _sha256_optional(args.calibration),
             "onnx": str(output.resolve()),
             "onnx_sha256": _sha256(output),
+            "input_size": image_size,
             "threshold": THRESHOLD,
             "calibration": {"temperature": temperature, "bias": bias, "blend_weight": weight},
         },
@@ -537,7 +642,7 @@ def export_model(args: argparse.Namespace) -> int:
 
 def parity(args: argparse.Namespace) -> int:
     model, _checkpoint = _load_checkpoint(args.checkpoint, device=args.device)
-    _samples, dataset = _dataset(args.manifest, args.split, browser_view=args.browser_view)
+    _samples, dataset = _dataset(args.manifest, args.split, browser_view=args.browser_view, model=model)
     raw = _raw_outputs(model, dataset, batch_size=args.batch_size, device=args.device, workers=args.workers)
     temperature, bias, weight = _load_calibration(args.calibration)
     python_scores = _probabilities(_blend(raw, weight), temperature, bias)
@@ -615,6 +720,20 @@ def build_parser() -> argparse.ArgumentParser:
     train_parser.add_argument("--device", default="cpu")
     train_parser.add_argument("--workers", type=int, default=8)
     train_parser.add_argument("--pretrained", action=argparse.BooleanOptionalAction, default=True)
+    train_parser.add_argument(
+        "--architecture",
+        choices=("mobilenet_v3_large_scalepair", "vit_multilayer_scalepair"),
+        default="mobilenet_v3_large_scalepair",
+    )
+    train_parser.add_argument(
+        "--model-repo",
+        default="buildborderless/CommunityForensics-DeepfakeDet-ViT",
+    )
+    train_parser.add_argument(
+        "--model-revision",
+        default="ac6ee457bea904a373065754107451793b56db00",
+    )
+    train_parser.add_argument("--unfreeze-last-blocks", type=int, default=0)
     train_parser.add_argument("--initial-checkpoint")
     train_parser.set_defaults(handler=train)
 
@@ -628,6 +747,8 @@ def build_parser() -> argparse.ArgumentParser:
     _common(evaluate_parser)
     evaluate_parser.add_argument("--predictions")
     evaluate_parser.add_argument("--browser-view", action="store_true")
+    evaluate_parser.add_argument("--paired-views", action="store_true")
+    evaluate_parser.add_argument("--seed", type=int, default=323)
     evaluate_parser.set_defaults(handler=evaluate)
 
     export_parser = commands.add_parser("export")

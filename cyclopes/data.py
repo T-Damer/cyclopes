@@ -135,8 +135,14 @@ def aspect_pad(image: Image.Image, size: int = IMAGE_SIZE) -> Image.Image:
     return canvas
 
 
-def tensor_for_browser(image: Image.Image) -> torch.Tensor:
-    return TF.normalize(TF.to_tensor(aspect_pad(image)), MEAN, STD)
+def tensor_for_browser(
+    image: Image.Image,
+    *,
+    size: int = IMAGE_SIZE,
+    mean: tuple[float, float, float] = MEAN,
+    std: tuple[float, float, float] = STD,
+) -> torch.Tensor:
+    return TF.normalize(TF.to_tensor(aspect_pad(image, size)), mean, std)
 
 
 def _reencode(image: Image.Image, rng: random.Random, quality: int, codec: str) -> Image.Image:
@@ -194,6 +200,9 @@ class ManifestDataset(Dataset):
         training: bool = False,
         seed: int = 323,
         browser_view: bool = False,
+        image_size: int = IMAGE_SIZE,
+        mean: tuple[float, float, float] = MEAN,
+        std: tuple[float, float, float] = STD,
     ) -> None:
         self.samples = [sample for sample in samples if sample.split == split]
         if not self.samples:
@@ -201,6 +210,9 @@ class ManifestDataset(Dataset):
         self.training = training
         self.seed = seed
         self.browser_view = browser_view
+        self.image_size = image_size
+        self.mean = mean
+        self.std = std
 
     def __len__(self) -> int:
         return len(self.samples)
@@ -210,15 +222,24 @@ class ManifestDataset(Dataset):
         with Image.open(sample.path) as opened:
             image = opened.copy() if opened.mode == "RGB" else decode_rgb(opened)
         if not self.training:
-            tensor = browser_crops(image)[0] if self.browser_view else tensor_for_browser(image)
+            tensor = (
+                browser_crops(image, size=self.image_size, mean=self.mean, std=self.std)[0]
+                if self.browser_view
+                else tensor_for_browser(image, size=self.image_size, mean=self.mean, std=self.std)
+            )
             return tensor, sample.label, index
 
         rng = random.Random(random.getrandbits(64) ^ self.seed ^ index)
         if rng.random() < 0.5:
             image = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-        clean = tensor_for_browser(image)
+        clean = tensor_for_browser(image, size=self.image_size, mean=self.mean, std=self.std)
         moderate = rng.random() < 0.60
-        web = tensor_for_browser(web_variant(image, rng, moderate=moderate))
+        web = tensor_for_browser(
+            web_variant(image, rng, moderate=moderate),
+            size=self.image_size,
+            mean=self.mean,
+            std=self.std,
+        )
         return clean, web, sample.label, sample.family_index, moderate, index
 
     def balanced_sampler(self, seed: int) -> WeightedRandomSampler:
@@ -234,11 +255,17 @@ class ManifestDataset(Dataset):
         return WeightedRandomSampler(weights, len(weights), replacement=True, generator=generator)
 
 
-def browser_crops(image: Image.Image) -> list[torch.Tensor]:
+def browser_crops(
+    image: Image.Image,
+    *,
+    size: int = IMAGE_SIZE,
+    mean: tuple[float, float, float] = MEAN,
+    std: tuple[float, float, float] = STD,
+) -> list[torch.Tensor]:
     width, height = image.size
     if max(width, height) / min(width, height) >= 1.25:
-        size = min(width, height)
-        left = (width - size) // 2
-        top = (height - size) // 2
-        image = image.crop((left, top, left + size, top + size))
-    return [tensor_for_browser(image)]
+        crop_size = min(width, height)
+        left = (width - crop_size) // 2
+        top = (height - crop_size) // 2
+        image = image.crop((left, top, left + crop_size, top + crop_size))
+    return [tensor_for_browser(image, size=size, mean=mean, std=std)]

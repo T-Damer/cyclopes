@@ -51,6 +51,19 @@ Source revisions and terms are frozen in [`DATASETS.md`](../DATASETS.md). Materi
 
 The checkpoint is selected by the worse of clean and web-transcoded validation balanced accuracy. Calibration, validation, test, and the fixed 65% browser boundary remain separate.
 
+## vNext ViT adaptation on Vast
+
+The released MobileNet ScalePair model remains the v0.1 baseline. The bounded vNext experiment freezes the directly licensed Community Forensics ViT-S prior and trains only Cyclopes multi-layer/scale residual heads. Build the independent evaluation corpus first; its procedure is in [`EVALUATION.md`](EVALUATION.md).
+
+```bash
+bash vast/bootstrap.sh
+TRAIN_MANIFEST=/workspace/data/training/clean.csv \
+EVAL_MANIFEST=/workspace/data/evaluation/clean.csv \
+MAX_SECONDS=5400 bash vast/run.sh
+```
+
+The bootstrap requires an H200-class CUDA device, at least 180 GB free disk, and `HF_READ_ONLY_TOKEN`. It never reads or modifies the local Vast API key or SSH keys. Copy the result archive before destroying the rented instance.
+
 ## Field and browser checks
 
 ```bash
@@ -61,4 +74,4 @@ The checkpoint is selected by the worse of clean and web-transcoded validation b
 npm test
 ```
 
-Load `dist/` at `chrome://extensions` → Developer mode → Load unpacked. Reload the target page once, click the Cyclopes icon, and verify loading badges, confidence badges, blur at ≥65%, dynamic images, scrolling, thumbnails, full images, and the GIF first frame. Compare the same Rule34 results with its **Filter AI posts** switch. Field cases are evaluation-only and must never influence training, calibration, threshold, or checkpoint selection. V5 was chosen over V6 because it reduced field false positives while preserving a large Arena margin; no user regression file participated in that choice.
+Load `dist/` at `chrome://extensions` → Developer mode → Load unpacked. Reload a local fixture page once, click the Cyclopes icon, and verify loading badges, confidence badges, blur at ≥65%, dynamic images, scrolling, thumbnails, full images, and the GIF first frame. Field cases are frozen evaluation-only data and must never influence training, calibration, threshold, or checkpoint selection. No live Rule34 check is part of the vNext training gate.
