@@ -5,11 +5,13 @@ set -euo pipefail
 nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader
 
 python - <<'PY'
+import os
 import shutil
 import torch
 
 free_gb = shutil.disk_usage(".").free / 1024**3
-assert free_gb >= 180, f"need at least 180 GiB free, found {free_gb:.1f}"
+minimum_free_gb = float(os.environ.get("MIN_FREE_GB", "40"))
+assert free_gb >= minimum_free_gb, f"need at least {minimum_free_gb:.0f} GiB free, found {free_gb:.1f}"
 assert torch.cuda.is_available(), "CUDA is unavailable"
 major, _minor = torch.cuda.get_device_capability()
 assert major >= 9, f"expected Hopper or newer, got compute capability {major}"

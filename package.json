@@ -2,7 +2,7 @@
   "name": "cyclopes-extension",
   "private": true,
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Browser-local AI image detector for POIDH bounty #323",
   "scripts": {
     "build": "node scripts/build.mjs",

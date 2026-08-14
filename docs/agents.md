@@ -62,7 +62,7 @@ EVAL_MANIFEST=/workspace/data/evaluation/clean.csv \
 MAX_SECONDS=5400 bash vast/run.sh
 ```
 
-The bootstrap requires an H200-class CUDA device, at least 180 GB free disk, and `HF_READ_ONLY_TOKEN`. It never reads or modifies the local Vast API key or SSH keys. Copy the result archive before destroying the rented instance.
+The bootstrap requires an H200-class CUDA device, at least 40 GB free disk, and `HF_READ_ONLY_TOKEN`. It never reads or modifies the local Vast API key or SSH keys. Copy the result archive before destroying the rented instance.
 
 ## Field and browser checks
 

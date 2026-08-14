@@ -1,0 +1,39 @@
+{
+  "best_selection_score": 0.9600233817502969,
+  "checkpoint": "/root/cyclopes-vnext/runs/vit-vnext-a/model.pt",
+  "checkpoint_sha256": "2f38d7a93256a66e4b1430dda24f95c181f04c44aea5065f1d4883b85ab4c40e",
+  "command": "train",
+  "epoch_metrics": [
+    {
+      "ema": {
+        "clean_balanced_accuracy": 0.9812359395614687,
+        "clean_threshold": 0.32308761637609695,
+        "selection_score": 0.9566060648473085,
+        "web_balanced_accuracy": 0.9566060648473085,
+        "web_threshold": 0.5068252615212792
+      },
+      "epoch": 1,
+      "loss": 0.4726728298504588,
+      "raw": {
+        "clean_balanced_accuracy": 0.9843990622600849,
+        "clean_threshold": 0.4472610611649998,
+        "selection_score": 0.9600233817502969,
+        "web_balanced_accuracy": 0.9600233817502969,
+        "web_threshold": 0.5669691606925641
+      },
+      "selected": "raw",
+      "step": 568
+    }
+  ],
+  "initial_checkpoint_sha256": null,
+  "manifest": "/root/cyclopes/data/final/clean.csv",
+  "manifest_sha256": "87e0da6bce5fa635883094a567599a2bc19429decced8fc7a57fbb27955f5a4e",
+  "runtime": {
+    "cuda": "12.8",
+    "device": "NVIDIA H200 NVL",
+    "torch": "2.7.1+cu128"
+  },
+  "samples": 36326,
+  "steps": 568,
+  "threshold": 0.65
+}

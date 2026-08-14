@@ -1,10 +1,10 @@
 {
-  "name": "Cyclopes ScalePair MobileNetV3-Large",
-  "version": 3,
+  "name": "Cyclopes Multi-Layer ScalePair ViT-S",
+  "version": 4,
   "file": "cyclopes.onnx",
-  "size_bytes": 14974340,
-  "sha256": "4936a9ef0988efe9717da24c45da61a213ed09eb39437f1ea7ee0474471fc359",
-  "input": "NCHW float32 RGB, 224x224, ImageNet-normalized",
+  "size_bytes": 88401160,
+  "sha256": "8033d130766ad3a37b7c0167479a30c1d16896587200cb84b2c2470adccb2d6e",
+  "input": "NCHW float32 RGB, 384x384, CLIP-normalized",
   "output": "one calibrated logit; sigmoid(logit) is p_ai",
   "threshold": 0.65,
   "offline": true

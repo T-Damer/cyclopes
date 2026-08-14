@@ -1,0 +1,14 @@
+{
+  "calibration": {
+    "bias": 0.27882282331984,
+    "blend_weight": 1.0,
+    "temperature": 0.717378306619652
+  },
+  "calibration_sha256": "cc96fdb08b020a034697a5ee89df53b69e9d816ac3970c1141e587c5829edbce",
+  "checkpoint_sha256": "2f38d7a93256a66e4b1430dda24f95c181f04c44aea5065f1d4883b85ab4c40e",
+  "command": "export",
+  "input_size": 384,
+  "onnx": "/root/cyclopes-vnext/runs/vit-vnext-a/cyclopes.onnx",
+  "onnx_sha256": "8033d130766ad3a37b7c0167479a30c1d16896587200cb84b2c2470adccb2d6e",
+  "threshold": 0.65
+}

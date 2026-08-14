@@ -16,11 +16,11 @@ We also report AI recall, real specificity, ROC-AUC, per-source accuracy, model 
 
 ## Model
 
-Cyclopes uses one original browser-local ScalePair CNN, not a public detector or an ensemble copied from another bounty entry:
+Cyclopes v0.2 uses one browser-local multi-layer ScalePair ViT, not an ensemble:
 
-- A MobileNetV3-Large ImageNet initialization is trained on Cyclopes' licensed pixel dataset.
-- One shared backbone sees the displayed 224×224 image and a synthetic 112→224 thumbnail probe in the same forward pass.
-- The head compares semantic embeddings, their difference/product, and early-layer mean/deviation/local-residual texture statistics.
+- The MIT-licensed Community Forensics ViT-S prior is pinned and frozen.
+- Trainable Cyclopes projections read hidden layers 4, 8, and 12 at 384×384.
+- A residual head compares the displayed image embedding with an internal 160→384 thumbnail probe and corrects the frozen prior logit.
 - Training pairs every clean image with a JPEG/WebP/downscale variant and penalizes inconsistent embeddings.
 - Calibration selects a fixed fused/current-head blend, temperature, and bias; those constants are embedded in one ONNX graph.
 

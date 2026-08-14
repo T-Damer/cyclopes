@@ -1,6 +1,6 @@
-const SIZE = 224;
-const MEAN = [0.485, 0.456, 0.406];
-const STD = [0.229, 0.224, 0.225];
+const SIZE = 384;
+const MEAN = [0.48145466, 0.4578275, 0.40821073];
+const STD = [0.26862954, 0.26130258, 0.27577711];
 let sessionPromise;
 
 function sigmoid(value) {
@@ -13,14 +13,7 @@ export function outputToScore(output) {
 }
 
 export function sourceRegion(width, height) {
-  if (Math.max(width, height) / Math.min(width, height) < 1.25) return { x: 0, y: 0, width, height };
-  const size = Math.min(width, height);
-  return {
-    x: Math.floor((width - size) / 2),
-    y: Math.floor((height - size) / 2),
-    width: size,
-    height: size
-  };
+  return { x: 0, y: 0, width, height };
 }
 
 function runtime() {

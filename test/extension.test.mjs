@@ -11,9 +11,9 @@ test("the filter boundary is exactly 65 percent", () => {
   assert.ok(Math.abs(inference.outputToScore({ data: [Math.log(0.65 / 0.35)] }) - 0.65) < 1e-12);
 });
 
-test("strong aspect ratios use one centered square view", () => {
-  assert.deepEqual(inference.sourceRegion(200, 400), { x: 0, y: 100, width: 200, height: 200 });
-  assert.deepEqual(inference.sourceRegion(400, 200), { x: 100, y: 0, width: 200, height: 200 });
+test("preprocessing preserves the complete displayed image", () => {
+  assert.deepEqual(inference.sourceRegion(200, 400), { x: 0, y: 0, width: 200, height: 400 });
+  assert.deepEqual(inference.sourceRegion(400, 200), { x: 0, y: 0, width: 400, height: 200 });
   assert.deepEqual(inference.sourceRegion(120, 100), { x: 0, y: 0, width: 120, height: 100 });
 });
 

@@ -1,0 +1,64 @@
+{
+  "calibration": {
+    "bias": 0.27882282331984,
+    "blend_weight": 1.0,
+    "clean_balanced_accuracy": 0.9785820440132927,
+    "raw_threshold": 0.5607148779120346,
+    "selection_score": 0.951953468502128,
+    "temperature": 0.717378306619652,
+    "threshold": 0.65,
+    "web_balanced_accuracy": 0.951953468502128
+  },
+  "calibration_sha256": "cc96fdb08b020a034697a5ee89df53b69e9d816ac3970c1141e587c5829edbce",
+  "candidates": [
+    {
+      "bias": 4.4977697526873905,
+      "blend_weight": 0.0,
+      "clean_balanced_accuracy": 0.8935390373174901,
+      "raw_threshold": 0.0010803193265382538,
+      "selection_score": 0.8167513979561727,
+      "temperature": 1.7607352786094512,
+      "web_balanced_accuracy": 0.8167513979561727
+    },
+    {
+      "bias": 4.572547203035925,
+      "blend_weight": 0.25,
+      "clean_balanced_accuracy": 0.9265481505187865,
+      "raw_threshold": 0.006920138159482005,
+      "selection_score": 0.8573071745356906,
+      "temperature": 1.2561945891340776,
+      "web_balanced_accuracy": 0.8573071745356906
+    },
+    {
+      "bias": 4.196121604239895,
+      "blend_weight": 0.5,
+      "clean_balanced_accuracy": 0.9554238301674709,
+      "raw_threshold": 0.03433691104788843,
+      "selection_score": 0.9102849055966693,
+      "temperature": 0.9327697088143876,
+      "web_balanced_accuracy": 0.9102849055966693
+    },
+    {
+      "bias": 2.5901551514965626,
+      "blend_weight": 0.75,
+      "clean_balanced_accuracy": 0.9718801244324129,
+      "raw_threshold": 0.17875173056918411,
+      "selection_score": 0.9409135662550727,
+      "temperature": 0.7735859500658339,
+      "web_balanced_accuracy": 0.9409135662550727
+    },
+    {
+      "bias": 0.27882282331984,
+      "blend_weight": 1.0,
+      "clean_balanced_accuracy": 0.9785820440132927,
+      "raw_threshold": 0.5607148779120346,
+      "selection_score": 0.951953468502128,
+      "temperature": 0.717378306619652,
+      "web_balanced_accuracy": 0.951953468502128
+    }
+  ],
+  "checkpoint_sha256": "2f38d7a93256a66e4b1430dda24f95c181f04c44aea5065f1d4883b85ab4c40e",
+  "command": "calibrate",
+  "manifest_sha256": "87e0da6bce5fa635883094a567599a2bc19429decced8fc7a57fbb27955f5a4e",
+  "samples": 4091
+}
