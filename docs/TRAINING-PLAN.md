@@ -49,7 +49,7 @@ Required product behavior:
 Cyclopes-specific product constraints agreed during development:
 
 - one toolbar action: filter ON/OFF;
-- qualifying images are blurred without adding badges or a complex popup;
+- qualifying images receive confidence badges without modifying page content;
 - a visible warm-up/loading state is allowed;
 - static and dynamically inserted images are supported;
 - GIF input is decoded to a still bitmap for classification;
@@ -402,10 +402,10 @@ In a clean Chrome profile:
 4. Confirm the extension works after inference assets are local and external networking is disabled.
 5. Confirm no runtime request except fetching the webpage's displayed image URL.
 6. Confirm each analyzed element receives a numeric diagnostic score.
-7. Confirm AI scores at or above 0.65 blur and scores below 0.65 do not.
+7. Confirm eligible images receive confidence badges, page content is not blurred, and rendered images below 64×64 are ignored.
 8. Run the frozen Rule34 URLs once and record full/thumbnail results without further tuning on them.
 
-Field target, not a statistical accuracy claim: at least 8 of the 10 AI-tagged cases blur, obvious case 18447267 and GIF thumbnail 18447269 blur, and the user-identified real case 18447261 remains unblurred.
+Field target, not a statistical accuracy claim: at least 8 of the 10 AI-tagged cases score at or above 0.65, including obvious case 18447267 and GIF thumbnail 18447269, while the user-identified real case 18447261 remains below threshold.
 
 ### 11.3 Automatic rejection
 

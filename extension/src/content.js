@@ -7,7 +7,6 @@ const visible = new Set();
 
 const style = document.createElement("style");
 style.textContent = `
-  .cyclopes-ai{filter:blur(20px)!important}
   .cyclopes-badge{position:fixed;z-index:2147483647;padding:3px 6px;border-radius:5px;color:#fff;background:#475569;font:600 11px/1.2 system-ui,sans-serif;pointer-events:none;box-shadow:0 1px 4px #0008}
   .cyclopes-badge[data-verdict="ai"]{background:#dc2626}
   .cyclopes-badge[data-verdict="real"]{background:#2563eb}
@@ -18,7 +17,7 @@ function positionBadge(image) {
   const badge = badges.get(image);
   if (!badge) return;
   const rect = image.getBoundingClientRect();
-  const shown = rect.bottom > 0 && rect.right > 0 && rect.top < innerHeight && rect.left < innerWidth;
+  const shown = isEligibleImage(image) && rect.bottom > 0 && rect.right > 0 && rect.top < innerHeight && rect.left < innerWidth;
   badge.hidden = !shown;
   if (!shown) return;
   badge.style.top = `${Math.max(3, rect.top + 3)}px`;
@@ -56,7 +55,6 @@ async function analyze(image) {
   if (!enabled || !visible.has(image) || !isEligibleImage(image)) return;
   const source = image.currentSrc;
   if (states.get(image) === source) return;
-  image.classList.remove("cyclopes-ai");
   delete image.dataset.cyclopesError;
   states.set(image, source);
   const badge = badgeFor(image);
@@ -66,10 +64,9 @@ async function analyze(image) {
   try {
     const result = await chrome.runtime.sendMessage({ target: "background", type: "score", url: source });
     if (typeof result?.score !== "number") throw new Error(result?.error || "Inference returned no score.");
-    if (!enabled || states.get(image) !== source) return;
+    if (!enabled || states.get(image) !== source || !isEligibleImage(image)) return;
     image.dataset.cyclopesScore = result.score.toFixed(4);
     const ai = result.score >= AI_THRESHOLD;
-    image.classList.toggle("cyclopes-ai", ai);
     badge.dataset.verdict = ai ? "ai" : "real";
     badge.textContent = `AI ${(result.score * 100).toFixed(0)}%`;
     positionBadge(image);
@@ -104,7 +101,6 @@ function scan(root = document) {
 
 function clear() {
   states = new WeakMap();
-  document.querySelectorAll(".cyclopes-ai").forEach((image) => image.classList.remove("cyclopes-ai"));
   badges.forEach((badge) => badge.remove());
   badges.clear();
 }

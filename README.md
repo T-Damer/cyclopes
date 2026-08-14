@@ -4,9 +4,9 @@
 
 ## Demo
 
-![Cyclopes blurs images classified as AI-generated](docs/demo.svg)
+![Cyclopes labels images classified as AI-generated](docs/demo.svg)
 
-Browser-local AI image filtering. One button, no uploads: images scoring at least **65% AI** are blurred.
+Browser-local AI image detection. One button, no uploads: eligible images receive an AI confidence badge; tiny icons and emoji are ignored.
 
 **93.68% AI precision · 94.83% balanced accuracy** on AI Detector Arena v0.1.
 
