@@ -44,6 +44,14 @@ test("images with more than 85 percent sampled occlusion are ignored", () => {
   assert.equal(shared.isMostlyOccluded(image, 100, 100), false);
 });
 
+test("badge placement checks its four corners and center", () => {
+  const placement = shared.BADGE_PLACEMENTS[0];
+  const rect = shared.badgePlacementRect({ left: 0, top: 0, width: 200, height: 100 }, 50, 20, placement);
+  assert.deepEqual(rect, { left: 147, top: 3, right: 197, bottom: 23, width: 50, height: 20 });
+  const image = { ownerDocument: { elementFromPoint: (x) => x < 150 ? {} : image } };
+  assert.equal(shared.badgeObstructionScore(image, rect), 2);
+});
+
 test("preprocessing preserves the complete displayed image", () => {
   assert.deepEqual(inference.sourceRegion(200, 400), { x: 0, y: 0, width: 200, height: 400 });
   assert.deepEqual(inference.sourceRegion(400, 200), { x: 0, y: 0, width: 400, height: 200 });
@@ -65,6 +73,9 @@ test("the built MV3 package is local and has its inference document", () => {
   assert.match(content, /cyclopesScore/);
   assert.match(content, /IntersectionObserver/);
   assert.match(content, /loadingFrames/);
+  assert.match(content, /\\u\{1307A\}/);
+  assert.match(content, /150/);
+  assert.match(content, /white-space:nowrap/);
   assert.match(content, /anchor-name/);
   assert.match(content, /AI.*%/);
   assert.doesNotMatch(content, /blur\(/);

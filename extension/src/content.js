@@ -1,4 +1,11 @@
-import { AI_THRESHOLD, isEligibleImage, isMostlyOccluded } from "./shared.js";
+import {
+  AI_THRESHOLD,
+  BADGE_PLACEMENTS,
+  badgeObstructionScore,
+  badgePlacementRect,
+  isEligibleImage,
+  isMostlyOccluded,
+} from "./shared.js";
 
 let states = new WeakMap();
 let enabled = false;
@@ -6,11 +13,11 @@ const badges = new Map();
 const anchors = new Map();
 const visible = new Set();
 let nextAnchor = 0;
-const loadingFrames = ["|", "/", "-", "\\"];
+const loadingFrames = ["𓁺", "𓁻", "𓁿", "𓂀"];
 
 const style = document.createElement("style");
 style.textContent = `
-  .cyclopes-badge{position:absolute;top:anchor(top);left:anchor(right);transform:translate(calc(-100% - 3px),3px);padding:3px 6px;border-radius:5px;color:#fff;background:#475569;font:600 11px/1.2 system-ui,sans-serif;pointer-events:none;box-shadow:0 1px 4px #0008}
+  .cyclopes-badge{position:absolute;white-space:nowrap;padding:3px 6px;border-radius:5px;color:#fff;background:#475569;font:600 11px/1.2 system-ui,sans-serif;pointer-events:none;box-shadow:0 1px 4px #0008}
   .cyclopes-badge[data-verdict="ai"]{background:#dc2626}
   .cyclopes-badge[data-verdict="real"]{background:#2563eb}
 `;
@@ -22,6 +29,25 @@ function updateBadge(image) {
   const rect = image.getBoundingClientRect();
   const shown = isEligibleImage(image) && rect.bottom > 0 && rect.right > 0 && rect.top < innerHeight && rect.left < innerWidth;
   badge.hidden = !shown;
+  if (!shown) return;
+  const width = badge.offsetWidth;
+  const height = badge.offsetHeight;
+  let best = BADGE_PLACEMENTS[0];
+  let bestScore = Infinity;
+  for (const placement of BADGE_PLACEMENTS) {
+    const area = badgePlacementRect(rect, width, height, placement);
+    if (area.left < rect.left || area.top < rect.top || area.right > rect.right || area.bottom > rect.bottom) continue;
+    const score = badgeObstructionScore(image, area);
+    if (score < bestScore) {
+      best = placement;
+      bestScore = score;
+      if (score === 0) break;
+    }
+  }
+  badge.dataset.position = best.name;
+  badge.style.left = `anchor(${best.x})`;
+  badge.style.top = `anchor(${best.y})`;
+  badge.style.transform = `translate(${best.tx * 100}%,${best.ty * 100}%) translate(${best.dx}px,${best.dy}px)`;
 }
 
 function removeBadge(image) {
@@ -57,7 +83,7 @@ function badgeFor(image) {
   badge.className = "cyclopes-badge";
   badge.style.setProperty("position-anchor", anchor);
   badge.style.zIndex = getComputedStyle(image).zIndex;
-  badge.textContent = "Cyclopes |";
+  badge.textContent = loadingFrames[0];
   image.insertAdjacentElement("afterend", badge);
   badges.set(image, badge);
   updateBadge(image);
@@ -68,9 +94,9 @@ let loadingFrame = 0;
 setInterval(() => {
   loadingFrame = (loadingFrame + 1) % loadingFrames.length;
   badges.forEach((badge) => {
-    if (badge.dataset.verdict === "loading") badge.textContent = `Cyclopes ${loadingFrames[loadingFrame]}`;
+    if (badge.dataset.verdict === "loading") badge.textContent = loadingFrames[loadingFrame];
   });
-}, 160);
+}, 150);
 
 async function analyze(image) {
   if (!enabled || !visible.has(image) || !isEligibleImage(image)) return;
@@ -81,7 +107,7 @@ async function analyze(image) {
   states.set(image, source);
   const badge = badgeFor(image);
   badge.dataset.verdict = "loading";
-  badge.textContent = "Cyclopes |";
+  badge.textContent = loadingFrames[0];
   try {
     const result = await chrome.runtime.sendMessage({ target: "background", type: "score", url: source });
     if (typeof result?.score !== "number") throw new Error(result?.error || "Inference returned no score.");
