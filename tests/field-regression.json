@@ -449,6 +449,118 @@
       "urls": [], "local_file": "social-real-street-photo-meme.png",
       "sha256": "25bfca05acd56b8cb48401ff53f0437a4aa3e8645a87ba5cab288d89e1521dcc",
       "current_scores": {"browser": 0.92}
+    },
+    {
+      "id": "social-real-game-counterstrike",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "game_screenshot",
+      "urls": [], "local_file": "social-real-game-counterstrike.png",
+      "sha256": "47796c8c9d70d76282607c305ddd7c4c0d3fb8633022aef4dff50d944b183b11",
+      "current_scores": {"browser": 0.73}
+    },
+    {
+      "id": "social-real-game-deadlock-portrait",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "game_screenshot",
+      "urls": [], "local_file": "social-real-game-deadlock-portrait.png",
+      "sha256": "e5a224f94b3c4261d4fcf8d4047cff64be0112de771b24fb7aad63048488a39e",
+      "current_scores": {"browser": 1.0}
+    },
+    {
+      "id": "social-real-game-deadlock-scene",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "game_screenshot",
+      "urls": [], "local_file": "social-real-game-deadlock-scene.png",
+      "sha256": "b23435c28f166815801825072be7626e6b6f04c1b970652fb0df2e3c5860cee5",
+      "current_scores": {"browser": 0.94}
+    },
+    {
+      "id": "social-real-photo-grey-shirt",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "photo",
+      "urls": [], "local_file": "social-real-photo-grey-shirt.png",
+      "sha256": "40396e6d8ea1b96e5a5265fbde845b54af4a8ad3936dca5b9cae53e71a76a3bb",
+      "current_scores": {"browser": 0.94}
+    },
+    {
+      "id": "social-real-photo-airplanes",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "photo",
+      "urls": [], "local_file": "social-real-photo-airplanes.png",
+      "sha256": "0c8558f7be64f09deb19e833d67084d77d7237a29bf0c5f683af9b149220ffd5",
+      "current_scores": {"browser": 0.99}
+    },
+    {
+      "id": "social-real-live-action-meme",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "photo_meme",
+      "urls": [], "local_file": "social-real-live-action-meme.png",
+      "sha256": "b33a9e1e5aa0d36d679afee9d079a690af462bb6225501407ffaafbae7892473",
+      "current_scores": {"browser": 0.70}
+    },
+    {
+      "id": "social-real-cartoon-frame-meme",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "cartoon_meme",
+      "urls": [], "local_file": "social-real-cartoon-frame-meme.png",
+      "sha256": "d81928d95ee94b846c9c003b8728b0a777bae0b1df960921b64d185a90b48b2b",
+      "current_scores": {"browser": 0.99}
+    },
+    {
+      "id": "social-real-ironman-meme",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "photo_meme",
+      "urls": [], "local_file": "social-real-ironman-meme.png",
+      "sha256": "d13224b4c132be12ffd416760ba2f538d3e89ba5a4af3703e1c7f00e622a983d",
+      "current_scores": {"browser": 0.78}
+    },
+    {
+      "id": "social-ai-gpt-image-gen-cookie-portrait",
+      "expected_label": "ai", "label_basis": "user_generator_attestation", "content_kind": "photo",
+      "urls": [], "local_file": "social-ai-gpt-image-gen-cookie-portrait.png",
+      "sha256": "201b77da3b8c3425ae7284db9ffafd4ab7dfb6df203fad13d6417a3f605df922",
+      "current_scores": {"browser": 0.0}
+    },
+    {
+      "id": "social-real-sopranos-meme",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "photo_meme",
+      "urls": [], "local_file": "social-real-sopranos-meme.png",
+      "sha256": "ae1cbe85d05b9cb1ba2405317a036232020e0d2a9dad59154100fe47bc15b80c",
+      "current_scores": {"browser": 0.94}
+    },
+    {
+      "id": "social-real-old-video-meme",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "video_frame_meme",
+      "urls": [], "local_file": "social-real-old-video-meme.png",
+      "sha256": "700f84a24651fbfe1022ab6499b1826fbfb910dc8cce08415f6b8a2f6a4d1b07",
+      "current_scores": {"browser": 1.0}
+    },
+    {
+      "id": "social-real-street-photo-woman",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "photo",
+      "urls": [], "local_file": "social-real-street-photo-woman.png",
+      "sha256": "6df4d8880863224375f0db472b84aa888309afde9cfb8f641bf2dd2849093544",
+      "current_scores": {"browser": 0.88}
+    },
+    {
+      "id": "social-real-russian-speaker-meme",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "photo_meme",
+      "urls": [], "local_file": "social-real-russian-speaker-meme.png",
+      "sha256": "7c07d51d94ff551b616caecbeee550c78dabff4433233e0e33f93e1d393c89e2",
+      "current_scores": {"browser": 0.99}
+    },
+    {
+      "id": "social-real-doctor-meme",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "photo_meme",
+      "urls": [], "local_file": "social-real-doctor-meme.png",
+      "sha256": "38b5868d176417b8f2470eba8e020fd82e94855445fcc99af7d075f530214a41",
+      "current_scores": {"browser": 1.0}
+    },
+    {
+      "id": "social-real-russian-actor-meme",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "photo_meme",
+      "urls": [], "local_file": "social-real-russian-actor-meme.png",
+      "sha256": "e679c255ff1f138185a05956f3c98a1822ff48f2ad2b7542320efb8f7033259c",
+      "current_scores": {"browser": 1.0}
+    },
+    {
+      "id": "social-real-photo-top-gear",
+      "expected_label": "real", "label_basis": "user_assessment", "content_kind": "photo",
+      "urls": [], "local_file": "social-real-photo-top-gear.png",
+      "sha256": "f2d59ab8546ca1524e2738947c2d60a7346350785945e675bfcadca5d418942e",
+      "current_scores": {"browser": 0.98}
     }
   ]
 }

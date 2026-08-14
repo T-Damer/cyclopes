@@ -15,6 +15,7 @@ class ScalePairOutputs:
     probe_logit: torch.Tensor
     family_logits: torch.Tensor
     embedding: torch.Tensor
+    content_logits: torch.Tensor | None = None
 
 
 class ScalePairMobileNet(nn.Module):

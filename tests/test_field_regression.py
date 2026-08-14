@@ -9,7 +9,7 @@ def test_field_regression_manifest_is_evaluation_only() -> None:
 
     assert manifest["training_allowed"] is False
     assert manifest["decision_threshold"] == 0.65
-    assert len(manifest["cases"]) == 54
+    assert len(manifest["cases"]) == 70
     candidates = manifest["ai_positive_profile_candidates"]
     assert "not licensed for training" in candidates["use"]
     assert len(candidates["urls"]) == len(set(candidates["urls"])) == 11

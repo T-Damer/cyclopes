@@ -42,8 +42,16 @@ class MultiLayerScalePairViT(nn.Module):
             nn.Linear(128, 1),
         )
         self.family_head = nn.Linear(embedding_size, family_classes)
+        self.content_router = nn.Sequential(nn.LayerNorm(embedding_size), nn.Linear(embedding_size, 4))
+        self.expert_heads = nn.ModuleList(
+            nn.Sequential(nn.LayerNorm(embedding_size * 2), nn.Linear(embedding_size * 2, 64), nn.GELU(), nn.Linear(64, 1))
+            for _ in range(4)
+        )
         nn.init.zeros_(self.residual_head[-1].weight)
         nn.init.zeros_(self.residual_head[-1].bias)
+        for expert in self.expert_heads:
+            nn.init.zeros_(expert[-1].weight)
+            nn.init.zeros_(expert[-1].bias)
         self.freeze_backbone()
 
     @classmethod
@@ -85,6 +93,13 @@ class MultiLayerScalePairViT(nn.Module):
             for parameter in self.backbone.layernorm.parameters():
                 parameter.requires_grad_(True)
 
+    def freeze_prior(self) -> None:
+        for parameter in self.parameters():
+            parameter.requires_grad_(False)
+        for module in (self.content_router, self.expert_heads):
+            for parameter in module.parameters():
+                parameter.requires_grad_(True)
+
     def thumbnail_probe(self, image: torch.Tensor) -> torch.Tensor:
         probe_size = max(32, round(self.image_size * 5 / 12))
         probe = F.interpolate(image, size=(probe_size, probe_size), mode="bilinear", align_corners=False)
@@ -102,13 +117,18 @@ class MultiLayerScalePairViT(nn.Module):
         embeddings, base_logits = self._encode(torch.cat((image, self.thumbnail_probe(image)), dim=0))
         current, probe = embeddings[:batch], embeddings[batch:]
         current_logit, probe_logit = base_logits[:batch], base_logits[batch:]
-        residual = self.residual_head(torch.cat((current, (current - probe).abs()), dim=1)).flatten()
+        expert_input = torch.cat((current, (current - probe).abs()), dim=1)
+        residual = self.residual_head(expert_input).flatten()
+        content_logits = self.content_router(current)
+        expert_logits = torch.stack([head(expert_input).flatten() for head in self.expert_heads], dim=1)
+        expert_residual = (content_logits.softmax(dim=1) * expert_logits).sum(dim=1)
         return ScalePairOutputs(
-            fused_logit=current_logit + residual,
+            fused_logit=current_logit + residual + expert_residual,
             current_logit=current_logit,
             probe_logit=probe_logit,
             family_logits=self.family_head(current),
             embedding=current,
+            content_logits=content_logits,
         )
 
     def forward(self, image: torch.Tensor) -> torch.Tensor:

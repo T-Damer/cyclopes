@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import torch
-from PIL import Image, ImageEnhance, ImageFilter
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageOps
 from torch.utils.data import Dataset, WeightedRandomSampler
 from torchvision.transforms import functional as TF
 
@@ -27,6 +27,20 @@ GENERATOR_FAMILIES = (
     "other",
 )
 FAMILY_TO_INDEX = {name: index for index, name in enumerate(GENERATOR_FAMILIES)}
+CONTENT_CLASSES = ("general", "photo", "art-game", "composite-ui")
+
+
+def content_index(domain: str) -> int:
+    value = domain.lower()
+    if value in {"mixed", "unknown"}:
+        return 0
+    if "photo" in value:
+        return 1
+    if any(token in value for token in ("art", "illustration", "cgi", "game", "anime", "cartoon")):
+        return 2
+    if any(token in value for token in ("meme", "composite", "ui", "screenshot", "logo", "poster", "text", "graphic")):
+        return 3
+    return 0
 
 
 @dataclass(frozen=True)
@@ -45,6 +59,10 @@ class Sample:
     @property
     def family_index(self) -> int:
         return FAMILY_TO_INDEX.get(self.generator_family, -1) if self.label else -1
+
+    @property
+    def content_index(self) -> int:
+        return content_index(self.content_domain)
 
 
 def _field(row: dict[str, str], primary: str, fallback: str = "") -> str:
@@ -192,6 +210,22 @@ def web_variant(image: Image.Image, rng: random.Random, *, moderate: bool | None
     return image
 
 
+def composite_variant(image: Image.Image, rng: random.Random) -> Image.Image:
+    """Add common meme/collage structure without changing the image label."""
+    image = image.convert("RGB")
+    if rng.random() < 0.5:
+        band = max(24, image.height // 5)
+        output = ImageOps.expand(image, border=(0, band, 0, 0), fill="white")
+        draw = ImageDraw.Draw(output)
+        draw.text((band // 3, band // 3), "WHEN THE CAPTION CHANGES THE CONTEXT", fill="black")
+        return output
+    panel = image.resize((image.width, max(1, image.height // 2)), Image.Resampling.BICUBIC)
+    output = Image.new("RGB", (image.width, panel.height * 2 + 8), "white")
+    output.paste(panel, (0, 0))
+    output.paste(panel.transpose(Image.Transpose.FLIP_LEFT_RIGHT), (0, panel.height + 8))
+    return output
+
+
 class ManifestDataset(Dataset):
     def __init__(
         self,
@@ -203,6 +237,7 @@ class ManifestDataset(Dataset):
         image_size: int = IMAGE_SIZE,
         mean: tuple[float, float, float] = MEAN,
         std: tuple[float, float, float] = STD,
+        composite_probability: float = 0.0,
     ) -> None:
         self.samples = [sample for sample in samples if sample.split == split]
         if not self.samples:
@@ -213,6 +248,7 @@ class ManifestDataset(Dataset):
         self.image_size = image_size
         self.mean = mean
         self.std = std
+        self.composite_probability = composite_probability
 
     def __len__(self) -> int:
         return len(self.samples)
@@ -230,6 +266,10 @@ class ManifestDataset(Dataset):
             return tensor, sample.label, index
 
         rng = random.Random(random.getrandbits(64) ^ self.seed ^ index)
+        content = sample.content_index
+        if rng.random() < self.composite_probability:
+            image = composite_variant(image, rng)
+            content = 3
         if rng.random() < 0.5:
             image = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
         clean = tensor_for_browser(image, size=self.image_size, mean=self.mean, std=self.std)
@@ -240,7 +280,7 @@ class ManifestDataset(Dataset):
             mean=self.mean,
             std=self.std,
         )
-        return clean, web, sample.label, sample.family_index, moderate, index
+        return clean, web, sample.label, sample.family_index, content, moderate, index
 
     def balanced_sampler(self, seed: int) -> WeightedRandomSampler:
         counts = Counter((sample.label, sample.source) for sample in self.samples)

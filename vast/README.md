@@ -9,6 +9,7 @@ export HF_READ_ONLY_TOKEN=...
 bash vast/bootstrap.sh
 
 export TRAIN_MANIFEST=/workspace/data/training/manifest.csv
+export INITIAL_CHECKPOINT=/workspace/data/artifacts/vit-vnext-a/model.pt
 export EVAL_MANIFEST=/workspace/data/evaluation/manifest.csv
 MAX_SECONDS=5400 bash vast/run.sh
 ```

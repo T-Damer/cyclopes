@@ -6,7 +6,7 @@ import pytest
 import torch
 from PIL import Image
 
-from cyclopes.data import aspect_pad, browser_crops, load_manifest, tensor_for_browser, web_variant
+from cyclopes.data import aspect_pad, browser_crops, composite_variant, load_manifest, tensor_for_browser, web_variant
 from cyclopes.metrics import best_balanced_threshold, binary_metrics
 from cyclopes.modeling import ScalePairMobileNet, threshold_alignment
 
@@ -56,6 +56,7 @@ def test_extended_manifest_fields_drive_family_auxiliary_label(tmp_path: Path) -
     sample = load_manifest(manifest)[0]
     assert sample.family_index == 0
     assert sample.content_domain == "mixed"
+    assert sample.content_index == 0
 
 
 def test_aspect_padding_preserves_the_complete_image() -> None:
@@ -81,6 +82,15 @@ def test_web_variant_is_deterministic_and_keeps_a_valid_image() -> None:
     assert first.size == second.size
     assert first.tobytes() == second.tobytes()
     assert min(first.size) <= 600
+
+
+def test_composite_variant_adds_a_meme_layout() -> None:
+    source = Image.new("RGB", (400, 300), (20, 40, 60))
+    first = composite_variant(source, __import__("random").Random(323))
+    second = composite_variant(source, __import__("random").Random(323))
+    assert first.size == second.size
+    assert first.tobytes() == second.tobytes()
+    assert first.size != source.size
 
 
 def test_scalepair_uses_one_shared_backbone_for_both_views() -> None:

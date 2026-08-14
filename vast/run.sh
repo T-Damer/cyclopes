@@ -3,9 +3,10 @@ set -euo pipefail
 
 : "${HF_READ_ONLY_TOKEN:?HF_READ_ONLY_TOKEN is required}"
 : "${TRAIN_MANIFEST:?TRAIN_MANIFEST is required}"
+: "${INITIAL_CHECKPOINT:?INITIAL_CHECKPOINT is required}"
 
 MAX_SECONDS="${MAX_SECONDS:-5400}"
-RUN_ROOT="${RUN_ROOT:-runs/vit-v1}"
+RUN_ROOT="${RUN_ROOT:-runs/vit-experts}"
 EVAL_MANIFEST="${EVAL_MANIFEST:-}"
 START_SECONDS=$SECONDS
 mkdir -p "$RUN_ROOT" reports
@@ -23,11 +24,12 @@ export HF_TOKEN="$HF_READ_ONLY_TOKEN"
 run_budgeted python -m cyclopes.cli train \
   --architecture vit_multilayer_scalepair \
   --model-revision ac6ee457bea904a373065754107451793b56db00 \
+  --initial-checkpoint "$INITIAL_CHECKPOINT" --experts-only \
   --manifest "$TRAIN_MANIFEST" \
   --output "$RUN_ROOT/cyclopes-vit.pt" \
   --report "$RUN_ROOT/train.json" \
   --device cuda --batch-size 64 --workers 16 \
-  --epochs 3 --max-steps 1600 \
+  --epochs 3 --max-steps 800 \
   --freeze-steps 1000000 --unfreeze-last-blocks 0 \
   --backbone-lr 0 --head-lr 0.0002 --consistency-weight 0.05
 

@@ -101,7 +101,10 @@ def _load_checkpoint(path: str | Path, *, device: str = "cpu"):
         model_revision=config.get("model_revision"),
         layers=tuple(config.get("layers", (4, 8, 12))),
     )
-    model.load_state_dict(state)
+    missing, unexpected = model.load_state_dict(state, strict=False)
+    allowed_missing = ("content_router.", "expert_heads.")
+    if unexpected or any(not key.startswith(allowed_missing) for key in missing):
+        raise RuntimeError(f"incompatible checkpoint: missing={missing}, unexpected={unexpected}")
     model.to(device).eval()
     return model, checkpoint
 
@@ -114,6 +117,7 @@ def _dataset(
     seed: int = 323,
     browser_view: bool = False,
     model=None,
+    composite_probability: float = 0.0,
 ):
     ManifestDataset, load_manifest = _data_helpers()
     samples = load_manifest(manifest)
@@ -126,6 +130,7 @@ def _dataset(
         image_size=getattr(model, "image_size", 224),
         mean=getattr(model, "mean", (0.485, 0.456, 0.406)),
         std=getattr(model, "std", (0.229, 0.224, 0.225)),
+        composite_probability=composite_probability,
     )
 
 
@@ -172,7 +177,7 @@ def _paired_raw_outputs(model, dataset, *, batch_size: int, device: str, workers
     )
     values: dict[str, list[np.ndarray]] = defaultdict(list)
     with torch.inference_mode():
-        for clean, web, _labels_batch, _families, _moderate, _indices in loader:
+        for clean, web, _labels_batch, _families, _contents, _moderate, _indices in loader:
             for name, images in (("clean", clean), ("web", web)):
                 outputs = model.components(images.to(device))
                 values[f"{name}_fused"].append(outputs.fused_logit.detach().cpu().numpy())
@@ -301,9 +306,18 @@ def train(args: argparse.Namespace) -> int:
             model_repo=args.model_repo,
             model_revision=args.model_revision,
         ).to(args.device)
-    _samples, dataset = _dataset(args.manifest, args.split, training=True, seed=args.seed, model=model)
+    if args.experts_only:
+        if not hasattr(model, "freeze_prior"):
+            raise ValueError("--experts-only requires vit_multilayer_scalepair")
+        model.freeze_prior()
+    composite_probability = 0.25 if args.experts_only else 0.0
+    _samples, dataset = _dataset(
+        args.manifest, args.split, training=True, seed=args.seed, model=model,
+        composite_probability=composite_probability,
+    )
     _validation_samples, validation = _dataset(
-        args.manifest, args.validation_split, training=True, seed=args.seed + 1, model=model
+        args.manifest, args.validation_split, training=True, seed=args.seed + 1, model=model,
+        composite_probability=composite_probability,
     )
     ema = copy.deepcopy(model).eval()
 
@@ -354,7 +368,7 @@ def train(args: argparse.Namespace) -> int:
         model.train()
         epoch_losses: list[float] = []
         consistency_weight = 0.0 if epoch == 0 else 0.02 if epoch == 1 else args.consistency_weight
-        for clean, web, labels, families, moderate, _indices in loader:
+        for clean, web, labels, families, contents, moderate, _indices in loader:
             if global_step == args.freeze_steps:
                 if hasattr(model, "unfreeze_last_blocks"):
                     model.unfreeze_last_blocks(args.unfreeze_last_blocks)
@@ -366,6 +380,7 @@ def train(args: argparse.Namespace) -> int:
             loss_device = "cpu" if args.device == "mps" else args.device
             labels = labels.float().to(loss_device, non_blocking=True)
             families = families.to(loss_device, non_blocking=True)
+            contents = contents.to(loss_device, non_blocking=True)
             moderate = moderate.to(loss_device, non_blocking=True)
             targets = labels * 0.98 + 0.01
             optimizer.zero_grad(set_to_none=True)
@@ -389,6 +404,9 @@ def train(args: argparse.Namespace) -> int:
                     family_loss = torch.nn.functional.cross_entropy(clean_outputs.family_logits.to(loss_device)[family_mask], families[family_mask])
                 else:
                     family_loss = fused_loss * 0
+                content_loss = torch.nn.functional.cross_entropy(
+                    clean_outputs.content_logits.to(loss_device), contents
+                ) if clean_outputs.content_logits is not None else fused_loss * 0
                 moderate_loss = torch.maximum(clean_fused, web_fused)[moderate].mean() if moderate.any() else fused_loss * 0
                 consistency = 1 - torch.nn.functional.cosine_similarity(
                     clean_outputs.embedding.to(loss_device), web_outputs.embedding.to(loss_device)
@@ -396,7 +414,8 @@ def train(args: argparse.Namespace) -> int:
                 loss = (
                     0.65 * fused_loss
                     + 0.15 * auxiliary
-                    + 0.10 * family_loss
+                    + 0.05 * family_loss
+                    + 0.05 * content_loss
                     + 0.10 * moderate_loss
                     + consistency_weight * consistency
                 )
@@ -735,6 +754,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     train_parser.add_argument("--unfreeze-last-blocks", type=int, default=0)
     train_parser.add_argument("--initial-checkpoint")
+    train_parser.add_argument("--experts-only", action="store_true")
     train_parser.set_defaults(handler=train)
 
     calibrate_parser = commands.add_parser("calibrate")
