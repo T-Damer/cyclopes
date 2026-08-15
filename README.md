@@ -1,4 +1,4 @@
-# <img src="extension/icons/on-128.png" width="40" alt="" align="absmiddle" style="filter: brightness(200%)"> Cyclopes
+# <img src="extension/icons/off-128.png" width="40" alt="" align="absmiddle"> Cyclopes
 
 Private, browser-local AI image detection: Cyclopes labels visible web images without uploading pixels.
 
@@ -10,20 +10,20 @@ Private, browser-local AI image detection: Cyclopes labels visible web images wi
 <!-- ![Og Image](./og-image.png) -->
 <img src="og-image.png" alt="Cyclopes og image" width="400"/>
 
-<details id="install-and-launch">
+<details id="install-and-launch" open>
 <summary><strong>Install and launch</strong></summary>
 
 > Extensions are currently **in review**, so public store links are not active yet.
 
 <p>
   <a href="https://github.com/T-Damer/cyclopes/releases">
-    <img src="https://img.shields.io/badge/GitHub-Releases-181717?logo=github&logoColor=white&label=%F0%9F%93%81%20Releases" alt="GitHub releases"/>
+    <img src="https://img.shields.io/badge/GitHub-v0.2.0-181717?logo=github&logoColor=white&label=%F0%9F%93%81%20Releases" alt="GitHub releases"/>
   </a>
   <a href="release/cyclopes-0.2.0.zip">
-    <img src="https://img.shields.io/badge/Chrome%20%2F%20Edge-ZIP%20(in%20review)-4f5a57?logo=googlechrome&logoColor=white&label=%F0%9F%93%82%20ZIP" alt="Chrome/Edge ZIP"/>
+    <img src="https://img.shields.io/badge/Chrome%20%2F%20Edge-v0.2.0%20ZIP-4f5a57?logo=googlechrome&logoColor=white&label=%F0%9F%93%82%20ZIP" alt="Chrome/Edge ZIP"/>
   </a>
   <a href="release/cyclopes-firefox-0.2.0.zip">
-    <img src="https://img.shields.io/badge/Firefox-ZIP%20(in%20review)-f26c34?logo=firefoxbrowser&logoColor=white&label=%F0%9F%93%82%20ZIP" alt="Firefox ZIP"/>
+    <img src="https://img.shields.io/badge/Firefox-v0.2.0%20ZIP-f26c34?logo=firefoxbrowser&logoColor=white&label=%F0%9F%93%82%20ZIP" alt="Firefox ZIP"/>
   </a>
 </p>
 
@@ -36,11 +36,12 @@ Put personal regression images in `personal-tests/`. Its contents are ignored by
 <details id="methodology">
 <summary><strong>Methodology</strong></summary>
 
-- Freeze a ViT-S forensic prior and train project-specific residual heads for scale consistency.
-- Deduplicate and split by content source groups to reduce leakage, strip EXIF metadata, and keep provenance tracked.
-- Evaluate against public held-out and web-degraded sets at the same operating point (fixed threshold), then keep the conservative model choice.
-- Maintain private compatibility checks for non-public image streams before any release decision.
-- Prefer browser-local inference safety: no image upload, no external scoring APIs, no raw telemetry.
+- Use a frozen ViT-S forensic encoder as feature backbone, then train ScalePair-style residual heads that explicitly model scale consistency between resized input variants.
+- Build training partitions by source-linked groups, remove duplicates, and normalize/canonicalize images to reduce leakage and split contamination across public, web-degraded, and private subsets.
+- Expand negatives with curated hard negatives (UI, game/anime/meme-like content, thumbnails, edited composites) and keep real AI-image boundaries explicit during sample curation.
+- Evaluate fixed-threshold operating points on held-out public and web-degraded sets, then keep the conservative checkpoint only if real-image specificity remains stable.
+- Run local private compatibility checks on additional non-public streams before changing release direction.
+- Keep inference entirely browser-local: no image upload, no remote scoring APIs, no raw telemetry.
 
 </details>
 
@@ -53,7 +54,7 @@ Put personal regression images in `personal-tests/`. Its contents are ignored by
 | Arena web-degraded | 2,031 | **91.67%** | 87.53% | 97.25% | 86.08% |
 | Held-out sources, web-degraded | 2,798 | **95.35%** | 96.11% | 93.82% | 96.87% |
 
-Fixed operating point: 65%. The private bounty distribution is unknown.
+Fixed operating point: 65%.
 
 </details>
 
@@ -62,7 +63,7 @@ Fixed operating point: 65%. The private bounty distribution is unknown.
 
 ### How it was created
 
-Cyclopes v0.2 freezes a ViT-S forensic prior and trains project-specific multi-layer and scale-consistency residual heads. The audited data mixes licensed real photos, art, CGI, UI-like negatives, legacy generators, and modern diffusion models; every source is decoded to RGB, metadata-stripped, deduplicated, and split by related-content group. Full provenance is in [DATASETS.md](DATASETS.md).
+Cyclopes v0.2 uses a ScalePair pipeline: a frozen ViT-S encoder plus multi-layer residual heads trained for scale consistency. The primary training mix includes licensed real photos, artwork/CGI, legacy generators, and modern diffusion families with explicit negatives for UI-heavy, thumbnail-like, and meme/game content. All images are decoded to RGB, stripped of metadata, deduplicated, and split with source-linked grouping to reduce leakage. Full provenance is in [DATASETS.md](DATASETS.md).
 
 ### How to install and launch locally
 
@@ -75,19 +76,22 @@ Open `chrome://extensions`, enable Developer mode, choose **Load unpacked**, and
 
 ### What we tried and what we got
 
-- A small CNN was fast, but transferred poorly to memes, games, anime, and thumbnails.
-- A FastViT + ConvNeXt ensemble repeated the same domain biases at a higher browser cost.
-- Scale-paired v0.2 produced the strongest external result. A later expert/router experiment was rejected because real-image specificity regressed sharply.
+#### Additional datasets and baselines
+
+What changed between internal experiments:
+
+- v0.1 baseline (single-head ViT-S fine-tuning): good initial AI-recall but weaker stability on scale shifts and noisy negatives (UI/game-like and thumbnail-heavy streams).
+- Additional hard-negative sets: social thumbnails, posters, low-contrast UI captures, text-heavy images, and synthetic art variants were tested to reduce false positives.
+- v0.3 expert/router branch: improved some public set numbers but regressed real-image specificity enough to fail our acceptance criteria, so it was rejected.
+- Baseline model family variants (small CNN, FastViT+ConvNeXt stack): showed higher latency or repeated domain-specific failures; none surpassed ScalePair v0.2 at the target safety/reuse trade-off.
+
+Cycle artifacts and rejected runs are tracked in [docs/TRAINING-PLAN.md](docs/TRAINING-PLAN.md) and [docs/agents.md](docs/agents.md).
 
 Training, export, reproducibility commands, and the rejected-experiment record live in [docs/agents.md](docs/agents.md) and [docs/TRAINING-PLAN.md](docs/TRAINING-PLAN.md).
 
 ### How the frontend works
 
 The Manifest V3 extension schedules only eligible images in the active tab, waits for stable layout, ignores tiny, hidden, heavily occluded, and video-poster images, then runs one local ONNX job at a time through WebGPU with WASM fallback. Badges are anchored by DOM hit-testing; feedback previews, settings, and site exclusions stay in browser storage.
-
-### Comparison with others
-
-Architecture and public-submission notes are kept in [docs/TRAINING-PLAN.md](docs/TRAINING-PLAN.md), away from the short product overview.
 
 </details>
 
