@@ -20,10 +20,10 @@ Private, browser-local AI image detection: Cyclopes labels visible web images wi
     <img src="https://img.shields.io/badge/GitHub-Releases-181717?logo=github&logoColor=white&label=%F0%9F%93%81%20Releases" alt="GitHub releases"/>
   </a>
   <a href="release/cyclopes-0.2.0.zip">
-    <img src="https://img.shields.io/badge/Chrome%20%2F%20Edge-Review%20ZIP%20(in%20review)-4f5a57?logo=googlechrome&logoColor=white&label=%F0%9F%93%82%20ZIP" alt="Chrome/Edge ZIP"/>
+    <img src="https://img.shields.io/badge/Chrome%20%2F%20Edge-ZIP%20(in%20review)-4f5a57?logo=googlechrome&logoColor=white&label=%F0%9F%93%82%20ZIP" alt="Chrome/Edge ZIP"/>
   </a>
   <a href="release/cyclopes-firefox-0.2.0.zip">
-    <img src="https://img.shields.io/badge/Firefox-Review%20ZIP%20(in%20review)-f26c34?logo=firefoxbrowser&logoColor=white&label=%F0%9F%93%82%20ZIP" alt="Firefox ZIP"/>
+    <img src="https://img.shields.io/badge/Firefox-ZIP%20(in%20review)-f26c34?logo=firefoxbrowser&logoColor=white&label=%F0%9F%93%82%20ZIP" alt="Firefox ZIP"/>
   </a>
 </p>
 
