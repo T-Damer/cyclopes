@@ -56,6 +56,14 @@ test("badge placement checks its four corners and center", () => {
   assert.equal(shared.badgeObstructionScore(image, rect), 2);
   image.ownerDocument.elementFromPoint = () => ({ contains: (element) => element === image });
   assert.equal(shared.badgeObstructionScore(image, rect), 0);
+  const side = shared.BADGE_PLACEMENTS.find(({ name }) => name === "right-center");
+  assert.deepEqual(
+    shared.badgePlacementRect({ left: 0, top: 0, right: 200, width: 200, height: 100 }, 50, 20, side),
+    { left: 177, top: 25, right: 197, bottom: 75, width: 20, height: 50 },
+  );
+  const badge = { classList: { contains: (name) => name === "cyclopes-badge" } };
+  image.ownerDocument.elementsFromPoint = () => [badge, {}];
+  assert.equal(shared.badgeObstructionScore(image, rect), 5);
 });
 
 test("preprocessing preserves the complete displayed image", () => {
@@ -90,6 +98,7 @@ test("the built MV3 package is local and has its inference document", () => {
   assert.match(content, /white-space:nowrap/);
   assert.match(content, /border-radius:10px/);
   assert.match(content, /anchor-name/);
+  assert.match(content, /rotate\(/);
   assert.match(content, /AI.*%/);
   assert.doesNotMatch(content, /blur\(/);
   assert.doesNotMatch(content, /2147483647/);

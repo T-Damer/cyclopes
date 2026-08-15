@@ -47,7 +47,13 @@ function updateBadge(image) {
   badge.dataset.position = best.name;
   badge.style.left = `anchor(${best.x})`;
   badge.style.top = `anchor(${best.y})`;
-  badge.style.transform = `translate(${best.tx * 100}%,${best.ty * 100}%) translate(${best.dx}px,${best.dy}px)`;
+  if (best.rotate) {
+    const inset = height / 2 + 3;
+    const direction = best.ax === 1 ? -1 : 1;
+    badge.style.transform = `translate(calc(-50% + ${direction * inset}px),-50%) rotate(${best.rotate}deg)`;
+  } else {
+    badge.style.transform = `translate(${best.tx * 100}%,${best.ty * 100}%) translate(${best.dx}px,${best.dy}px)`;
+  }
 }
 
 function removeBadge(image) {

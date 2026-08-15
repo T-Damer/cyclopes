@@ -1,15 +1,9 @@
-import csv
-import json
-import sys
-
-import tools.prepare_field_regression as field_regression
 from tools.prepare_hard_negatives import eligible_oga, eligible_photo
 from tools.prepare_ai_replay import cocoxgen_group
 from tools.prepare_blender_frames import download_url
 from tools.prepare_anime_pairs import art_prompt, author_group
 from tools.generate_modern_anime import prompts
 from tools.audit_manifest import low_information, near_duplicate, normalized_group_split
-from tools.prepare_field_regression import rule34_media
 from cyclopes.data import Sample
 from pathlib import Path
 
@@ -29,36 +23,6 @@ def test_docci_neighbors_share_a_content_group() -> None:
     first = Sample(Path("train_00007.jpg"), 0, "google/docci", "camera", "old-7", "train")
     second = Sample(Path("train_00009.jpg"), 0, "google/docci", "camera", "old-9", "test")
     assert normalized_group_split(first) == normalized_group_split(second)
-
-
-def test_rule34_media_extracts_full_and_thumbnail() -> None:
-    page = b'''<meta property="og:image" content="https://wimg.rule34.xxx/images/1/full.jpeg?7">
-    <a href="https://wimg.rule34.xxx/thumbnails//1/thumbnail_hash.jpg">thumb</a>'''
-    assert rule34_media(page) == [
-        "https://wimg.rule34.xxx/images/1/full.jpeg?7",
-        "https://wimg.rule34.xxx/thumbnails//1/thumbnail_hash.jpg",
-    ]
-
-
-def test_field_manifest_deduplicates_identical_downloads(monkeypatch, tmp_path) -> None:
-    cases = tmp_path / "cases.json"
-    output = tmp_path / "field"
-    cases.write_text(json.dumps({
-        "training_allowed": False,
-        "cases": [{
-            "id": "same-image",
-            "urls": ["https://example.test/full.jpg", "https://example.test/thumb.jpg"],
-            "expected_label": "ai",
-            "content_kind": "illustration",
-        }],
-    }))
-    monkeypatch.setattr(field_regression, "fetch", lambda _url: (b"same", "image/jpeg"))
-    monkeypatch.setattr(sys, "argv", ["prepare_field_regression.py", str(cases), str(output)])
-
-    field_regression.main()
-
-    with (output / "manifest.csv").open(newline="") as handle:
-        assert len(list(csv.DictReader(handle))) == 1
 
 
 def test_anime_pair_selection_prefers_art_prompts_and_groups_authors() -> None:

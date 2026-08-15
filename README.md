@@ -28,6 +28,8 @@ npm run build
 
 Open `chrome://extensions`, enable Developer mode, choose **Load unpacked**, and select `dist/`. Reload already-open pages once, then click the Cyclopes icon to toggle **Filter: ON/OFF**.
 
+Put private regression images you want to test in `personal-tests/`; its contents are ignored by Git.
+
 ## Approach
 
 A frozen ViT-S forensic prior is adapted with project-trained multi-layer and scale-consistency residual heads. Each complete displayed image is compared with its own downscale/upscale probe inside one ONNX graph. The graph runs through WebGPU with a WASM fallback; pixels never leave the browser.

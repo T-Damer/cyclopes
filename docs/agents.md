@@ -64,14 +64,11 @@ MAX_SECONDS=5400 bash vast/run.sh
 
 The bootstrap requires an H200-class CUDA device, at least 40 GB free disk, and `HF_READ_ONLY_TOKEN`. It never reads or modifies the local Vast API key or SSH keys. Copy the result archive before destroying the rented instance.
 
-## Field and browser checks
+## Browser checks
 
 ```bash
-.venv/bin/python tools/prepare_field_regression.py tests/field-regression.json data/field-regression
-.venv/bin/python -m cyclopes.cli evaluate --manifest data/field-regression/manifest.csv --checkpoint data/artifacts/cyclopes-v5.pt --calibration data/artifacts/calibration-v5.json --browser-view --predictions reports/field-browser-predictions-v5.json --report reports/field-browser-v5.json
-.venv/bin/python -m cyclopes.cli onnx-parity --manifest data/field-regression/manifest.csv --checkpoint data/artifacts/cyclopes-v5.pt --calibration data/artifacts/calibration-v5.json --onnx extension/models/cyclopes.onnx --browser-view --report reports/parity-field-browser-v5.json --tolerance 0.001
 .venv/bin/python -m pytest -q
 npm test
 ```
 
-Load `dist/` at `chrome://extensions` → Developer mode → Load unpacked. Reload a local fixture page once, click the Cyclopes icon, and verify anchored hieroglyph loading badges stay on one line, follow scrolling/transforms, avoid page controls using corner/edge positions, share image stacking, support absolutely positioned images inside aspect-ratio containers, pause inference while the tab is hidden, and ignore rendered or source images below 256×256, video posters, and images over 85% occluded. Field cases are frozen evaluation-only data and must never influence training, calibration, threshold, or checkpoint selection. No live Rule34 check is part of the vNext training gate.
+Load `dist/` at `chrome://extensions` → Developer mode → Load unpacked. Reload a local fixture page once, click the Cyclopes icon, and verify anchored hieroglyph loading badges stay on one line, follow scrolling/transforms, avoid page controls using corner/edge positions (including rotated side-center fallbacks), share image stacking, support absolutely positioned images inside aspect-ratio containers, pause inference while the tab is hidden, and ignore rendered or source images below 256×256, video posters, and images over 85% occluded. Personal regression images belong only in the Git-ignored `personal-tests/` directory and must never influence training, calibration, threshold, or checkpoint selection.

@@ -9,7 +9,7 @@
 
 The research below led to a single **ScalePair MobileNetV3-Large** ONNX model, not the rejected FastViT + ConvNeXt ensemble. It compares RGB features with a downscale/upscale probe inside one project-trained graph; no public AI-detector checkpoint, metadata, watermark, or server is used.
 
-V5 was selected after a bounded 100-step frozen-backbone replay fine-tune. No H200 was needed for this final pass. At the fixed 0.65 threshold it reaches **90.65% balanced accuracy and 91.90% AI precision** on AI Detector Arena v0.1. The 56-file user field regression reaches 90% AI recall and 52.78% real specificity; this deliberately difficult, non-representative set exposes the remaining false positives rather than being used for tuning.
+V5 was selected after a bounded 100-step frozen-backbone replay fine-tune. No H200 was needed for this final pass. At the fixed 0.65 threshold it reaches **90.65% balanced accuracy and 91.90% AI precision** on AI Detector Arena v0.1.
 
 The final graph is 14,974,340 bytes with SHA-256 `4936a9ef0988efe9717da24c45da61a213ed09eb39437f1ea7ee0474471fc359`. Reproducibility commands are in [`docs/agents.md`](agents.md); machine-readable results are in `reports/*-v5.json`.
 
@@ -135,40 +135,6 @@ Rejected baseline at the start of this plan:
 
 The large internal-to-OOD drop was evidence of source/generalization shortcuts. Passing 75% by less than half a percentage point was not a safe margin for an unknown private evaluation, so those graphs were removed.
 
-## 5. Browser field audit
-
-The existing unpacked extension was exercised on user-selected Rule34 posts. Labels below come from the site's `ai generated` tag and user assessment; they are not independently verified scientific ground truth. These URLs must remain evaluation-only and must never enter training, calibration, checkpoint selection, or augmentation development.
-
-| Post | Expected | Thumbnail score | Full-page score | Current result |
-| --- | --- | ---: | ---: | --- |
-| [18447255](https://rule34.xxx/index.php?page=post&s=view&id=18447255) | AI-tagged | 0.6443 | 0.3868 | miss |
-| [18447258](https://rule34.xxx/index.php?page=post&s=view&id=18447258) | AI-tagged | 0.1981 | 0.4237 | miss |
-| [18447257](https://rule34.xxx/index.php?page=post&s=view&id=18447257) | AI-tagged | 0.6161 | 0.3070 | miss |
-| [18447247](https://rule34.xxx/index.php?page=post&s=view&id=18447247) | AI-tagged | 0.3231 | 0.2980 | miss |
-| [18447265](https://rule34.xxx/index.php?page=post&s=view&id=18447265) | AI-tagged | 0.5070 | 0.7576 | full only |
-| [18447254](https://rule34.xxx/index.php?page=post&s=view&id=18447254) | AI-tagged, visually ambiguous | 0.6488 | 0.4379 | miss |
-| [18447260](https://rule34.xxx/index.php?page=post&s=view&id=18447260) | AI-tagged, visually ambiguous | 0.6483 | 0.6487 | miss |
-| [18447263](https://rule34.xxx/index.php?page=post&s=view&id=18447263) | AI-tagged, visually ambiguous | 0.6467 | 0.4850 | miss |
-| [18447261](https://rule34.xxx/index.php?page=post&s=view&id=18447261) | user-identified real | 0.6477 | 0.6505 | false positive on full image |
-| [18447267](https://rule34.xxx/index.php?page=post&s=view&id=18447267) | AI-tagged, obvious | — | 0.0056 | severe miss |
-| [18447269](https://rule34.xxx/index.php?page=post&s=view&id=18447269) | AI-tagged GIF | [0.6498](https://wimg.rule34.xxx/thumbnails/703/thumbnail_58712c18ee0cae454e7dfbadad771ff5.jpg?18447269) | 0.3170 | miss |
-
-The GIF path is functional: the browser decoded and scored a still frame. The failure is classification, not missing GIF support.
-
-An additional real-graphics audit exposed a separate threshold-boundary failure:
-
-| Image pair | Expected | Small/cached score | Larger-source score | Current result |
-| --- | --- | ---: | ---: | --- |
-| [Yabloko poster cached image](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSS2AcirVk3FIc6Hxw_JtAsDcwFuWMsJJxoaJlJrI-zg&s=10) / [1200 px source](https://www.yabloko.ru/files/styles/max_1300x1300/public/for-smi-gallery/2025-08/01.png?itok=EVHk0C7A) | real flat graphic | 0.6504 | 0.6504 | false positive |
-| [Yabloko emblem cached image](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs1S8eMlC1QBIFh8QSVMQ5eUk5PsS9ZZ1FDIhuK17PCA&s) / [250 px Wikimedia source](https://upload.wikimedia.org/wikipedia/ru/thumb/1/19/Yabloko_emblem.svg/250px-Yabloko_emblem.svg.png) | real logo/vector rendering | 0.6503 | 0.6497 | threshold flips across representations |
-| [Google cached graphic 2](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS1azaop7DT5uG32yneNV7kYjuMwwxr_6cHmfuOQhwVw&s=10) | real web graphic | 0.6506 | — | false positive |
-| [Google cached graphic 3](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcwj3FPZUVjv19cFfFTQr3gLyHLtz5R9MXAhNybCZmcw&s=10) | real web graphic | 0.6502 | — | false positive |
-| [RFE/RL graphic](https://gdb.rferl.org/fdabfb49-5181-4c57-46eb-08decacf94d0_w408_r1_s.png) | real web graphic | 0.6505 | — | false positive |
-
-The second decision changes across the fixed `0.65` boundary for a score difference of only `0.0006`. The first pair remains slightly above the boundary at both resolutions. These cases show that logos, typography, flat color fields, and rasterized vector art need explicit real hard-negative coverage. They also show why tuning the threshold on individual examples is invalid.
-
-All user-supplied field cases are frozen in [`tests/field-regression.json`](../tests/field-regression.json). The manifest explicitly forbids training use and preserves the current scores for before/after comparison. [`tests/test_field_regression.py`](../tests/test_field_regression.py) validates its schema and uniqueness without making network requests.
-
 ## 6. Why the previous approach was rejected
 
 ### 6.1 Originality
@@ -181,13 +147,7 @@ Arena and Synthbuster balanced accuracy are only 75.49% and 75.36%. Both are too
 
 ### 6.3 Resolution and codec instability
 
-The same content can cross the threshold after resizing in either direction. Examples include:
-
-- post 18447265: `0.5070` thumbnail versus `0.7576` full-size;
-- post 18447269: `0.6498` thumbnail versus `0.3170` GIF still;
-- post 18447255: `0.6443` thumbnail versus `0.3868` full-size.
-
-A threshold adjustment cannot solve contradictory scores for the same content and would violate the fixed 0.65 rule.
+The same content can cross the threshold after resizing in either direction. A threshold adjustment cannot solve contradictory scores for the same content and would violate the fixed 0.65 rule.
 
 ### 6.4 Runtime cost
 
@@ -270,7 +230,6 @@ Epoch sampling is 50% real and 50% AI. Within each label, sources and generators
 - `validation`: 10%, disjoint groups, used for checkpoint and compression selection;
 - `Arena`: development OOD only; already observed and therefore not a frozen test;
 - `Synthbuster + RAISE-1k`: historical OOD regression only; already observed and therefore no longer honestly blind;
-- `Rule34 field set`: one-time qualitative browser regression after the model is frozen.
 
 The private POIDH set is the only truly blind final evaluation. Public results will be described as development or regression evidence, not as a prediction of the private score.
 
@@ -307,7 +266,7 @@ L = 0.5 * BCE(z_ref, y)
   + 0.25 * SmoothL1(z_ref, z_web)
 ```
 
-The consistency weight is frozen before the OOD evaluations. It may be changed only using the calibration/validation splits, never the Rule34 cases.
+The consistency weight is frozen before the OOD evaluations. It may be changed only using the calibration/validation splits, never private personal cases.
 
 ## 10. Training run
 
@@ -403,9 +362,6 @@ In a clean Chrome profile:
 5. Confirm no runtime request except fetching the webpage's displayed image URL.
 6. Confirm each analyzed element receives a numeric diagnostic score.
 7. Confirm eligible images receive confidence badges, page content is not blurred, and rendered or source images below 256×256 are ignored.
-8. Run the frozen Rule34 URLs once and record full/thumbnail results without further tuning on them.
-
-Field target, not a statistical accuracy claim: at least 8 of the 10 AI-tagged cases score at or above 0.65, including obvious case 18447267 and GIF thumbnail 18447269, while the user-identified real case 18447261 remains below threshold.
 
 ### 11.3 Automatic rejection
 
@@ -452,7 +408,6 @@ Before submission, reviewers should be able to inspect:
 - PyTorch/ONNX/Chrome parity rows;
 - final ONNX hash and size;
 - clean-profile offline browser evidence;
-- Rule34 full/thumbnail regression table;
 - concise disclosure of limitations and all failed gates.
 
 ## 14. Resolved review questions
@@ -462,7 +417,6 @@ Decisions used for V5:
 1. Are the proposed Openverse/OpenGameArt digital-art licenses and attribution workflow acceptable for released model weights?
 2. Is MobileNetV3 ImageNet initialization sufficiently distinct for the originality claim, or should the RGB branch also be trained from scratch at a likely accuracy cost?
 3. Are the 80%/78% internal gates enough margin, or should Arena require 80%?
-4. Should the field target require 8/10 or 9/10 AI-tagged Rule34 examples, given that three were explicitly judged visually ambiguous?
-5. Does the team accept using no public-detector teacher distillation in the first candidate?
+4. Does the team accept using no public-detector teacher distillation in the first candidate?
 
-The final choices were: CC0 OpenGameArt only for the added real hard negatives; ordinary ImageNet initialization is acceptable because it is not an AI detector; Arena must exceed 80%; the user field set remains evaluation-only; and no teacher distillation is used.
+The final choices were: CC0 OpenGameArt only for the added real hard negatives; ordinary ImageNet initialization is acceptable because it is not an AI detector; Arena must exceed 80%; and no teacher distillation is used.

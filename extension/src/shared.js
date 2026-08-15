@@ -7,6 +7,8 @@ export const BADGE_PLACEMENTS = [
   { name: "bottom-left", x: "left", y: "bottom", ax: 0, ay: 1, tx: 0, ty: -1, dx: 3, dy: -3 },
   { name: "top-center", x: "center", y: "top", ax: 0.5, ay: 0, tx: -0.5, ty: 0, dx: 0, dy: 3 },
   { name: "bottom-center", x: "center", y: "bottom", ax: 0.5, ay: 1, tx: -0.5, ty: -1, dx: 0, dy: -3 },
+  { name: "right-center", x: "right", y: "center", ax: 1, ay: 0.5, rotate: 90 },
+  { name: "left-center", x: "left", y: "center", ax: 0, ay: 0.5, rotate: -90 },
   { name: "top-right-edge", x: "right", y: "top", ax: 1, ay: 0, tx: -2, ty: 0, dx: -6, dy: 3 },
   { name: "top-left-edge", x: "left", y: "top", ax: 0, ay: 0, tx: 1, ty: 0, dx: 6, dy: 3 },
   { name: "bottom-right-edge", x: "right", y: "bottom", ax: 1, ay: 1, tx: -2, ty: -1, dx: -6, dy: -3 },
@@ -22,13 +24,23 @@ export const BADGE_PLACEMENTS = [
 ];
 
 export function badgePlacementRect(imageRect, badgeWidth, badgeHeight, placement) {
+  if (placement.rotate) {
+    const left = placement.ax === 1 ? imageRect.right - badgeHeight - 3 : imageRect.left + 3;
+    const top = imageRect.top + (imageRect.height - badgeWidth) / 2;
+    return { left, top, right: left + badgeHeight, bottom: top + badgeWidth, width: badgeHeight, height: badgeWidth };
+  }
   const left = imageRect.left + imageRect.width * placement.ax + badgeWidth * placement.tx + placement.dx;
   const top = imageRect.top + imageRect.height * placement.ay + badgeHeight * placement.ty + placement.dy;
   return { left, top, right: left + badgeWidth, bottom: top + badgeHeight, width: badgeWidth, height: badgeHeight };
 }
 
 function belongsToImage(image, element) {
-  return element === image || element?.contains?.(image) || element?.classList?.contains("cyclopes-badge");
+  return element === image || element?.contains?.(image);
+}
+
+function elementBelowBadge(document, x, y) {
+  return document.elementsFromPoint?.(x, y)
+    .find((element) => !element.classList?.contains("cyclopes-badge")) ?? document.elementFromPoint(x, y);
 }
 
 export function badgeObstructionScore(image, rect) {
@@ -40,7 +52,7 @@ export function badgeObstructionScore(image, rect) {
     [rect.left + rect.width / 2, rect.top + rect.height / 2],
   ];
   return points.reduce((blocked, [x, y]) => {
-    const top = image.ownerDocument.elementFromPoint(x, y);
+    const top = elementBelowBadge(image.ownerDocument, x, y);
     return blocked + Number(!belongsToImage(image, top));
   }, 0);
 }
@@ -59,7 +71,7 @@ export function isMostlyOccluded(image, viewportWidth, viewportHeight) {
       const x = rect.left + rect.width * (column + 0.5) / 5;
       const y = rect.top + rect.height * (row + 0.5) / 5;
       if (x < 0 || y < 0 || x >= viewportWidth || y >= viewportHeight) continue;
-      const top = image.ownerDocument.elementFromPoint(x, y);
+      const top = elementBelowBadge(image.ownerDocument, x, y);
       if (belongsToImage(image, top)) visible += 1;
     }
   }

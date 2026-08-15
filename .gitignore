@@ -10,6 +10,8 @@ __pycache__/
 node_modules/
 dist/
 release/
+personal-tests/*
+!personal-tests/.gitkeep
 data/
 runs/
 models/*.onnx
