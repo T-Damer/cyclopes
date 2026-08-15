@@ -27,6 +27,10 @@ export function badgePlacementRect(imageRect, badgeWidth, badgeHeight, placement
   return { left, top, right: left + badgeWidth, bottom: top + badgeHeight, width: badgeWidth, height: badgeHeight };
 }
 
+function belongsToImage(image, element) {
+  return element === image || element?.contains?.(image) || element?.classList?.contains("cyclopes-badge");
+}
+
 export function badgeObstructionScore(image, rect) {
   const points = [
     [rect.left + 1, rect.top + 1],
@@ -37,7 +41,7 @@ export function badgeObstructionScore(image, rect) {
   ];
   return points.reduce((blocked, [x, y]) => {
     const top = image.ownerDocument.elementFromPoint(x, y);
-    return blocked + Number(top !== image && !top?.classList?.contains("cyclopes-badge"));
+    return blocked + Number(!belongsToImage(image, top));
   }, 0);
 }
 
@@ -56,7 +60,7 @@ export function isMostlyOccluded(image, viewportWidth, viewportHeight) {
       const y = rect.top + rect.height * (row + 0.5) / 5;
       if (x < 0 || y < 0 || x >= viewportWidth || y >= viewportHeight) continue;
       const top = image.ownerDocument.elementFromPoint(x, y);
-      if (top === image || top?.classList?.contains("cyclopes-badge")) visible += 1;
+      if (belongsToImage(image, top)) visible += 1;
     }
   }
   return visible < 4;

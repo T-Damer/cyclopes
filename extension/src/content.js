@@ -99,7 +99,7 @@ setInterval(() => {
 }, 150);
 
 async function analyze(image) {
-  if (!enabled || !visible.has(image) || !isEligibleImage(image)) return;
+  if (!enabled || document.hidden || !visible.has(image) || !isEligibleImage(image)) return;
   const source = image.currentSrc;
   if (states.get(image) === source) return;
   if (isMostlyOccluded(image, innerWidth, innerHeight)) return;
@@ -111,7 +111,7 @@ async function analyze(image) {
   try {
     const result = await chrome.runtime.sendMessage({ target: "background", type: "score", url: source });
     if (typeof result?.score !== "number") throw new Error(result?.error || "Inference returned no score.");
-    if (!enabled || states.get(image) !== source || !isEligibleImage(image) || isMostlyOccluded(image, innerWidth, innerHeight)) {
+    if (!enabled || document.hidden || states.get(image) !== source || !isEligibleImage(image) || isMostlyOccluded(image, innerWidth, innerHeight)) {
       states.delete(image);
       removeBadge(image);
       return;
@@ -122,6 +122,11 @@ async function analyze(image) {
     badge.textContent = `AI ${(result.score * 100).toFixed(0)}%`;
     updateBadge(image);
   } catch (error) {
+    if (document.hidden || !enabled) {
+      states.delete(image);
+      removeBadge(image);
+      return;
+    }
     const message = error instanceof Error ? error.message : String(error);
     image.dataset.cyclopesError = message;
     badge.textContent = "Cyclopes ERR";
@@ -179,3 +184,6 @@ new MutationObserver((records) => {
 }).observe(document.documentElement, { attributes: true, attributeFilter: ["src", "srcset"], childList: true, subtree: true });
 addEventListener("scroll", refresh, { passive: true });
 addEventListener("resize", refresh, { passive: true });
+addEventListener("visibilitychange", () => {
+  if (!document.hidden) refresh();
+});

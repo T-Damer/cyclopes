@@ -66,7 +66,7 @@ Required pre-submission gates:
 - Native Manifest V3 extension.
 - ONNX Runtime Web with WebGPU first and WASM fallback; all executable and inference assets are packaged locally.
 - An offscreen extension document fetches displayed image bytes, decodes pixels, runs inference, and returns only the score to the content script.
-- Static and dynamically inserted webpage images of at least 64 by 64 pixels are analyzed when they enter a 200px viewport margin.
+- Static and dynamically inserted webpage images whose source and displayed dimensions are both at least 256 by 256 pixels are analyzed when they enter a 200px viewport margin and the tab is visible.
 - The extension icon is the only control: click toggles Filter ON/OFF and exposes warming/error state.
 - Every visible image at least 64×64 CSS pixels receives an anchored loading badge and then an AI confidence badge; the badge probes ordered corner/edge positions to avoid page controls, video posters and images over 85% occluded are ignored, and content is never blurred.
 - Results are cached by image-byte SHA-256 with a 256-entry LRU; inference concurrency is one to keep page interaction responsive.

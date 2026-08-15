@@ -44,6 +44,8 @@ test("images with more than 85 percent sampled occlusion are ignored", () => {
   samples = 0;
   image.ownerDocument.elementFromPoint = () => samples++ < 4 ? image : {};
   assert.equal(shared.isMostlyOccluded(image, 100, 100), false);
+  image.ownerDocument.elementFromPoint = () => ({ contains: (element) => element === image });
+  assert.equal(shared.isMostlyOccluded(image, 100, 100), false);
 });
 
 test("badge placement checks its four corners and center", () => {
@@ -52,6 +54,8 @@ test("badge placement checks its four corners and center", () => {
   assert.deepEqual(rect, { left: 147, top: 3, right: 197, bottom: 23, width: 50, height: 20 });
   const image = { ownerDocument: { elementFromPoint: (x) => x < 150 ? {} : image } };
   assert.equal(shared.badgeObstructionScore(image, rect), 2);
+  image.ownerDocument.elementFromPoint = () => ({ contains: (element) => element === image });
+  assert.equal(shared.badgeObstructionScore(image, rect), 0);
 });
 
 test("preprocessing preserves the complete displayed image", () => {
@@ -78,6 +82,8 @@ test("the built MV3 package is local and has its inference document", () => {
   const content = readFileSync("dist/content.js", "utf8");
   assert.match(content, /cyclopesScore/);
   assert.match(content, /IntersectionObserver/);
+  assert.match(content, /document\.hidden/);
+  assert.match(content, /visibilitychange/);
   assert.match(content, /loadingFrames/);
   assert.match(content, /\\u\{1307A\}/);
   assert.match(content, /150/);
