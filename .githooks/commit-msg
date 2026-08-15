@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ -f "${1:-}" ]; then
+  node ./scripts/commit-version.mjs "$1"
+  git add package.json package-lock.json
+fi
