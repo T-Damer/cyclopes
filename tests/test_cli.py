@@ -32,6 +32,32 @@ def test_metrics_report_is_frozen_at_point_65() -> None:
     assert report["metrics"]["true_negative"] == 1
 
 
+def test_metrics_report_uses_predicted_routes() -> None:
+    samples = [
+        Sample(Path("real.png"), 0, "photos", "", "r", "test", content_domain="clean"),
+        Sample(Path("fake.png"), 1, "generated", "diffusion", "f", "test", content_domain="clean"),
+    ]
+    report = _metrics_report(samples, np.array([0.9, 0.9]), content_routes=np.array([2, 2]))
+    assert report["per_content_domain"] == {
+        "composite": {
+            "accuracy": 0.5,
+            "ai_count": 1,
+            "ai_precision": 0.5,
+            "ai_recall": 1.0,
+            "balanced_accuracy": 0.5,
+            "count": 2,
+            "false_negative": 0,
+            "false_positive": 1,
+            "roc_auc": 0.5,
+            "real_count": 1,
+            "real_specificity": 0.0,
+            "threshold": 0.65,
+            "true_negative": 0,
+            "true_positive": 1,
+        }
+    }
+
+
 def test_calibration_aligns_selected_raw_threshold() -> None:
     temperature, bias, raw_threshold = _fit_calibration(
         np.array([-2.0, -1.0, 1.0, 2.0]), np.array([0, 0, 1, 1])

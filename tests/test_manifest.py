@@ -45,3 +45,26 @@ def test_manifest_rejects_duplicate_file_content(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="duplicate image content"):
         load_manifest(manifest)
+
+
+def test_manifest_normalizes_content_domain(tmp_path: Path) -> None:
+    image = tmp_path / "image.jpg"
+    image.write_bytes(b"fake")
+    manifest = tmp_path / "manifest.csv"
+    with manifest.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=FIELDS + ("domain", "content_group", "sha256"))
+        writer.writeheader()
+        writer.writerow(
+            {
+                "path": image.name,
+                "label": 0,
+                "source": "opengameart",
+                "generator": "",
+                "content_group": "opengameart:missing-route",
+                "split": "train",
+                "domain": "cgi",
+                "sha256": "",
+            }
+        )
+    rows = load_manifest(manifest)
+    assert rows[0].content_domain == "retro-degraded"

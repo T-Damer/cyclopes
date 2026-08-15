@@ -1,4 +1,13 @@
 export const AI_THRESHOLD = 0.65;
+export const DEFAULT_IMAGE_SETTINGS = Object.freeze({
+  minSourceSize: 256,
+  maxAspectRatio: 4,
+  threshold: AI_THRESHOLD,
+  smartPositioning: true,
+  cssBackgrounds: true,
+  theme: "system",
+});
+export const MIN_RENDERED_AREA = 96 * 96;
 
 export const BADGE_PLACEMENTS = [
   { name: "top-right", x: "right", y: "top", ax: 1, ay: 0, tx: -1, ty: 0, dx: -3, dy: 3 },
@@ -23,19 +32,44 @@ export const BADGE_PLACEMENTS = [
   { name: "bottom-left-diagonal", x: "left", y: "bottom", ax: 0, ay: 1, tx: 1, ty: -2, dx: 6, dy: -6 },
 ];
 
-export function badgePlacementRect(imageRect, badgeWidth, badgeHeight, placement) {
+export function roundedCornerInset(radius) {
+  return Math.ceil(Math.max(0, radius) * (1 - Math.SQRT1_2));
+}
+
+export function cssBackgroundUrl(value) {
+  const match = value?.match(/^url\((?:"([^"]+)"|'([^']+)'|([^)]*))\)$/);
+  return match ? (match[1] || match[2] || match[3]).trim() : "";
+}
+
+export function badgePlacementOffset(placement, cornerInset = 0) {
+  const atCorner = (placement.ax === 0 || placement.ax === 1) && (placement.ay === 0 || placement.ay === 1);
+  return {
+    x: atCorner ? (placement.ax ? -cornerInset : cornerInset) : 0,
+    y: atCorner ? (placement.ay ? -cornerInset : cornerInset) : 0,
+  };
+}
+
+export function badgePlacementRect(imageRect, badgeWidth, badgeHeight, placement, cornerInset = 0) {
   if (placement.rotate) {
     const left = placement.ax === 1 ? imageRect.right - badgeHeight - 3 : imageRect.left + 3;
     const top = imageRect.top + (imageRect.height - badgeWidth) / 2;
     return { left, top, right: left + badgeHeight, bottom: top + badgeWidth, width: badgeHeight, height: badgeWidth };
   }
-  const left = imageRect.left + imageRect.width * placement.ax + badgeWidth * placement.tx + placement.dx;
-  const top = imageRect.top + imageRect.height * placement.ay + badgeHeight * placement.ty + placement.dy;
+  const offset = badgePlacementOffset(placement, cornerInset);
+  const left = imageRect.left + imageRect.width * placement.ax + badgeWidth * placement.tx + placement.dx + offset.x;
+  const top = imageRect.top + imageRect.height * placement.ay + badgeHeight * placement.ty + placement.dy + offset.y;
   return { left, top, right: left + badgeWidth, bottom: top + badgeHeight, width: badgeWidth, height: badgeHeight };
 }
 
 function belongsToImage(image, element) {
-  return element === image || element?.contains?.(image);
+  if (element === image || element?.contains?.(image)) return true;
+  const mediaWrapper = image.parentElement?.parentElement;
+  return Boolean(
+    mediaWrapper &&
+    element?.parentElement === mediaWrapper &&
+    !element.firstElementChild &&
+    !element.textContent?.trim()
+  );
 }
 
 function elementBelowBadge(document, x, y) {
@@ -79,12 +113,29 @@ export function isMostlyOccluded(image, viewportWidth, viewportHeight) {
 }
 
 export function isEligibleImage(image) {
+  return isEligibleImageWithSettings(image, DEFAULT_IMAGE_SETTINGS);
+}
+
+export function normalizeImageSettings(settings = {}) {
+  const minSourceSize = Math.min(1024, Math.max(64, Number(settings.minSourceSize) || DEFAULT_IMAGE_SETTINGS.minSourceSize));
+  const maxAspectRatio = Math.min(10, Math.max(1, Number(settings.maxAspectRatio) || DEFAULT_IMAGE_SETTINGS.maxAspectRatio));
+  const threshold = Math.min(0.95, Math.max(0.5, Number(settings.threshold) || DEFAULT_IMAGE_SETTINGS.threshold));
+  const smartPositioning = settings.smartPositioning !== false;
+  const cssBackgrounds = settings.cssBackgrounds !== false;
+  const theme = ["system", "light", "dark"].includes(settings.theme) ? settings.theme : DEFAULT_IMAGE_SETTINGS.theme;
+  return { minSourceSize, maxAspectRatio, threshold, smartPositioning, cssBackgrounds, theme };
+}
+
+export function isEligibleImageWithSettings(image, settings) {
+  const { minSourceSize, maxAspectRatio } = normalizeImageSettings(settings);
+  const sourceArea = image.naturalWidth * image.naturalHeight;
+  const renderedArea = image.width * image.height;
+  const aspectRatio = Math.max(image.naturalWidth, image.naturalHeight) / Math.max(1, Math.min(image.naturalWidth, image.naturalHeight));
   return Boolean(
     image.currentSrc &&
-      image.naturalWidth >= 256 &&
-      image.naturalHeight >= 256 &&
-      image.width >= 256 &&
-      image.height >= 256 &&
+      sourceArea >= minSourceSize ** 2 &&
+      renderedArea >= MIN_RENDERED_AREA &&
+      aspectRatio <= maxAspectRatio &&
       !isVideoPoster(image)
   );
 }

@@ -28,6 +28,41 @@ GENERATOR_FAMILIES = (
 )
 FAMILY_TO_INDEX = {name: index for index, name in enumerate(GENERATOR_FAMILIES)}
 CONTENT_CLASSES = ("clean", "web-degraded", "composite", "pixel-art", "retro-degraded")
+DOMAIN_ROUTING = {
+    "meme": "composite",
+    "pixel-art": "pixel-art",
+    "cgi": "retro-degraded",
+    "digital-art": "clean",
+    "photo": "clean",
+    "logo-poster-vector": "clean",
+    "traditional-art": "clean",
+}
+SOURCE_ROUTING = {
+    "Leonardo6/memotion": "composite",
+    "bghira/free-to-use-pixelart": "pixel-art",
+    "jainr3/diffusiondb-pixelart": "pixel-art",
+    "heikeadel/cocoxgen": "web-degraded",
+    "pamela-dataset/pamela": "web-degraded",
+    "opengameart": "clean",
+}
+
+
+def _content_route_index(content_domain: str) -> int:
+    return CONTENT_CLASSES.index(content_domain) if content_domain in CONTENT_CLASSES else 0
+
+
+def _resolve_content_domain(row: dict[str, str]) -> str:
+    content_domain = (row.get("content_domain") or row.get("domain") or "").strip().lower()
+    if content_domain in CONTENT_CLASSES:
+        return content_domain
+    if content_domain in DOMAIN_ROUTING:
+        return DOMAIN_ROUTING[content_domain]
+    if content_domain:
+        return content_domain
+    source = (row.get("source_dataset") or row.get("source") or "").strip().lower()
+    if source in SOURCE_ROUTING:
+        return SOURCE_ROUTING[source]
+    return "clean"
 
 
 @dataclass(frozen=True)
@@ -81,7 +116,7 @@ def load_manifest(path: str | Path) -> list[Sample]:
                     group=_field(row, "content_group", "group"),
                     split=_field(row, "split"),
                     generator_family=_field(row, "generator_family", "family") or "unknown",
-                    content_domain=_field(row, "content_domain", "domain") or "unknown",
+                    content_domain=_resolve_content_domain(row),
                     license=_field(row, "license") or "unknown",
                     sha256=_field(row, "sha256"),
                 )
@@ -277,7 +312,7 @@ class ManifestDataset(Dataset):
             return tensor, sample.label, index
 
         rng = random.Random(random.getrandbits(64) ^ self.seed ^ index)
-        content = 3 if sample.content_domain == "pixel-art" else 2 if sample.content_domain == "meme" else 0
+        content = _content_route_index(sample.content_domain)
         composite_probability = max(self.composite_probability, 0.65) if sample.label else self.composite_probability
         if rng.random() < composite_probability:
             image = composite_variant(image, rng)

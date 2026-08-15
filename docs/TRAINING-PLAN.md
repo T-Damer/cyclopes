@@ -420,3 +420,35 @@ Decisions used for V5:
 4. Does the team accept using no public-detector teacher distillation in the first candidate?
 
 The final choices were: CC0 OpenGameArt only for the added real hard negatives; ordinary ImageNet initialization is acceptable because it is not an AI detector; Arena must exceed 80%; and no teacher distillation is used.
+
+## 15. Failed v0.3 outer7 post-mortem (tracked)
+
+The v0.3 candidate **outer7** is kept in repository history only as a failure record; current release decision remains **`REJECT_KEEP_V0_2`**.
+
+### 15.1 Architecture and data in one sentence
+
+- Architecture: the v0.2 frozen Community Forensics ViT-S prior plus Cyclopes multi-layer/ScalePair residual path, with the content router and five correction experts enabled at the fixed **0.65** threshold.
+- Data: reused the paired train/calibration/evaluation pipeline while adding expert-oriented replay slices; the final manifests were not sufficiently representative of web real-image negatives.
+
+### 15.2 Authoritative metrics (single source of truth)
+
+- clean BA: **0.6523**
+- web BA: **0.6295**
+- real specificity: **0.4087 / 0.3238** (split-dependent)
+- keep/reject rule: failed all hard release gates under blind/equivalent private-compatibility criteria, so decision is `REJECT_KEEP_V0_2` (v0.2 retained).
+
+### 15.3 Artifacts and hash evidence retained locally
+
+Large v0.3 checkpoints/ONNXs/reports were removed during local cleanup. Their recorded hashes are retained so the rejected build cannot be confused with the release:
+
+- rejected v0.3 checkpoint: `3b5014ad6d85652f904e4a3a40391cd124de8c1465024095d4e495247d335fb9`
+- rejected v0.3 ONNX: `4b835d48ef46872a841cb0a030a7f26ea5c4d5bf856b5df097976c4953265179`
+- released v0.2 ONNX: `8033d130766ad3a37b7c0167479a30c1d16896587200cb84b2c2470adccb2d6e` (`size_bytes=88401160`)
+
+### 15.4 Main preflight/pipeline failure causes
+
+- `HF_READ_ONLY_TOKEN` or token scope issues prevented clean HuggingFace dataset reads on runs.
+- Absolute paths (for example `/Users/d/...`) leaked into manifests/config, causing non-portable path validation failures.
+- `data/evaluation/manifest.csv` (and/or train/calibration/evaluation manifests) was missing/inconsistent in runs.
+- Non-unique run directories and stale/parallel train processes were observed in the same instance, creating overwrite and status race conditions.
+- "stale validation" runs (including 0.93–0.95 BA variants) were incorrectly reused as candidate proof; authoritative evidence stayed at archived outer7 BA 0.6523 / web BA 0.6295 with the same low specificity.

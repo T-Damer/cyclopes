@@ -14,6 +14,7 @@ from typing import Any, Iterable
 
 import numpy as np
 
+from .data import CONTENT_CLASSES
 from .metrics import THRESHOLD, best_balanced_threshold, binary_metrics
 
 
@@ -89,6 +90,12 @@ def _data_helpers():
     return ManifestDataset, load_manifest
 
 
+def _content_route_name(route: int) -> str:
+    if 0 <= route < len(CONTENT_CLASSES):
+        return CONTENT_CLASSES[route]
+    return "unknown"
+
+
 def _load_checkpoint(path: str | Path, *, device: str = "cpu"):
     torch = _torch()
     checkpoint = torch.load(path, map_location=device, weights_only=False)
@@ -101,7 +108,13 @@ def _load_checkpoint(path: str | Path, *, device: str = "cpu"):
         model_revision=config.get("model_revision"),
         layers=tuple(config.get("layers", (4, 8, 12))),
     )
-    missing, unexpected = model.load_state_dict(state, strict=False)
+    model_state = model.state_dict()
+    loadable_state = {
+        name: tensor
+        for name, tensor in state.items()
+        if name in model_state and tensor.shape == model_state[name].shape
+    }
+    missing, unexpected = model.load_state_dict(loadable_state, strict=False)
     allowed_missing = ("content_router.", "expert_heads.")
     if unexpected or any(not key.startswith(allowed_missing) for key in missing):
         raise RuntimeError(f"incompatible checkpoint: missing={missing}, unexpected={unexpected}")
@@ -182,6 +195,7 @@ def _paired_raw_outputs(model, dataset, *, batch_size: int, device: str, workers
                 outputs = model.components(images.to(device))
                 values[f"{name}_fused"].append(outputs.fused_logit.detach().cpu().numpy())
                 values[f"{name}_current"].append(outputs.current_logit.detach().cpu().numpy())
+                values[f"{name}_routes"].append(np.asarray(outputs.content_logits.argmax(dim=1).detach().cpu(), dtype=np.int64))
     return {key: np.concatenate(items) for key, items in values.items()}
 
 
@@ -237,15 +251,26 @@ def _blend(outputs: tuple[np.ndarray, np.ndarray], weight: float) -> np.ndarray:
     return weight * fused + (1 - weight) * current
 
 
-def _metrics_report(samples: Iterable[Any], scores: np.ndarray) -> dict[str, Any]:
+def _metrics_report(
+    samples: Iterable[Any],
+    scores: np.ndarray,
+    content_routes: np.ndarray | None = None,
+) -> dict[str, Any]:
     samples = list(samples)
     labels = np.asarray([sample.label for sample in samples], dtype=np.int8)
+    if content_routes is not None:
+        route_values = np.asarray(content_routes).astype(int).reshape(-1)
+        if len(route_values) != len(samples):
+            raise ValueError("content route count must match sample count")
     metrics = binary_metrics(labels, scores, threshold=THRESHOLD).to_dict()
 
     def grouped(attribute: str) -> dict[str, Any]:
         groups: defaultdict[str, list[int]] = defaultdict(list)
         for index, sample in enumerate(samples):
-            groups[getattr(sample, attribute) or "unknown"].append(index)
+            if attribute == "content_domain" and content_routes is not None:
+                groups[_content_route_name(int(route_values[index]))].append(index)
+            else:
+                groups[getattr(sample, attribute) or "unknown"].append(index)
         return {
             name: binary_metrics(labels[indices], scores[indices], threshold=THRESHOLD).to_dict()
             for name, indices in sorted(groups.items())
@@ -307,9 +332,9 @@ def train(args: argparse.Namespace) -> int:
             model_revision=args.model_revision,
         ).to(args.device)
     if args.experts_only:
-        if not hasattr(model, "freeze_prior"):
+        if not hasattr(model, "set_expert_training_mode"):
             raise ValueError("--experts-only requires vit_multilayer_scalepair")
-        model.freeze_prior()
+        model.set_expert_training_mode()
     composite_probability = 0.25 if args.experts_only else 0.0
     _samples, dataset = _dataset(
         args.manifest, args.split, training=True, seed=args.seed, model=model,
@@ -567,7 +592,10 @@ def evaluate(args: argparse.Namespace) -> int:
             )
             for view in ("clean", "web")
         }
-        view_reports = {view: _metrics_report(dataset.samples, scores) for view, scores in view_scores.items()}
+        view_reports = {
+            view: _metrics_report(dataset.samples, scores, content_routes=paired[f"{view}_routes"])
+            for view, scores in view_scores.items()
+        }
         _emit(
             {
                 "command": "evaluate",

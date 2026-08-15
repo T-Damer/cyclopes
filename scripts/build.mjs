@@ -10,7 +10,7 @@ const extension = join(root, "extension");
 await rm(dist, { force: true, recursive: true });
 await mkdir(dist, { recursive: true });
 
-for (const name of ["background", "content", "offscreen"]) {
+for (const name of ["background", "content", "offscreen", "options"]) {
   await build({
     bundle: true,
     entryPoints: [join(extension, "src", `${name}.js`)],
@@ -23,6 +23,8 @@ for (const name of ["background", "content", "offscreen"]) {
 
 await cp(join(extension, "manifest.json"), join(dist, "manifest.json"));
 await cp(join(extension, "offscreen.html"), join(dist, "offscreen.html"));
+await cp(join(extension, "options.html"), join(dist, "options.html"));
+await cp(join(extension, "options.css"), join(dist, "options.css"));
 await mkdir(join(dist, "models"), { recursive: true });
 for (const name of ["cyclopes.onnx", "cyclopes.json"]) {
   await cp(join(extension, "models", name), join(dist, "models", name));

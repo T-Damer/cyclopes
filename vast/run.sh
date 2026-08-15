@@ -32,8 +32,8 @@ run_budgeted python -m cyclopes.cli train \
   --report "$RUN_ROOT/train.json" \
   --device cuda --batch-size 64 --workers 16 \
   --epochs 3 --max-steps 800 \
-  --freeze-steps 1000000 --unfreeze-last-blocks 0 \
-  --backbone-lr 0 --head-lr 0.0002 --consistency-weight 0.05
+  --freeze-steps 100 --unfreeze-last-blocks 2 \
+  --backbone-lr 5e-6 --head-lr 1e-4 --consistency-weight 0.05
 
 run_budgeted python -m cyclopes.cli calibrate \
   --manifest "$TRAIN_MANIFEST" --split calibration \

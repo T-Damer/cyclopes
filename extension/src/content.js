@@ -1,48 +1,149 @@
 import {
-  AI_THRESHOLD,
   BADGE_PLACEMENTS,
+  DEFAULT_IMAGE_SETTINGS,
+  MIN_RENDERED_AREA,
   badgeObstructionScore,
+  badgePlacementOffset,
   badgePlacementRect,
-  isEligibleImage,
+  cssBackgroundUrl,
+  isEligibleImageWithSettings,
   isMostlyOccluded,
+  normalizeImageSettings,
+  roundedCornerInset,
 } from "./shared.js";
 
 let states = new WeakMap();
 let enabled = false;
+let globallyEnabled = false;
+let excludedSites = [];
+let imageSettings = DEFAULT_IMAGE_SETTINGS;
 const badges = new Map();
 const anchors = new Map();
+const placementTimers = new WeakMap();
 const visible = new Set();
+const backgroundImages = new WeakMap();
 let nextAnchor = 0;
 const loadingFrames = ["𓁺", "𓁻", "𓁿", "𓂀"];
 
+document.querySelectorAll(".cyclopes-badge").forEach((badge) => badge.remove());
+
 const style = document.createElement("style");
 style.textContent = `
-  .cyclopes-badge{position:absolute;white-space:nowrap;padding:3px 6px;border-radius:10px;color:#fff;background:#475569;font:600 11px/1.2 system-ui,sans-serif;pointer-events:none;box-shadow:0 1px 4px #0008}
+  .cyclopes-badge{position:absolute;white-space:nowrap;padding:3px 6px;border-radius:10px;color:#fff;background:#475569;font:600 11px/1.2 system-ui,sans-serif;pointer-events:none;text-shadow:0 1px 1px #000;box-shadow:0 0 0 1px #fff,0 0 0 2px #000,0 2px 5px #000a}
   .cyclopes-badge[data-verdict="ai"]{background:#dc2626}
   .cyclopes-badge[data-verdict="real"]{background:#2563eb}
 `;
 document.documentElement.append(style);
 
-function updateBadge(image) {
+function backgroundSource(element) {
+  return cssBackgroundUrl(getComputedStyle(element).backgroundImage);
+}
+
+function sourceFor(target) {
+  return target instanceof HTMLImageElement ? target.currentSrc : backgroundImages.get(target)?.source;
+}
+
+function dimensionsFor(target) {
+  if (target instanceof HTMLImageElement) return { width: target.naturalWidth, height: target.naturalHeight };
+  const { width = 0, height = 0 } = backgroundImages.get(target) ?? {};
+  return { width, height };
+}
+
+function eligibilityCandidate(target) {
+  if (target instanceof HTMLImageElement) return target;
+  const source = sourceFor(target);
+  const natural = dimensionsFor(target);
+  const rect = target.getBoundingClientRect();
+  return {
+    currentSrc: source,
+    naturalWidth: natural.width,
+    naturalHeight: natural.height,
+    width: rect.width,
+    height: rect.height,
+    closest: () => null,
+    ownerDocument: target.ownerDocument,
+  };
+}
+
+function isEligibleTarget(target) {
+  return (target instanceof HTMLImageElement || imageSettings.cssBackgrounds) &&
+    isEligibleImageWithSettings(eligibilityCandidate(target), imageSettings);
+}
+
+function radiusPixels(value, width, height) {
+  const parts = value.split(/\s+/);
+  const values = parts.flatMap((part, index) => {
+    const number = Number.parseFloat(part);
+    if (!Number.isFinite(number)) return [0];
+    if (!part.endsWith("%")) return [number];
+    if (parts.length === 1) return [number * width / 100, number * height / 100];
+    return [number * (index ? height : width) / 100];
+  });
+  return Math.max(...values, 0);
+}
+
+function cornerInsets(image, imageRect) {
+  const insets = { topLeft: 0, topRight: 0, bottomRight: 0, bottomLeft: 0 };
+  // ponytail: the image and its immediate mask cover current layouts; walk ancestors if nested masks appear.
+  for (const element of [image, image.parentElement].filter(Boolean)) {
+    const rect = element.getBoundingClientRect();
+    const computed = getComputedStyle(element);
+    const near = (a, b) => Math.abs(a - b) <= 2;
+    const inset = (property, borders) => roundedCornerInset(radiusPixels(computed[property], rect.width, rect.height))
+      + Math.max(...borders.map((name) => Number.parseFloat(computed[name]) || 0));
+    if (near(rect.left, imageRect.left) && near(rect.top, imageRect.top))
+      insets.topLeft = Math.max(insets.topLeft, inset("borderTopLeftRadius", ["borderTopWidth", "borderLeftWidth"]));
+    if (near(rect.right, imageRect.right) && near(rect.top, imageRect.top))
+      insets.topRight = Math.max(insets.topRight, inset("borderTopRightRadius", ["borderTopWidth", "borderRightWidth"]));
+    if (near(rect.right, imageRect.right) && near(rect.bottom, imageRect.bottom))
+      insets.bottomRight = Math.max(insets.bottomRight, inset("borderBottomRightRadius", ["borderBottomWidth", "borderRightWidth"]));
+    if (near(rect.left, imageRect.left) && near(rect.bottom, imageRect.bottom))
+      insets.bottomLeft = Math.max(insets.bottomLeft, inset("borderBottomLeftRadius", ["borderBottomWidth", "borderLeftWidth"]));
+  }
+  return insets;
+}
+
+function placementInset(placement, insets) {
+  if (placement.ax === 0 && placement.ay === 0) return insets.topLeft;
+  if (placement.ax === 1 && placement.ay === 0) return insets.topRight;
+  if (placement.ax === 1 && placement.ay === 1) return insets.bottomRight;
+  if (placement.ax === 0 && placement.ay === 1) return insets.bottomLeft;
+  return 0;
+}
+
+function isBadgeShown(image, rect = image.getBoundingClientRect()) {
+  return isEligibleTarget(image) && rect.bottom > 0 && rect.right > 0 && rect.top < innerHeight && rect.left < innerWidth;
+}
+
+function placeBadge(image) {
   const badge = badges.get(image);
   if (!badge) return;
   const rect = image.getBoundingClientRect();
-  const shown = isEligibleImage(image) && rect.bottom > 0 && rect.right > 0 && rect.top < innerHeight && rect.left < innerWidth;
+  const shown = isBadgeShown(image, rect);
   badge.hidden = !shown;
   if (!shown) return;
   const width = badge.offsetWidth;
   const height = badge.offsetHeight;
-  let best = BADGE_PLACEMENTS[0];
+  const insets = cornerInsets(image, rect);
+  let best;
+  let bestInset = 0;
   let bestScore = Infinity;
-  for (const placement of BADGE_PLACEMENTS) {
-    const area = badgePlacementRect(rect, width, height, placement);
+  const placements = imageSettings.smartPositioning ? BADGE_PLACEMENTS : BADGE_PLACEMENTS.slice(0, 1);
+  for (const placement of placements) {
+    const inset = placementInset(placement, insets);
+    const area = badgePlacementRect(rect, width, height, placement, inset);
     if (area.left < rect.left || area.top < rect.top || area.right > rect.right || area.bottom > rect.bottom) continue;
     const score = badgeObstructionScore(image, area);
     if (score < bestScore) {
       best = placement;
+      bestInset = inset;
       bestScore = score;
       if (score === 0) break;
     }
+  }
+  if (!best || bestScore > 0) {
+    best = BADGE_PLACEMENTS[0];
+    bestInset = placementInset(best, insets);
   }
   badge.dataset.position = best.name;
   badge.style.left = `anchor(${best.x})`;
@@ -52,11 +153,39 @@ function updateBadge(image) {
     const direction = best.ax === 1 ? -1 : 1;
     badge.style.transform = `translate(calc(-50% + ${direction * inset}px),-50%) rotate(${best.rotate}deg)`;
   } else {
-    badge.style.transform = `translate(${best.tx * 100}%,${best.ty * 100}%) translate(${best.dx}px,${best.dy}px)`;
+    const offset = badgePlacementOffset(best, bestInset);
+    badge.style.transform = `translate(${best.tx * 100}%,${best.ty * 100}%) translate(${best.dx + offset.x}px,${best.dy + offset.y}px)`;
   }
 }
 
+function updateBadge(image) {
+  const badge = badges.get(image);
+  if (!badge) return;
+  if (badge.dataset.position) {
+    badge.hidden = !isBadgeShown(image);
+    return;
+  }
+  badge.hidden = true;
+  clearTimeout(placementTimers.get(image));
+  placementTimers.set(image, setTimeout(() => {
+    placementTimers.delete(image);
+    placeBadge(image);
+  }, 120));
+}
+
+function resetBadgePosition(image, immediate = false) {
+  const badge = badges.get(image);
+  if (!badge) return;
+  delete badge.dataset.position;
+  clearTimeout(placementTimers.get(image));
+  placementTimers.delete(image);
+  if (immediate) placeBadge(image);
+  else updateBadge(image);
+}
+
 function removeBadge(image) {
+  clearTimeout(placementTimers.get(image));
+  placementTimers.delete(image);
   badges.get(image)?.remove();
   badges.delete(image);
   const previous = anchors.get(image);
@@ -105,8 +234,8 @@ setInterval(() => {
 }, 150);
 
 async function analyze(image) {
-  if (!enabled || document.hidden || !visible.has(image) || !isEligibleImage(image)) return;
-  const source = image.currentSrc;
+  if (!enabled || document.hidden || !visible.has(image) || !isEligibleTarget(image)) return;
+  const source = sourceFor(image);
   if (states.get(image) === source) return;
   if (isMostlyOccluded(image, innerWidth, innerHeight)) return;
   delete image.dataset.cyclopesError;
@@ -117,23 +246,28 @@ async function analyze(image) {
   try {
     const result = await chrome.runtime.sendMessage({ target: "background", type: "score", url: source });
     if (typeof result?.score !== "number") throw new Error(result?.error || "Inference returned no score.");
-    if (!enabled || document.hidden || states.get(image) !== source || !isEligibleImage(image) || isMostlyOccluded(image, innerWidth, innerHeight)) {
+    if (!enabled || document.hidden || states.get(image) !== source || !isEligibleTarget(image) || isMostlyOccluded(image, innerWidth, innerHeight)) {
       states.delete(image);
       removeBadge(image);
       return;
     }
     image.dataset.cyclopesScore = result.score.toFixed(4);
-    const ai = result.score >= AI_THRESHOLD;
+    const ai = result.score >= imageSettings.threshold;
     badge.dataset.verdict = ai ? "ai" : "real";
     badge.textContent = `AI ${(result.score * 100).toFixed(0)}%`;
     updateBadge(image);
   } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (message.includes("Extension context invalidated")) {
+      enabled = false;
+      clear();
+      return;
+    }
     if (document.hidden || !enabled) {
       states.delete(image);
       removeBadge(image);
       return;
     }
-    const message = error instanceof Error ? error.message : String(error);
     image.dataset.cyclopesError = message;
     badge.textContent = "Cyclopes ERR";
     console.warn(`Cyclopes: ${message}`);
@@ -152,13 +286,58 @@ const viewport = new IntersectionObserver((entries) => {
 
 function watch(image) {
   viewport.observe(image);
-  if (image.complete && visible.has(image)) analyze(image);
+  if (!(image instanceof HTMLImageElement) || image.complete) analyze(image);
   else image.addEventListener("load", () => analyze(image), { once: true });
+}
+
+function forgetBackground(element) {
+  if (!backgroundImages.has(element)) return;
+  backgroundImages.delete(element);
+  states.delete(element);
+  visible.delete(element);
+  viewport.unobserve(element);
+  removeBadge(element);
+}
+
+function watchBackground(element) {
+  if (element instanceof HTMLImageElement || element.closest?.(".cyclopes-badge")) return;
+  const rect = element.getBoundingClientRect();
+  if (rect.width * rect.height < MIN_RENDERED_AREA) {
+    forgetBackground(element);
+    return;
+  }
+  const source = backgroundSource(element);
+  const previous = backgroundImages.get(element);
+  if (!source) {
+    forgetBackground(element);
+    return;
+  }
+  if (previous?.source === source) {
+    watch(element);
+    return;
+  }
+  states.delete(element);
+  backgroundImages.set(element, { source, width: 0, height: 0 });
+  watch(element);
+  const probe = new Image();
+  probe.addEventListener("load", () => {
+    if (backgroundImages.get(element)?.source !== source) return;
+    backgroundImages.set(element, { source, width: probe.naturalWidth, height: probe.naturalHeight });
+    analyze(element);
+  }, { once: true });
+  probe.src = source;
+}
+
+function scanBackgrounds(root = document) {
+  if (!imageSettings.cssBackgrounds) return;
+  if (root instanceof Element) watchBackground(root);
+  root.querySelectorAll?.("*").forEach(watchBackground);
 }
 
 function scan(root = document) {
   if (root instanceof HTMLImageElement) watch(root);
   root.querySelectorAll?.("img").forEach(watch);
+  scanBackgrounds(root);
 }
 
 function clear() {
@@ -173,23 +352,67 @@ function setEnabled(value) {
   else clear();
 }
 
-chrome.storage.local.get({ enabled: false }).then(({ enabled: value }) => setEnabled(value));
+function applySiteSetting() {
+  setEnabled(globallyEnabled && !excludedSites.includes(location.hostname));
+}
+
+chrome.storage.local.get({ enabled: false, excludedSites: [], ...DEFAULT_IMAGE_SETTINGS }).then((values) => {
+  imageSettings = normalizeImageSettings(values);
+  globallyEnabled = values.enabled;
+  excludedSites = values.excludedSites;
+  applySiteSetting();
+});
 chrome.storage.onChanged.addListener((changes) => {
-  if (changes.enabled) setEnabled(changes.enabled.newValue);
+  if (changes.enabled) globallyEnabled = changes.enabled.newValue;
+  if (changes.excludedSites) excludedSites = changes.excludedSites.newValue ?? [];
+  if (changes.enabled || changes.excludedSites) applySiteSetting();
+  if (changes.minSourceSize || changes.maxAspectRatio || changes.threshold || changes.smartPositioning || changes.cssBackgrounds) {
+    imageSettings = normalizeImageSettings({
+      minSourceSize: changes.minSourceSize?.newValue ?? imageSettings.minSourceSize,
+      maxAspectRatio: changes.maxAspectRatio?.newValue ?? imageSettings.maxAspectRatio,
+      threshold: changes.threshold?.newValue ?? imageSettings.threshold,
+      smartPositioning: changes.smartPositioning?.newValue ?? imageSettings.smartPositioning,
+      cssBackgrounds: changes.cssBackgrounds?.newValue ?? imageSettings.cssBackgrounds,
+      theme: imageSettings.theme,
+    });
+    if (changes.smartPositioning) badges.forEach((_badge, image) => resetBadgePosition(image));
+    if (changes.cssBackgrounds) {
+      clear();
+      scan();
+    }
+    refresh();
+  }
 });
 new MutationObserver((records) => {
   for (const record of records) {
     if (record.target instanceof Element && record.target.closest(".cyclopes-badge")) continue;
     if (record.type === "attributes") {
       const image = record.target instanceof HTMLImageElement ? record.target : record.target.parentElement?.querySelector("img");
-      if (image) watch(image);
+      if (image) {
+        resetBadgePosition(image);
+        watch(image);
+      }
+      if (imageSettings.cssBackgrounds && record.target instanceof Element) watchBackground(record.target);
     }
     else record.addedNodes.forEach((node) => node.nodeType === Node.ELEMENT_NODE && scan(node));
   }
   refresh();
-}).observe(document.documentElement, { attributes: true, attributeFilter: ["src", "srcset"], childList: true, subtree: true });
+}).observe(document.documentElement, { attributes: true, attributeFilter: ["class", "src", "srcset", "style"], childList: true, subtree: true });
 addEventListener("scroll", refresh, { passive: true });
-addEventListener("resize", refresh, { passive: true });
+addEventListener("resize", () => {
+  scanBackgrounds();
+  refresh();
+}, { passive: true });
+addEventListener("animationstart", (event) => {
+  if (event.target instanceof HTMLImageElement) resetBadgePosition(event.target, true);
+  else event.target.querySelectorAll?.("img").forEach((image) => resetBadgePosition(image, true));
+}, true);
+for (const type of ["animationend", "transitionend"]) {
+  addEventListener(type, (event) => {
+    if (event.target instanceof HTMLImageElement) resetBadgePosition(event.target);
+    else event.target.querySelectorAll?.("img").forEach((image) => resetBadgePosition(image));
+  }, true);
+}
 addEventListener("visibilitychange", () => {
   if (!document.hidden) refresh();
 });

@@ -94,10 +94,38 @@ class MultiLayerScalePairViT(nn.Module):
                 parameter.requires_grad_(True)
 
     def freeze_prior(self) -> None:
+        self.set_expert_training_mode()
+
+    def set_expert_training_mode(
+        self,
+        *,
+        expert_indices: tuple[int, ...] | None = None,
+        enable_residual_head: bool = False,
+        enable_projections: bool = False,
+        enable_content_router: bool = True,
+    ) -> None:
         for parameter in self.parameters():
             parameter.requires_grad_(False)
-        for parameter in (*self.content_router.parameters(), *self.expert_heads[4].parameters()):
-            parameter.requires_grad_(True)
+
+        if enable_content_router:
+            for parameter in self.content_router.parameters():
+                parameter.requires_grad_(True)
+
+        active_experts = tuple(range(len(self.expert_heads))) if expert_indices is None else expert_indices
+        for index in active_experts:
+            if index < 0 or index >= len(self.expert_heads):
+                raise ValueError("expert index out of range")
+            for parameter in self.expert_heads[index].parameters():
+                parameter.requires_grad_(True)
+
+        if enable_residual_head:
+            for parameter in self.residual_head.parameters():
+                parameter.requires_grad_(True)
+
+        if enable_projections:
+            for projection in self.projections:
+                for parameter in projection.parameters():
+                    parameter.requires_grad_(True)
 
     def thumbnail_probe(self, image: torch.Tensor) -> torch.Tensor:
         probe_size = max(32, round(self.image_size * 5 / 12))
