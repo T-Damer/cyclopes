@@ -177,7 +177,7 @@ def _paired_raw_outputs(model, dataset, *, batch_size: int, device: str, workers
     )
     values: dict[str, list[np.ndarray]] = defaultdict(list)
     with torch.inference_mode():
-        for clean, web, _labels_batch, _families, _contents, _moderate, _indices in loader:
+        for clean, web, _labels_batch, _families, _contents, _web_contents, _moderate, _indices in loader:
             for name, images in (("clean", clean), ("web", web)):
                 outputs = model.components(images.to(device))
                 values[f"{name}_fused"].append(outputs.fused_logit.detach().cpu().numpy())
@@ -368,7 +368,7 @@ def train(args: argparse.Namespace) -> int:
         model.train()
         epoch_losses: list[float] = []
         consistency_weight = 0.0 if epoch == 0 else 0.02 if epoch == 1 else args.consistency_weight
-        for clean, web, labels, families, contents, moderate, _indices in loader:
+        for clean, web, labels, families, contents, web_contents, moderate, _indices in loader:
             if global_step == args.freeze_steps:
                 if hasattr(model, "unfreeze_last_blocks"):
                     model.unfreeze_last_blocks(args.unfreeze_last_blocks)
@@ -377,6 +377,8 @@ def train(args: argparse.Namespace) -> int:
                         parameter.requires_grad_(True)
             clean = clean.to(args.device, non_blocking=True)
             web = web.to(args.device, non_blocking=True)
+            content_routes = contents.to(args.device, non_blocking=True)
+            web_routes = web_contents.to(args.device, non_blocking=True)
             loss_device = "cpu" if args.device == "mps" else args.device
             labels = labels.float().to(loss_device, non_blocking=True)
             families = families.to(loss_device, non_blocking=True)
@@ -386,8 +388,8 @@ def train(args: argparse.Namespace) -> int:
             optimizer.zero_grad(set_to_none=True)
             device_type = "cuda" if args.device.startswith("cuda") else "cpu"
             with torch.autocast(device_type=device_type, dtype=torch.bfloat16, enabled=device_type == "cuda"):
-                clean_outputs = model.components(clean)
-                web_outputs = model.components(web)
+                clean_outputs = model.components(clean, content_routes) if args.experts_only else model.components(clean)
+                web_outputs = model.components(web, web_routes) if args.experts_only else model.components(web)
                 clean_fused = bce(clean_outputs.fused_logit.to(loss_device), targets)
                 web_fused = bce(web_outputs.fused_logit.to(loss_device), targets)
                 fused_loss = 0.5 * (clean_fused.mean() + web_fused.mean())
@@ -404,8 +406,9 @@ def train(args: argparse.Namespace) -> int:
                     family_loss = torch.nn.functional.cross_entropy(clean_outputs.family_logits.to(loss_device)[family_mask], families[family_mask])
                 else:
                     family_loss = fused_loss * 0
-                content_loss = torch.nn.functional.cross_entropy(
-                    clean_outputs.content_logits.to(loss_device), contents
+                content_loss = 0.5 * (
+                    torch.nn.functional.cross_entropy(clean_outputs.content_logits.to(loss_device), contents)
+                    + torch.nn.functional.cross_entropy(web_outputs.content_logits.to(loss_device), web_routes.to(loss_device))
                 ) if clean_outputs.content_logits is not None else fused_loss * 0
                 moderate_loss = torch.maximum(clean_fused, web_fused)[moderate].mean() if moderate.any() else fused_loss * 0
                 consistency = 1 - torch.nn.functional.cosine_similarity(

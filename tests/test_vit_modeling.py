@@ -25,11 +25,16 @@ def test_multilayer_vit_starts_as_the_source_detector() -> None:
 
     torch.testing.assert_close(outputs.fused_logit, expected)
     assert outputs.embedding.shape == (2, 384)
-    assert outputs.content_logits.shape == (2, 4)
+    assert outputs.content_logits.shape == (2, 5)
     assert not any(parameter.requires_grad for parameter in model.backbone.parameters())
     assert any(parameter.requires_grad for parameter in model.residual_head.parameters())
 
     model.freeze_prior()
     assert all(parameter.requires_grad for parameter in model.content_router.parameters())
-    assert all(parameter.requires_grad for expert in model.expert_heads for parameter in expert.parameters())
+    assert not any(parameter.requires_grad for expert in model.expert_heads[:4] for parameter in expert.parameters())
+    assert all(parameter.requires_grad for parameter in model.expert_heads[4].parameters())
     assert not any(parameter.requires_grad for parameter in model.residual_head.parameters())
+
+    with torch.inference_mode():
+        routed = model.components(image, torch.tensor([1, 4]))
+    torch.testing.assert_close(routed.fused_logit, expected)

@@ -27,20 +27,7 @@ GENERATOR_FAMILIES = (
     "other",
 )
 FAMILY_TO_INDEX = {name: index for index, name in enumerate(GENERATOR_FAMILIES)}
-CONTENT_CLASSES = ("general", "photo", "art-game", "composite-ui")
-
-
-def content_index(domain: str) -> int:
-    value = domain.lower()
-    if value in {"mixed", "unknown"}:
-        return 0
-    if "photo" in value:
-        return 1
-    if any(token in value for token in ("art", "illustration", "cgi", "game", "anime", "cartoon")):
-        return 2
-    if any(token in value for token in ("meme", "composite", "ui", "screenshot", "logo", "poster", "text", "graphic")):
-        return 3
-    return 0
+CONTENT_CLASSES = ("clean", "web-degraded", "composite", "pixel-art", "retro-degraded")
 
 
 @dataclass(frozen=True)
@@ -59,10 +46,6 @@ class Sample:
     @property
     def family_index(self) -> int:
         return FAMILY_TO_INDEX.get(self.generator_family, -1) if self.label else -1
-
-    @property
-    def content_index(self) -> int:
-        return content_index(self.content_domain)
 
 
 def _field(row: dict[str, str], primary: str, fallback: str = "") -> str:
@@ -174,7 +157,32 @@ def _reencode(image: Image.Image, rng: random.Random, quality: int, codec: str) 
         return decoded.convert("RGB")
 
 
-def web_variant(image: Image.Image, rng: random.Random, *, moderate: bool | None = None) -> Image.Image:
+def retro_variant(image: Image.Image, rng: random.Random) -> Image.Image:
+    """Apply pixel/VHS degradation while preserving the source label."""
+    width, height = image.size
+    short_edge = rng.choice((64, 80, 96, 128, 160))
+    scale = min(1.0, short_edge / min(width, height))
+    reduced = image.resize(
+        (max(1, round(width * scale)), max(1, round(height * scale))),
+        rng.choice((Image.Resampling.BILINEAR, Image.Resampling.BICUBIC)),
+    )
+    image = reduced.resize((width, height), rng.choice((Image.Resampling.NEAREST, Image.Resampling.BILINEAR)))
+    mask = Image.new("L", image.size)
+    draw = ImageDraw.Draw(mask)
+    spacing = rng.choice((2, 3, 4))
+    strength = rng.randint(18, 42)
+    for y in range(rng.randrange(spacing), height, spacing):
+        draw.line((0, y, width, y), fill=strength)
+    return Image.composite(Image.new("RGB", image.size), image, mask)
+
+
+def web_variant(
+    image: Image.Image,
+    rng: random.Random,
+    *,
+    moderate: bool | None = None,
+    retro: bool | None = None,
+) -> Image.Image:
     if image.mode != "RGB":
         image = decode_rgb(image)
     moderate = rng.random() < 0.60 if moderate is None else moderate
@@ -207,6 +215,9 @@ def web_variant(image: Image.Image, rng: random.Random, *, moderate: bool | None
         image = image.filter(ImageFilter.GaussianBlur(rng.uniform(0.1, 0.8 if moderate else 1.2)))
     elif rng.random() < 0.08:
         image = ImageEnhance.Sharpness(image).enhance(rng.uniform(1.05, 1.35))
+    retro = rng.random() < (0.10 if moderate else 0.30) if retro is None else retro
+    if retro:
+        image = retro_variant(image, rng)
     return image
 
 
@@ -266,21 +277,24 @@ class ManifestDataset(Dataset):
             return tensor, sample.label, index
 
         rng = random.Random(random.getrandbits(64) ^ self.seed ^ index)
-        content = sample.content_index
-        if rng.random() < self.composite_probability:
+        content = 3 if sample.content_domain == "pixel-art" else 2 if sample.content_domain == "meme" else 0
+        composite_probability = max(self.composite_probability, 0.65) if sample.label else self.composite_probability
+        if rng.random() < composite_probability:
             image = composite_variant(image, rng)
-            content = 3
+            content = 2
         if rng.random() < 0.5:
             image = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
         clean = tensor_for_browser(image, size=self.image_size, mean=self.mean, std=self.std)
         moderate = rng.random() < 0.60
+        retro = rng.random() < (0.10 if moderate else 0.30)
         web = tensor_for_browser(
-            web_variant(image, rng, moderate=moderate),
+            web_variant(image, rng, moderate=moderate, retro=retro),
             size=self.image_size,
             mean=self.mean,
             std=self.std,
         )
-        return clean, web, sample.label, sample.family_index, content, moderate, index
+        web_content = 4 if retro else content if content >= 2 else 1
+        return clean, web, sample.label, sample.family_index, content, web_content, moderate, index
 
     def balanced_sampler(self, seed: int) -> WeightedRandomSampler:
         counts = Counter((sample.label, sample.source) for sample in self.samples)

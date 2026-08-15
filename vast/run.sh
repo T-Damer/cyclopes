@@ -57,6 +57,6 @@ run_budgeted python -m cyclopes.cli export \
   --checkpoint "$RUN_ROOT/cyclopes-vit.pt" --calibration "$RUN_ROOT/calibration.json" \
   --output "$RUN_ROOT/cyclopes-vit.onnx" --report "$RUN_ROOT/export.json"
 
-sha256sum "$RUN_ROOT"/* > "$RUN_ROOT/SHA256SUMS"
-tar -czf "$RUN_ROOT.tar.gz" "$RUN_ROOT"
+find "$RUN_ROOT" -maxdepth 1 -type f ! -name SHA256SUMS -exec sha256sum {} + > "$RUN_ROOT/SHA256SUMS"
+tar --exclude="$RUN_ROOT/checkpoints" -czf "$RUN_ROOT.tar.gz" "$RUN_ROOT"
 echo "completed in $((SECONDS - START_SECONDS)) seconds: $RUN_ROOT.tar.gz"

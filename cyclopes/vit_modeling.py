@@ -42,10 +42,10 @@ class MultiLayerScalePairViT(nn.Module):
             nn.Linear(128, 1),
         )
         self.family_head = nn.Linear(embedding_size, family_classes)
-        self.content_router = nn.Sequential(nn.LayerNorm(embedding_size), nn.Linear(embedding_size, 4))
+        self.content_router = nn.Sequential(nn.LayerNorm(embedding_size), nn.Linear(embedding_size, 5))
         self.expert_heads = nn.ModuleList(
             nn.Sequential(nn.LayerNorm(embedding_size * 2), nn.Linear(embedding_size * 2, 64), nn.GELU(), nn.Linear(64, 1))
-            for _ in range(4)
+            for _ in range(5)
         )
         nn.init.zeros_(self.residual_head[-1].weight)
         nn.init.zeros_(self.residual_head[-1].bias)
@@ -96,9 +96,8 @@ class MultiLayerScalePairViT(nn.Module):
     def freeze_prior(self) -> None:
         for parameter in self.parameters():
             parameter.requires_grad_(False)
-        for module in (self.content_router, self.expert_heads):
-            for parameter in module.parameters():
-                parameter.requires_grad_(True)
+        for parameter in (*self.content_router.parameters(), *self.expert_heads[4].parameters()):
+            parameter.requires_grad_(True)
 
     def thumbnail_probe(self, image: torch.Tensor) -> torch.Tensor:
         probe_size = max(32, round(self.image_size * 5 / 12))
@@ -112,7 +111,7 @@ class MultiLayerScalePairViT(nn.Module):
         base_logit = self.base_head(outputs.last_hidden_state[:, 0]).flatten()
         return embedding, base_logit
 
-    def components(self, image: torch.Tensor) -> ScalePairOutputs:
+    def components(self, image: torch.Tensor, content_targets: torch.Tensor | None = None) -> ScalePairOutputs:
         batch = image.shape[0]
         embeddings, base_logits = self._encode(torch.cat((image, self.thumbnail_probe(image)), dim=0))
         current, probe = embeddings[:batch], embeddings[batch:]
@@ -121,7 +120,11 @@ class MultiLayerScalePairViT(nn.Module):
         residual = self.residual_head(expert_input).flatten()
         content_logits = self.content_router(current)
         expert_logits = torch.stack([head(expert_input).flatten() for head in self.expert_heads], dim=1)
-        expert_residual = (content_logits.softmax(dim=1) * expert_logits).sum(dim=1)
+        routes = F.one_hot(
+            content_targets if content_targets is not None else content_logits.argmax(dim=1),
+            num_classes=len(self.expert_heads),
+        ).to(expert_logits.dtype)
+        expert_residual = (routes * expert_logits).sum(dim=1)
         return ScalePairOutputs(
             fused_logit=current_logit + residual + expert_residual,
             current_logit=current_logit,
