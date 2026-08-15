@@ -1,0 +1,71 @@
+name: Build and package extension
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-extension:
+    name: Build and create extension ZIP
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build extension
+        run: npm run build
+
+      - name: Create release zip
+        id: package
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          mkdir -p release
+          ZIP_PATH="release/cyclopes-${VERSION}.zip"
+          (cd dist && zip -r "../${ZIP_PATH}" .)
+          echo "zip_path=${ZIP_PATH}" >> "$GITHUB_OUTPUT"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          sha256sum "$ZIP_PATH" > "$ZIP_PATH.sha256"
+
+      - name: Verify zip integrity
+        run: |
+          unzip -t "${{ steps.package.outputs.zip_path }}"
+
+      - name: Upload ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cyclopes-${{ steps.package.outputs.version }}
+          path: ${{ steps.package.outputs.zip_path }}
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Push package to GitHub Release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.package.outputs.zip_path }}
+          generate_release_notes: true
+
+  publish-stores:
+    name: Publish to browser stores (requires secrets)
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs: build-extension
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build is required artifact only
+        run: echo "Store publish is scaffolded and gated by secrets. Enable manual dispatch or add credentials as needed."
