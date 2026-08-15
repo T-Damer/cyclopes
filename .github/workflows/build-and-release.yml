@@ -13,6 +13,9 @@ jobs:
   build-extension:
     name: Build and create extension ZIP
     runs-on: ubuntu-latest
+    outputs:
+      zip_path: ${{ steps.package.outputs.zip_path }}
+      version: ${{ steps.package.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,13 +34,13 @@ jobs:
       - name: Create release zip
         id: package
         run: |
-          VERSION="$(node -p "require('./package.json').version")"
+          VERSION="$(node -p \"require('./package.json').version\")"
           mkdir -p release
           ZIP_PATH="release/cyclopes-${VERSION}.zip"
-          (cd dist && zip -r "../${ZIP_PATH}" .)
+          (cd dist && zip -r ../${ZIP_PATH} .)
           echo "zip_path=${ZIP_PATH}" >> "$GITHUB_OUTPUT"
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
-          sha256sum "$ZIP_PATH" > "$ZIP_PATH.sha256"
+          shasum -a 256 "$ZIP_PATH" > "$ZIP_PATH.sha256"
 
       - name: Verify zip integrity
         run: |
@@ -46,7 +49,7 @@ jobs:
       - name: Upload ZIP artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cyclopes-${{ steps.package.outputs.version }}
+          name: cyclopes-extension-${{ steps.package.outputs.version }}
           path: ${{ steps.package.outputs.zip_path }}
           if-no-files-found: error
           retention-days: 30
@@ -60,12 +63,15 @@ jobs:
 
   publish-stores:
     name: Publish to browser stores (requires secrets)
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      github.event_name == 'push'
     needs: build-extension
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Build is required artifact only
-        run: echo "Store publish is scaffolded and gated by secrets. Enable manual dispatch or add credentials as needed."
+      - name: Placeholder publish hooks
+        run: |
+          echo "Store publish workflow is prepared scaffold-wise. Add store actions and set secrets to enable auto publish."
+          echo "Expected secrets: CHROME_CLIENT_ID, CHROME_CLIENT_SECRET, CHROME_REFRESH_TOKEN, CHROME_EXTENSION_ID,"
+          echo "EDGE_CLIENT_ID, EDGE_CLIENT_SECRET, EDGE_REFRESH_TOKEN, EDGE_EXTENSION_ID,"
+          echo "FIREFOX_API_TOKEN, FIREFOX_EXTENSION_ID."
