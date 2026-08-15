@@ -10,23 +10,34 @@ Private, browser-local AI image detection: Cyclopes labels visible web images wi
 <!-- ![Og Image](./og-image.png) -->
 <img src="og-image.png" alt="Cyclopes og image" width="400"/>
 
-<details>
-<summary><strong>Table of contents</strong></summary>
-
-- [Install and launch](#install-and-launch)
-- [Metrics](#metrics)
-- [Dev](#dev)
-
-</details>
-
 <details id="install-and-launch">
 <summary><strong>Install and launch</strong></summary>
 
-> Chrome Web Store and Edge Add-ons links will appear here after review.
+> Extensions are currently **in review**, so public store links are not active yet.
+
+<p>
+  <a href="release/cyclopes-0.2.0.zip">
+    <img src="https://img.shields.io/badge/Chrome%20%2F%20Edge-Review%20ZIP%20(in%20review)-4f5a57?logo=googlechrome&logoColor=white&label=%F0%9F%93%82%20ZIP" alt="Chrome/Edge ZIP"/>
+  </a>
+  <a href="release/cyclopes-firefox-0.2.0.zip">
+    <img src="https://img.shields.io/badge/Firefox-Review%20ZIP%20(in%20review)-f26c34?logo=firefoxbrowser&logoColor=white&label=%F0%9F%93%82%20ZIP" alt="Firefox ZIP"/>
+  </a>
+</p>
 
 For now, build and load `dist/` as an unpacked extension. Cyclopes includes detection controls, themes, per-site exclusions, smart badge positioning, and private local reports.
 
 Put personal regression images in `personal-tests/`. Its contents are ignored by Git.
+
+</details>
+
+<details id="methodology">
+<summary><strong>Methodology</strong></summary>
+
+- Freeze a ViT-S forensic prior and train project-specific residual heads for scale consistency.
+- Deduplicate and split by content source groups to reduce leakage, strip EXIF metadata, and keep provenance tracked.
+- Evaluate against public held-out and web-degraded sets at the same operating point (fixed threshold), then keep the conservative model choice.
+- Maintain private compatibility checks for non-public image streams before any release decision.
+- Prefer browser-local inference safety: no image upload, no external scoring APIs, no raw telemetry.
 
 </details>
 

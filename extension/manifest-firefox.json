@@ -1,0 +1,37 @@
+{
+  "manifest_version": 2,
+  "name": "Cyclopes — Local AI Image Detector",
+  "version": "0.2.0",
+  "description": "Detects AI-generated web images locally in your browser — no uploads.",
+  "icons": {"16": "icons/off-16.png", "32": "icons/off-32.png", "48": "icons/off-48.png", "128": "icons/off-128.png"},
+  "permissions": ["activeTab", "contextMenus", "tabs", "storage", "<all_urls>"],
+  "background": {
+    "page": "background.html",
+    "persistent": false
+  },
+  "browser_action": {
+    "default_icon": {"16": "icons/off-16.png", "32": "icons/off-32.png"},
+    "default_popup": "options.html",
+    "default_title": "Cyclopes"
+  },
+  "options_ui": {
+    "page": "options.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": ["ort/*.wasm", "ort/*.mjs", "ort/ort.js", "models/*"],
+  "content_security_policy": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "cyclopes-local-ai-detector@poidh.xyz",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  }
+}

@@ -5,6 +5,8 @@ export const DEFAULT_IMAGE_SETTINGS = Object.freeze({
   threshold: AI_THRESHOLD,
   smartPositioning: true,
   cssBackgrounds: true,
+  blurAiImages: false,
+  blurLevel: 8,
   theme: "system",
 });
 export const MIN_RENDERED_AREA = 96 * 96;
@@ -122,8 +124,10 @@ export function normalizeImageSettings(settings = {}) {
   const threshold = Math.min(0.95, Math.max(0.5, Number(settings.threshold) || DEFAULT_IMAGE_SETTINGS.threshold));
   const smartPositioning = settings.smartPositioning !== false;
   const cssBackgrounds = settings.cssBackgrounds !== false;
+  const blurAiImages = settings.blurAiImages === true;
+  const blurLevel = Math.min(24, Math.max(0, Number(settings.blurLevel) || DEFAULT_IMAGE_SETTINGS.blurLevel));
   const theme = ["system", "light", "dark"].includes(settings.theme) ? settings.theme : DEFAULT_IMAGE_SETTINGS.theme;
-  return { minSourceSize, maxAspectRatio, threshold, smartPositioning, cssBackgrounds, theme };
+  return { minSourceSize, maxAspectRatio, threshold, smartPositioning, cssBackgrounds, blurAiImages, blurLevel, theme };
 }
 
 export function isEligibleImageWithSettings(image, settings) {

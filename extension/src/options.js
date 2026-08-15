@@ -5,6 +5,8 @@ const minSourceSize = document.querySelector("#min-source-size");
 const threshold = document.querySelector("#threshold");
 const smartPositioning = document.querySelector("#smart-positioning");
 const cssBackgrounds = document.querySelector("#css-backgrounds");
+const blurAiImages = document.querySelector("#blur-ai-images");
+const blurLevel = document.querySelector("#blur-level");
 const theme = document.querySelector("#theme");
 const warning = document.querySelector("#small-image-warning");
 const saved = document.querySelector("#saved");
@@ -54,6 +56,8 @@ function rememberSections(openSections) {
 function renderSettings() {
   document.querySelector("#threshold-value").value = `${threshold.value}%`;
   document.querySelector("#min-source-size-value").value = `${minSourceSize.value} px`;
+  document.querySelector("#blur-level-value").value = `${blurLevel.value}px`;
+  blurLevel.disabled = !blurAiImages.checked;
   warning.hidden = Number(minSourceSize.value) >= DEFAULT_IMAGE_SETTINGS.minSourceSize;
   document.documentElement.dataset.theme = theme.value;
 }
@@ -65,6 +69,8 @@ async function saveSettings() {
     threshold: Number(threshold.value) / 100,
     smartPositioning: smartPositioning.checked,
     cssBackgrounds: cssBackgrounds.checked,
+    blurAiImages: blurAiImages.checked,
+    blurLevel: Number(blurLevel.value),
     theme: theme.value,
   });
   await chrome.storage.local.set({ enabled: enabled.checked, ...settings });
@@ -134,6 +140,8 @@ Promise.all([
   threshold.value = Math.round(settings.threshold * 100);
   smartPositioning.checked = settings.smartPositioning;
   cssBackgrounds.checked = settings.cssBackgrounds;
+  blurAiImages.checked = settings.blurAiImages;
+  blurLevel.value = settings.blurLevel;
   theme.value = settings.theme;
   renderSettings();
   renderReports(values.feedbackReports);

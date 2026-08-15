@@ -50,6 +50,15 @@
             <span><strong>CSS background images</strong><small>Also inspect elements with a single background URL</small></span>
             <input id="css-backgrounds" type="checkbox" role="switch">
           </label>
+          <label class="switch-row compact">
+            <span><strong>Blur AI images</strong><small>Hide obvious AI content by softening pixels</small></span>
+            <input id="blur-ai-images" type="checkbox" role="switch">
+          </label>
+          <label class="range-row" for="blur-level">
+            <span>Blur level <output id="blur-level-value"></output></span>
+            <input id="blur-level" type="range" min="1" max="24" step="1">
+            <small>Higher values apply stronger blur (in px).</small>
+          </label>
           </div>
         </details>
 

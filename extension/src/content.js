@@ -22,6 +22,7 @@ const anchors = new Map();
 const placementTimers = new WeakMap();
 const visible = new Set();
 const backgroundImages = new WeakMap();
+const originalFilters = new WeakMap();
 let nextAnchor = 0;
 const loadingFrames = ["𓁺", "𓁻", "𓁿", "𓂀"];
 
@@ -193,11 +194,40 @@ function resetBadgePosition(image, immediate = false) {
 function removeBadge(image) {
   clearTimeout(placementTimers.get(image));
   placementTimers.delete(image);
+  applyImageBlur(image, 0);
   badges.get(image)?.remove();
   badges.delete(image);
   const previous = anchors.get(image);
   if (previous !== undefined) image.style.setProperty("anchor-name", previous);
   anchors.delete(image);
+}
+
+function applyImageBlur(image, blurPx) {
+  if (!(image instanceof Element)) return;
+  const amount = Number(blurPx);
+  if (!Number.isFinite(amount) || amount <= 0) {
+    const previous = originalFilters.get(image);
+    if (previous === undefined) return;
+    image.style.filter = previous;
+    originalFilters.delete(image);
+    return;
+  }
+  if (!originalFilters.has(image)) {
+    originalFilters.set(image, image.style.filter);
+  }
+  const previous = originalFilters.get(image);
+  const base = previous || "";
+  image.style.filter = `${base ? `${base} ` : ""}blur(${amount}px)`;
+}
+
+function applyBlurForImage(image) {
+  const badge = badges.get(image);
+  const isAi = badge?.dataset?.verdict === "ai" && imageSettings.blurAiImages;
+  applyImageBlur(image, isAi ? imageSettings.blurLevel : 0);
+}
+
+function applyBlurForAll() {
+  badges.forEach((_, image) => applyBlurForImage(image));
 }
 
 let refreshing = false;
@@ -255,6 +285,7 @@ async function analyze(image) {
     if (typeof result?.score !== "number") throw new Error(result?.error || "Inference returned no score.");
     if (!enabled || document.hidden || states.get(image) !== source || !isEligibleTarget(image) || isMostlyOccluded(image, innerWidth, innerHeight)) {
       states.delete(image);
+      applyImageBlur(image, 0);
       removeBadge(image);
       return;
     }
@@ -262,6 +293,7 @@ async function analyze(image) {
     const ai = result.score >= imageSettings.threshold;
     badge.dataset.verdict = ai ? "ai" : "real";
     badge.textContent = `AI ${(result.score * 100).toFixed(0)}%`;
+    applyBlurForImage(image);
     updateBadge(image);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -373,19 +405,32 @@ chrome.storage.onChanged.addListener((changes) => {
   if (changes.enabled) globallyEnabled = changes.enabled.newValue;
   if (changes.excludedSites) excludedSites = changes.excludedSites.newValue ?? [];
   if (changes.enabled || changes.excludedSites) applySiteSetting();
-  if (changes.minSourceSize || changes.maxAspectRatio || changes.threshold || changes.smartPositioning || changes.cssBackgrounds) {
+  if (
+    changes.minSourceSize ||
+    changes.maxAspectRatio ||
+    changes.threshold ||
+    changes.smartPositioning ||
+    changes.cssBackgrounds ||
+    changes.blurAiImages ||
+    changes.blurLevel
+  ) {
     imageSettings = normalizeImageSettings({
       minSourceSize: changes.minSourceSize?.newValue ?? imageSettings.minSourceSize,
       maxAspectRatio: changes.maxAspectRatio?.newValue ?? imageSettings.maxAspectRatio,
       threshold: changes.threshold?.newValue ?? imageSettings.threshold,
       smartPositioning: changes.smartPositioning?.newValue ?? imageSettings.smartPositioning,
       cssBackgrounds: changes.cssBackgrounds?.newValue ?? imageSettings.cssBackgrounds,
+      blurAiImages: changes.blurAiImages?.newValue ?? imageSettings.blurAiImages,
+      blurLevel: changes.blurLevel?.newValue ?? imageSettings.blurLevel,
       theme: imageSettings.theme,
     });
     if (changes.smartPositioning) badges.forEach((_badge, image) => resetBadgePosition(image));
     if (changes.cssBackgrounds) {
       clear();
       scan();
+    }
+    if (changes.blurAiImages || changes.blurLevel) {
+      applyBlurForAll();
     }
     refresh();
   }

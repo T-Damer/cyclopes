@@ -6,7 +6,9 @@
   "description": "Browser-local AI image detector for POIDH bounty #323",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "test": "npm run build && node --test test/*.test.mjs"
+    "build:firefox": "node scripts/build-firefox.mjs",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "bundle:mozilla": "bash scripts/bundle-for-mozilla.sh"
   },
   "dependencies": {
     "onnxruntime-web": "^1.24.2"
