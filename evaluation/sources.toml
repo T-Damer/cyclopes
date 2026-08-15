@@ -1,0 +1,106 @@
+minimum_images = 50000
+maximum_images = 100000
+required_scenarios = [
+  "photo", "ui", "illustration", "film", "3d", "meme", "logo-text",
+  "ai-legacy", "ai-modern", "ai-anime-cgi"
+]
+
+# Roots are intentionally outside git. Each source must be absent from training.
+# Limits total 80,000. The builder requires every quota and a concrete,
+# commercial-compatible license before it will emit a manifest.
+
+[[source]]
+name = "eval-real-photo"
+root = "../data/evaluation/raw/real-photo"
+label = 0
+scenario = "photo"
+license = "source-specific"
+limit = 10000
+
+[[source]]
+name = "eval-ui"
+root = "../data/evaluation/raw/ui"
+label = 0
+scenario = "ui"
+license = "source-specific"
+limit = 7000
+
+[[source]]
+name = "eval-illustration"
+root = "../data/evaluation/raw/illustration"
+label = 0
+scenario = "illustration"
+license = "source-specific"
+limit = 7000
+
+[[source]]
+name = "eval-film"
+root = "../data/evaluation/raw/film"
+label = 0
+scenario = "film"
+license = "source-specific"
+limit = 5000
+
+[[source]]
+name = "eval-3d"
+root = "../data/evaluation/raw/3d"
+label = 0
+scenario = "3d"
+license = "source-specific"
+limit = 5000
+
+[[source]]
+name = "eval-meme"
+root = "../data/evaluation/raw/meme"
+label = 0
+scenario = "meme"
+license = "source-specific"
+limit = 5000
+
+[[source]]
+name = "eval-logo-text"
+root = "../data/evaluation/raw/logo-text"
+label = 0
+scenario = "logo-text"
+license = "source-specific"
+limit = 3000
+
+[[source]]
+name = "eval-ai-legacy"
+root = "../data/evaluation/raw/ai-legacy"
+label = 1
+scenario = "ai-legacy"
+generator = "mixed-held-out-legacy"
+generator_family = "legacy"
+license = "source-specific"
+limit = 10000
+
+[[source]]
+name = "eval-ai-modern"
+root = "../data/evaluation/raw/ai-modern"
+label = 1
+scenario = "ai-modern"
+generator = "mixed-held-out-2025-2026"
+generator_family = "modern"
+license = "source-specific"
+limit = 12000
+
+[[source]]
+name = "eval-ai-anime-cgi"
+root = "../data/evaluation/raw/ai-anime-cgi"
+label = 1
+scenario = "ai-anime-cgi"
+generator = "mixed-held-out-anime-cgi"
+generator_family = "modern"
+license = "source-specific"
+limit = 6000
+
+[[source]]
+name = "eval-ai-web-degraded"
+root = "../data/evaluation/raw/ai-web-degraded"
+label = 1
+scenario = "ai-modern"
+generator = "mixed-held-out-web"
+generator_family = "modern"
+license = "source-specific"
+limit = 10000

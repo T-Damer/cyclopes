@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Cyclopes</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main>
+    <header>
+      <span id="state-icon">
+        <img id="state-logo" src="icons/off-128.png" width="42" height="42" alt="Cyclopes is off">
+        <img id="state-symbol" src="icons/loading-0-128.png" width="42" height="42" alt="Cyclopes is loading" hidden>
+      </span>
+      <div><h1>Cyclopes</h1><p id="state-copy" aria-live="polite">Local AI image detector</p></div>
+    </header>
+
+    <div id="settings-view">
+      <form id="settings-form">
+        <label class="switch-row">
+          <span><strong>Image detection</strong><small>Runs only in the active tab</small></span>
+          <input id="enabled" type="checkbox" role="switch">
+        </label>
+
+        <section id="current-site" hidden>
+          <h2>Current website</h2>
+          <label class="switch-row compact">
+            <span class="site-copy"><span class="site-name"><img id="site-favicon" width="18" height="18" alt=""><strong id="site-host"></strong></span><small>Filter this website</small></span>
+            <input id="filter-site" type="checkbox" role="switch" aria-label="Filter this website">
+          </label>
+          <a class="manage-link" href="#sites">Manage excluded sites</a>
+        </section>
+
+        <details id="detection-section">
+          <summary>Detection</summary>
+          <div class="section-body">
+          <label class="range-row" for="threshold">
+            <span>AI threshold <output id="threshold-value"></output></span>
+            <input id="threshold" type="range" min="50" max="95" step="1">
+            <small>Higher values reduce false positives.</small>
+          </label>
+          <label class="range-row" for="min-source-size">
+            <span>Minimum source size <output id="min-source-size-value"></output></span>
+            <input id="min-source-size" type="range" min="64" max="1024" step="32">
+            <small>Square-equivalent source resolution.</small>
+          </label>
+          <p id="small-image-warning" class="warning" hidden>Scores below 256 px may be inaccurate.</p>
+          <label class="switch-row compact detection-toggle">
+            <span><strong>CSS background images</strong><small>Also inspect elements with a single background URL</small></span>
+            <input id="css-backgrounds" type="checkbox" role="switch">
+          </label>
+          </div>
+        </details>
+
+        <details id="appearance-section">
+          <summary>Appearance</summary>
+          <div class="section-body">
+          <label class="switch-row compact">
+            <span><strong>Smart badge position</strong><small>Avoid visible controls and content</small></span>
+            <input id="smart-positioning" type="checkbox" role="switch">
+          </label>
+          <label class="select-row" for="theme"><span>Theme</span>
+            <select id="theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select>
+          </label>
+          </div>
+        </details>
+      </form>
+
+      <details id="reports" hidden>
+        <summary class="section-title">
+          <span>Local reports <strong id="report-count"></strong></span>
+          <button id="reports-info" class="info-button" type="button" aria-label="About local reports" aria-expanded="false">?</button>
+          <span id="reports-tooltip" class="tooltip" role="tooltip" hidden>Right-click an image and choose Report as AI or Report as Non-AI in the Cyclopes menu. A 128 px WebP preview and page details stay only in this browser profile. Nothing is uploaded.</span>
+        </summary>
+        <div class="section-body">
+          <div id="report-grid"></div>
+          <small>Stored only in this browser profile.</small>
+        </div>
+      </details>
+
+      <footer>
+        <a href="https://github.com/T-Damer/cyclopes" target="_blank">GitHub</a>
+        <a href="https://poidh.xyz/arbitrum/bounty/323" target="_blank">Bounty</a>
+        <output id="saved" aria-live="polite"></output>
+      </footer>
+    </div>
+
+    <div id="sites-view" hidden>
+      <button id="back" class="back" type="button">← Settings</button>
+      <h2>Excluded sites</h2>
+      <div id="excluded-sites-list"></div>
+      <p id="no-excluded-sites">No excluded sites.</p>
+    </div>
+  </main>
+  <script src="options.js"></script>
+</body>
+</html>
