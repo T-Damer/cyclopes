@@ -65,10 +65,10 @@ export function isMostlyOccluded(image, viewportWidth, viewportHeight) {
 export function isEligibleImage(image) {
   return Boolean(
     image.currentSrc &&
-      image.naturalWidth >= 64 &&
-      image.naturalHeight >= 64 &&
-      image.width >= 64 &&
-      image.height >= 64 &&
+      image.naturalWidth >= 256 &&
+      image.naturalHeight >= 256 &&
+      image.width >= 256 &&
+      image.height >= 256 &&
       !isVideoPoster(image)
   );
 }

@@ -11,10 +11,12 @@ test("the filter boundary is exactly 65 percent", () => {
   assert.ok(Math.abs(inference.outputToScore({ data: [Math.log(0.65 / 0.35)] }) - 0.65) < 1e-12);
 });
 
-test("tiny rendered images are ignored even when their source is large", () => {
+test("images smaller than 256 pixels are ignored even when their source is large", () => {
   const image = { currentSrc: "image.jpg", naturalWidth: 512, naturalHeight: 512, width: 32, height: 32 };
   assert.equal(shared.isEligibleImage(image), false);
-  assert.equal(shared.isEligibleImage({ ...image, width: 64, height: 64 }), true);
+  assert.equal(shared.isEligibleImage({ ...image, width: 255, height: 256 }), false);
+  assert.equal(shared.isEligibleImage({ ...image, naturalWidth: 255, width: 256, height: 256 }), false);
+  assert.equal(shared.isEligibleImage({ ...image, width: 256, height: 256 }), true);
 });
 
 test("video poster images are ignored", () => {
