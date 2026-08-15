@@ -10,7 +10,11 @@ __pycache__/
 node_modules/
 dist/
 release/
+dist-firefox/
+dist-chrome/
+cyclopes-mozilla-source.zip
 reports/
+*.zip
 personal-tests/*
 !personal-tests/.gitkeep
 data/
