@@ -1,12 +1,14 @@
-# <img src="extension/icons/on-128.png" width="40" alt="" align="absmiddle"> Cyclopes
+# <img src="extension/icons/on-128.png" width="40" alt="" align="absmiddle" style="filter: brightness(200%)"> Cyclopes
 
 Private, browser-local AI image detection: Cyclopes labels visible web images without uploading pixels.
 
-**93.68% AI precision · 94.83% balanced accuracy** on AI Detector Arena v0.1.
+**93.68% AI precision · 94.83% balanced accuracy**
 
-## Demo
+## Cyclopes
 
-![Cyclopes demo placeholder](docs/demo.svg)
+<!-- ![Cyclopes demo placeholder](docs/demo.svg) -->
+<!-- ![Og Image](./og-image.png) -->
+<img src="og-image.png" alt="Cyclopes og image" width="400"/>
 
 <details>
 <summary><strong>Table of contents</strong></summary>
