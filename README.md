@@ -48,6 +48,8 @@ Put personal regression images in `personal-tests/`. Its contents are ignored by
 <details id="metrics">
 <summary><strong>Metrics</strong></summary>
 
+Running on WebGPU at around **90ms/image** (desktop-class browser GPU), Cyclopes scores at a fixed **65%** threshold on a **36,000-image** held-out benchmark (clean / web / hard-degraded): **91.3% / 87.3% / 84.6% balanced accuracy**.
+
 | External set | Images | Balanced accuracy | AI precision | AI recall | Real specificity |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | AI Detector Arena v0.1 | 2,031 | **94.83%** | **93.68%** | 96.17% | 93.48% |
