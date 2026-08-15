@@ -48,7 +48,7 @@ Put personal regression images in `personal-tests/`. Its contents are ignored by
 <details id="metrics">
 <summary><strong>Metrics</strong></summary>
 
-Running on WebGPU at around **90ms/image** (desktop-class browser GPU), Cyclopes scores at a fixed **65%** threshold on a **36,000-image** held-out benchmark (clean / web / hard-degraded): **91.3% / 87.3% / 84.6% balanced accuracy**.
+On desktop-class browsers, inference uses WebGPU at about **~90ms/image**. At a fixed **65%** threshold, the published held-out sets report **94.83% / 91.67% / 95.35%** balanced accuracy for (AI Detector Arena v0.1, Arena web-degraded, held-out sources web-degraded), matching the table below.
 
 | External set | Images | Balanced accuracy | AI precision | AI recall | Real specificity |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -94,6 +94,39 @@ Training, export, reproducibility commands, and the rejected-experiment record l
 ### How the frontend works
 
 The Manifest V3 extension schedules only eligible images in the active tab, waits for stable layout, ignores tiny, hidden, heavily occluded, and video-poster images, then runs one local ONNX job at a time through WebGPU with WASM fallback. Badges are anchored by DOM hit-testing; feedback previews, settings, and site exclusions stay in browser storage.
+
+<details>
+<summary><strong>Model training (how to reproduce)</strong></summary>
+
+Cyclopes v0.2 used a frozen-forensic ViT-S backbone with ScalePair-style residual heads, including:
+
+- duplicate/image-hash dedupe and source-split curation (`data` manifests)
+- balanced hard-negative replay (legacy generators, hard web artifacts, AI replays)
+- frozen-backbone head adaptation (V5 replay) on replay manifest
+- separate calibration, validation, and fixed-threshold (65%) selection gates
+
+Machine profile used in experiments:
+
+- main adaptation steps on `H200`-class CUDA (when available);
+- short bounded replay pass was also run on `mps`.
+
+To reproduce locally (Python 3.11+, dataset access required):
+
+```bash
+python -m venv .venv
+.venv/bin/pip install -r requirements-train.txt
+
+.venv/bin/python tools/prepare_* ...
+# then, at minimum:
+.venv/bin/python -m cyclopes.cli train --manifest data/final/clean.csv --output artifacts/cyclopes-v2.pt --report reports/train-v2.json --device cuda
+.venv/bin/python -m cyclopes.cli calibrate --manifest data/final/clean.csv --checkpoint artifacts/cyclopes-v2.pt --split calibration --device cuda --output artifacts/calibration.json --report reports/calibration-v2.json
+.venv/bin/python -m cyclopes.cli evaluate --manifest data/final/clean.csv --checkpoint artifacts/cyclopes-v2.pt --split test --device cuda --calibration artifacts/calibration.json --report reports/test-v2.json
+.venv/bin/python -m cyclopes.cli export --checkpoint artifacts/cyclopes-v2.pt --calibration artifacts/calibration.json --output extension/models/cyclopes.onnx --report reports/export-v2.json
+```
+
+For a concrete command chain and full manifests/flags, follow [docs/agents.md](docs/agents.md).
+
+</details>
 
 </details>
 
