@@ -68,6 +68,10 @@ test("the built MV3 package is local and has its inference document", () => {
   assert.match(background, /action\.onClicked/);
   assert.match(background, /MAX_INFERENCE_CONCURRENCY = 1/);
   assert.match(background, /Warming up/);
+  assert.match(background, /loadingFrames/);
+  assert.match(background, /\\u\{1307A\}/);
+  assert.match(background, /setInterval/);
+  assert.doesNotMatch(background, /text: "…"/);
   assert.match(background, /text: "ERR"/);
   const content = readFileSync("dist/content.js", "utf8");
   assert.match(content, /cyclopesScore/);

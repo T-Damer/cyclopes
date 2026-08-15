@@ -1,20 +1,36 @@
 const MAX_INFERENCE_CONCURRENCY = 1;
+const loadingFrames = ["𓁺", "𓁻", "𓁿", "𓂀"];
 const inFlight = new Map();
 const queue = [];
 let active = 0;
 let offscreenReady;
 let filterEnabled = false;
 let ready = false;
+let loadingFrame = 0;
+let loadingTimer;
+
+function stopLoadingAnimation() {
+  clearInterval(loadingTimer);
+  loadingTimer = undefined;
+}
 
 function showState(enabled) {
   filterEnabled = enabled;
   const warmingUp = enabled && !ready;
-  chrome.action.setBadgeText({ text: warmingUp ? "…" : enabled ? "ON" : "OFF" });
+  if (warmingUp && !loadingTimer) {
+    loadingFrame = 0;
+    loadingTimer = setInterval(() => {
+      loadingFrame = (loadingFrame + 1) % loadingFrames.length;
+      chrome.action.setBadgeText({ text: loadingFrames[loadingFrame] });
+    }, 150);
+  } else if (!warmingUp) stopLoadingAnimation();
+  chrome.action.setBadgeText({ text: warmingUp ? loadingFrames[loadingFrame] : enabled ? "ON" : "OFF" });
   chrome.action.setBadgeBackgroundColor({ color: warmingUp ? "#d97706" : enabled ? "#2563eb" : "#6b7280" });
   chrome.action.setTitle({ title: warmingUp ? "Cyclopes — Warming up" : `Cyclopes — Filter ${enabled ? "ON" : "OFF"}` });
 }
 
 function showError() {
+  stopLoadingAnimation();
   chrome.action.setBadgeText({ text: "ERR" });
   chrome.action.setBadgeBackgroundColor({ color: "#dc2626" });
   chrome.action.setTitle({ title: "Cyclopes — Inference failed" });
