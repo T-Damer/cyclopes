@@ -6,14 +6,6 @@
 
 <img src="og-image.png" alt="Cyclopes — private, browser-local AI image detection" width="100%">
 
-## Demo
-
-![Cyclopes adds local AI confidence badges to eligible webpage images](docs/demo.svg)
-
-Cyclopes inspects eligible images in the active tab, displays a local confidence badge, and can optionally blur likely AI content. The model sees pixels—not filenames, prompts, tags, or embedded metadata.
-
-> A video demo and public store buttons will be added after store review.
-
 <details>
 <summary><strong>Table of contents</strong></summary>
 
