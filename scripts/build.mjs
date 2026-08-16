@@ -1,11 +1,29 @@
 import { build } from "esbuild";
-import { cp, mkdir, readdir, rm } from "node:fs/promises";
+import { access, cp, mkdir, readdir, rm } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dist = join(root, "dist");
 const extension = join(root, "extension");
+const isCI = process.env.CI === "true";
+
+async function copyModelArtifact(source, target) {
+  try {
+    await access(source);
+    await cp(source, target);
+    return true;
+  } catch (error) {
+    if (error?.code === "ENOENT") {
+      if (isCI) {
+        console.warn(`Warning: missing model artifact ${source}. Build will continue without it for CI packaging.`);
+        return false;
+      }
+      throw new Error(`Missing required model artifact: ${source}. Add extension/models/cyclopes.onnx before building locally.`);
+    }
+    throw error;
+  }
+}
 
 await rm(dist, { force: true, recursive: true });
 await mkdir(dist, { recursive: true });
@@ -27,7 +45,11 @@ await cp(join(extension, "options.html"), join(dist, "options.html"));
 await cp(join(extension, "options.css"), join(dist, "options.css"));
 await mkdir(join(dist, "models"), { recursive: true });
 for (const name of ["cyclopes.onnx", "cyclopes.json"]) {
-  await cp(join(extension, "models", name), join(dist, "models", name));
+  const source = join(extension, "models", name);
+  const copied = await copyModelArtifact(source, join(dist, "models", name));
+  if (!copied && name === "cyclopes.onnx") {
+    console.warn("Local inference will be unavailable until cyclopes.onnx is added.");
+  }
 }
 await cp(join(extension, "icons"), join(dist, "icons"), { recursive: true });
 
